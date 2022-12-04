@@ -1,12 +1,23 @@
 ﻿namespace ArrayApp.Domain.Common;
 
+/// <summary>
+/// All the basic properties that every entity should need
+/// </summary>
 public abstract class BaseAuditableEntity : BaseEntity
 {
-    public DateTime Created { get; set; }
+    public virtual int Id { get; set; }
 
-    public string? CreatedBy { get; set; }
+    public virtual DateTimeOffset CreationTime { get; set; } = DateTimeOffset.Now;
 
-    public DateTime? LastModified { get; set; }
+    public virtual string? CreatorUserId { get; set; }
 
-    public string? LastModifiedBy { get; set; }
+    public virtual string DeleterUserId { get; set; }
+
+    public virtual DateTimeOffset? DeletionTime { get; set; }
+
+    public virtual bool IsDeleted { get; set; }
+
+    public virtual DateTimeOffset? LastModificationTime { get; set; }
+
+    public virtual string? LastModifierUserId { get; set; }
 }

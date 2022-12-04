@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArrayApp.Domain.Common;
-
+/// <summary>
+/// ...and some common properties to go along with them
+/// </summary>
 public abstract class BaseEntity
 {
     public int Id { get; set; }

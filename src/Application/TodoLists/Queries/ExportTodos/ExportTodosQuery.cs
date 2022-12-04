@@ -27,7 +27,7 @@ public class ExportTodosQueryHandler : IRequestHandler<ExportTodosQuery, ExportT
     public async Task<ExportTodosVm> Handle(ExportTodosQuery request, CancellationToken cancellationToken)
     {
         var records = await _context.TodoItems
-                .Where(t => t.ListId == request.ListId)
+                .Where(t => t.Id == request.ListId)
                 .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
