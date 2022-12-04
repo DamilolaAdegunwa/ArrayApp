@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Domain.Exceptions;
-using CleanArchitecture.Domain.ValueObjects;
+﻿using ArrayApp.Domain.Exceptions;
+using ArrayApp.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Domain.UnitTests.ValueObjects;
+namespace ArrayApp.Domain.UnitTests.ValueObjects;
 
 public class ColourTests
 {

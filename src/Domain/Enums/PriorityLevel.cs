@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.Enums;
+﻿namespace ArrayApp.Domain.Enums;
 
 public enum PriorityLevel
 {

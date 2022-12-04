@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <RootNamespace>CleanArchitecture.Application.IntegrationTests</RootNamespace>
-        <AssemblyName>CleanArchitecture.Application.IntegrationTests</AssemblyName>
+        <RootNamespace>ArrayApp.Application.IntegrationTests</RootNamespace>
+        <AssemblyName>ArrayApp.Application.IntegrationTests</AssemblyName>
 
         <IsPackable>false</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>

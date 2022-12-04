@@ -1,6 +1,6 @@
-﻿global using CleanArchitecture.Domain.Common;
-global using CleanArchitecture.Domain.Entities;
-global using CleanArchitecture.Domain.Enums;
-global using CleanArchitecture.Domain.Events;
-global using CleanArchitecture.Domain.Exceptions;
-global using CleanArchitecture.Domain.ValueObjects;
+﻿global using ArrayApp.Domain.Common;
+global using ArrayApp.Domain.Entities;
+global using ArrayApp.Domain.Enums;
+global using ArrayApp.Domain.Events;
+global using ArrayApp.Domain.Exceptions;
+global using ArrayApp.Domain.ValueObjects;

@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <RootNamespace>ArrayApp.Application.UnitTests</RootNamespace>
-        <AssemblyName>ArrayApp.Application.UnitTests</AssemblyName>
+        <RootNamespace>ArrayAppArrayApp.Application.UnitTests</RootNamespace>
+        <AssemblyName>ArrayAppArrayApp.Application.UnitTests</AssemblyName>
 
         <IsPackable>false</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>

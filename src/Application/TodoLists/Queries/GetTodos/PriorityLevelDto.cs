@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos;
+﻿namespace ArrayApp.Application.TodoLists.Queries.GetTodos;
 
 public class PriorityLevelDto
 {

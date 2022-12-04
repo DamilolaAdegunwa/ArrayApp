@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.Exceptions;
+﻿namespace ArrayApp.Domain.Exceptions;
 
 public class UnsupportedColourException : Exception
 {

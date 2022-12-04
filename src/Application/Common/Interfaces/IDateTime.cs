@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.Common.Interfaces;
+﻿namespace ArrayApp.Application.Common.Interfaces;
 
 public interface IDateTime
 {

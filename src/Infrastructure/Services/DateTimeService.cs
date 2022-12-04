@@ -1,6 +1,6 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
+﻿using ArrayApp.Application.Common.Interfaces;
 
-namespace CleanArchitecture.Infrastructure.Services;
+namespace ArrayApp.Infrastructure.Services;
 
 public class DateTimeService : IDateTime
 {

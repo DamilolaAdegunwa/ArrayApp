@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="CleanArchitecture.Application.IntegrationTests" />
+        <InternalsVisibleTo Include="ArrayApp.Application.IntegrationTests" />
     </ItemGroup>
 
   <ItemGroup>

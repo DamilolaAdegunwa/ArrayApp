@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchitecture.Application.IntegrationTests;
+namespace ArrayApp.Application.IntegrationTests;
 
 public static class ServiceCollectionExtensions
 {

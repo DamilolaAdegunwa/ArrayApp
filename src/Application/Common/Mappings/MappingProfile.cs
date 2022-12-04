@@ -1,7 +1,7 @@
 using System.Reflection;
 using AutoMapper;
 
-namespace CleanArchitecture.Application.Common.Mappings;
+namespace ArrayApp.Application.Common.Mappings;
 
 public class MappingProfile : Profile
 {

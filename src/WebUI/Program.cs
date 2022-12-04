@@ -1,4 +1,4 @@
-using CleanArchitecture.Infrastructure.Persistence;
+using ArrayApp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

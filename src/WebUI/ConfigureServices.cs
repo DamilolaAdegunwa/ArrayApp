@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure.Persistence;
-using CleanArchitecture.WebUI.Filters;
-using CleanArchitecture.WebUI.Services;
+﻿using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Infrastructure.Persistence;
+using ArrayApp.WebUI.Filters;
+using ArrayApp.WebUI.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using NSwag;
@@ -34,7 +34,7 @@ public static class ConfigureServices
 
         services.AddOpenApiDocument(configure =>
         {
-            configure.Title = "CleanArchitecture API";
+            configure.Title = "ArrayApp API";
             configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
             {
                 Type = OpenApiSecuritySchemeType.ApiKey,

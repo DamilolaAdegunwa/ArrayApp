@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "CleanArchitecture.WebUI": {
+    "ArrayApp.WebUI": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "CleanArchitecture.WebUI:build:production"
+              "browserTarget": "ArrayApp.WebUI:build:production"
             },
             "development": {
-              "browserTarget": "CleanArchitecture.WebUI:build:development",
+              "browserTarget": "ArrayApp.WebUI:build:development",
               "proxyConfig": "proxy.conf.js"
             }
           },
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "CleanArchitecture.WebUI:build"
+            "browserTarget": "ArrayApp.WebUI:build"
           }
         },
         "test": {
@@ -131,7 +131,7 @@
       }
     }
   },
-  "defaultProject": "CleanArchitecture.WebUI",
+  "defaultProject": "ArrayApp.WebUI",
   "cli": {
     "analytics": "0e75b972-900b-4c01-a835-1b15d57f6d61"
   }

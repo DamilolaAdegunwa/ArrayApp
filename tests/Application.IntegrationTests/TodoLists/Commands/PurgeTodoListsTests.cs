@@ -1,12 +1,12 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Common.Security;
-using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
-using CleanArchitecture.Application.TodoLists.Commands.PurgeTodoLists;
-using CleanArchitecture.Domain.Entities;
+﻿using ArrayApp.Application.Common.Exceptions;
+using ArrayApp.Application.Common.Security;
+using ArrayApp.Application.TodoLists.Commands.CreateTodoList;
+using ArrayApp.Application.TodoLists.Commands.PurgeTodoLists;
+using ArrayApp.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Application.IntegrationTests.TodoLists.Commands;
+namespace ArrayApp.Application.IntegrationTests.TodoLists.Commands;
 
 using static Testing;
 

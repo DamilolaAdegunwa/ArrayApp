@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoLists.Queries.ExportTodos;
+﻿namespace ArrayApp.Application.TodoLists.Queries.ExportTodos;
 
 public class ExportTodosVm
 {

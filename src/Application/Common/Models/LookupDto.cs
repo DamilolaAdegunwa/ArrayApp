@@ -1,7 +1,7 @@
-﻿using CleanArchitecture.Application.Common.Mappings;
-using CleanArchitecture.Domain.Entities;
+﻿using ArrayApp.Application.Common.Mappings;
+using ArrayApp.Domain.Entities;
 
-namespace CleanArchitecture.Application.Common.Models;
+namespace ArrayApp.Application.Common.Models;
 
 // Note: This is currently just used to demonstrate applying multiple IMapFrom attributes.
 public class LookupDto : IMapFrom<TodoList>, IMapFrom<TodoItem>
