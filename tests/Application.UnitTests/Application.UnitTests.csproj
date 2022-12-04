@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Application\Application.csproj" />
-        <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Application\ArrayApp.Application.csproj" />
+        <ProjectReference Include="..\..\src\Infrastructure\ArrayApp.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
