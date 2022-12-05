@@ -84,10 +84,13 @@ app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseOpenApi();
+//app.UseSwaggerUi3();
+
 app.UseSwaggerUi3(settings =>
 {
     settings.Path = "/api";
-    settings.DocumentPath = "/api/specification.json";
+    //settings.DocumentPath = "/api/specification.json";
 });
 
 app.UseRouting();

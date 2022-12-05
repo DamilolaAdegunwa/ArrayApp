@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityModel;
 using Azure;
 using NSwag.Annotations;
-using Swashbuckle.AspNetCore.Annotations;
+//using Swashbuckle.AspNetCore.Annotations;
 namespace ArrayApp.WebUI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = false)]

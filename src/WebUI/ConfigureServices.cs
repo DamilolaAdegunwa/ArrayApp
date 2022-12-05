@@ -46,6 +46,8 @@ public static class ConfigureServices
             configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
         });
 
+        //services.AddSwaggerDocument(configure => configure.Title = "Array.WebUI");
+
         return services;
     }
 }
