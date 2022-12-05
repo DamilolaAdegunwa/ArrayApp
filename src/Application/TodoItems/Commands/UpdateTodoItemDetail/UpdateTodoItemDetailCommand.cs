@@ -36,7 +36,7 @@ public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItem
             throw new NotFoundException(nameof(TodoItem), request.Id);
         }
 
-        entity.Id = request.ListId;
+        //entity.Id = request.ListId;
         entity.Priority = request.Priority;
         entity.Note = request.Note;
 

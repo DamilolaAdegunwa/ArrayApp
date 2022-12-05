@@ -25,10 +25,19 @@ public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemComman
     {
         var entity = new TodoItem
         {
-            Id = request.ListId,
+            //Id = request.ListId,
+            //ListId = request.ListId,
             Title = request.Title,
             Done = false
         };
+
+        var list = _context.TodoLists.FirstOrDefault(l => l.Id == request.ListId);
+        if(list == null || list.Id <= 0)
+        {
+            throw new Exception("cant find the list!");
+        }
+
+        entity.List = list;
 
         entity.AddDomainEvent(new TodoItemCreatedEvent(entity));
 
