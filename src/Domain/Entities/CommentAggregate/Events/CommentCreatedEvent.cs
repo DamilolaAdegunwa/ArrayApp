@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.CommentAggregate.Events;
-internal class CommentCreatedEvent
+public class CommentCreatedEvent
 {
 }
 /*

@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.IdeaAggregate.Handlers;
-internal class IdeaLikedNotificationHandler
+public class IdeaLikedNotificationHandler
 {
 }

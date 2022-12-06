@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.AppAggregate.Events;
-internal class ExitEvent
+public class ExitEvent
 {
 }

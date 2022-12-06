@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.NotificationAggregate.Events;
-internal class NotificationSentEvent
+public class NotificationSentEvent
 {
 }

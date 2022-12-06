@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.GroupAggregate.Handlers;
-internal class GroupRenamedNotificationHandler
+public class GroupRenamedNotificationHandler
 {
 }

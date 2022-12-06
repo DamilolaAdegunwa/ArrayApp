@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.AdvertAggregate.Handlers;
-internal class AdvertViewedNotificationHandler
+public class AdvertViewedNotificationHandler
 {
 }

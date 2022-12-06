@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.SubscriptionAggregate.Events;
-internal class SubscriptionCancelledEvent
+public class SubscriptionCancelledEvent
 {
 }

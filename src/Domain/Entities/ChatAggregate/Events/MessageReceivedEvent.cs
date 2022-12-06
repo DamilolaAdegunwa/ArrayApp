@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.ChatAggregate.Events;
-internal class MessageReceivedEvent
+public class MessageReceivedEvent
 {
 }

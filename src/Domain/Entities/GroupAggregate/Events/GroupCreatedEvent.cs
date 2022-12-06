@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.GroupAggregate.Events;
-internal class GroupCreatedEvent
+public class GroupCreatedEvent
 {
 }
 /*

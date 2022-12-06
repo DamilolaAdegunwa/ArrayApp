@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.TopicAggregate.Handlers;
-internal class TopicRenamedNotificationHandler
+public class TopicRenamedNotificationHandler
 {
 }

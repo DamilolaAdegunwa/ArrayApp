@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.CommentAggregate.Handlers;
-internal class CommentDeletedNotificationHandler
+public class CommentDeletedNotificationHandler
 {
 }

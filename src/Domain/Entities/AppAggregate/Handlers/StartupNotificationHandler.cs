@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.AppAggregate.Handlers;
-internal class StartupNotificationHandler
+public class StartupNotificationHandler
 {
 }

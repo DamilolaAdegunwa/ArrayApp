@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.FileAggregate.Events;
-internal class FileAccessedEvent
+public class FileAccessedEvent
 {
 }

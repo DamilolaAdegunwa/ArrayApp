@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.FileAggregate.Handlers;
-internal class FileDeletedNotificationHandler
+public class FileDeletedNotificationHandler
 {
 }

@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.IdeaAggregate.Events;
-internal class IdeaLikedEvent
+public class IdeaLikedEvent
 {
 }

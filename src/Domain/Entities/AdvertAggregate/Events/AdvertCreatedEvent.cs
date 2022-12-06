@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.AdvertAggregate.Events;
-internal class AdvertCreatedEvent
+public class AdvertCreatedEvent
 {
 }
 /*

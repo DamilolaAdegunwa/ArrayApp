@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.CommentAggregate.Events;
-internal class CommentDeletedEvent
+public class CommentDeletedEvent
 {
 }

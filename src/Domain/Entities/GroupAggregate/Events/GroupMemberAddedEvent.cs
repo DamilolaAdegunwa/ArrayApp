@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ArrayApp.Domain.Entities.GroupAggregate.Events;
-internal class GroupMemberAddedEvent
+public class GroupMemberAddedEvent
 {
 }
