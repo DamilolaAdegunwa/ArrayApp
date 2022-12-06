@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Persistence;
+using ArrayApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,18 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 //builder.Services.AddDbContext(connectionString);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-//  .AddEntityFrameworkStores<ApplicationDbContext>()
-//  .AddDefaultTokenProviders();
+//builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+//.AddEntityFrameworkStores<ApplicationDbContext>()
+//.AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebUIServices();
 builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).Bind(options));
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IServiceHelper, ServiceHelper>();
+builder.Services.AddScoped<ITokenSvc, TokenService>();
 
 #region jwt
 builder.Services.AddAuthentication(x => {
@@ -58,6 +62,7 @@ builder.Services.AddAuthentication(x => {
             })
             ;
 #endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -96,7 +101,7 @@ app.UseSwaggerUi3(settings =>
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseIdentityServer();
+//app.UseIdentityServer();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -13,5 +13,6 @@ public class Constants
     }
     public static class Url
     {
+        public const string WelcomeEmail = "wwwroot/messaging/emailtemplates/welcome-email.html";
     }
 }

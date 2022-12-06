@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using ArrayApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 namespace ArrayApp.WebUI.Controllers;
 //public class BaseController : Controller
 //{
@@ -15,10 +16,10 @@ namespace ArrayApp.WebUI.Controllers;
 [ApiController]
 public class BaseController : ApiControllerBase//: ControllerBase
 {
-    private readonly ILogger _logger;
-    public BaseController(ILogger logger)
+    //private readonly ILogger _logger = 
+    public BaseController(/*ILogger logger*/)
     {
-        _logger = logger;
+        //_logger = logger;
     }
 
     protected async Task<ServiceResponse<T>> HandleApiOperationAsync<T>(
@@ -26,7 +27,7 @@ public class BaseController : ApiControllerBase//: ControllerBase
     {
         //var _logger = LogManager.GetLogger(typeof(BaseController));
 
-        _logger.LogInformation($"ENTERS ({method}) method");
+        Log.Information($"ENTERS ({method}) method");
 
         var serviceResponse = new ServiceResponse<T>
         {
@@ -61,10 +62,10 @@ public class BaseController : ApiControllerBase//: ControllerBase
                     m => m.Value.Errors.Select(e => e.Exception?.Message ?? e.ErrorMessage)
                 );
             }
-            _logger.LogError(ex.Message, ex);
+            Log.Error(ex.Message, ex);
         }
 
-        _logger.LogInformation($"EXITS ({method}) method");
+        Log.Information($"EXITS ({method}) method");
 
         return serviceResponse;
     }

@@ -1,4 +1,5 @@
-﻿using ArrayApp.Application.Common.Interfaces;
+﻿using System.Data;
+using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Infrastructure.Files;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
@@ -33,13 +34,34 @@ public static class ConfigureServices
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        services
-            .AddDefaultIdentity<ApplicationUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+        //services
+        //    .AddDefaultIdentity<ApplicationUser>()
+        //    //.AddRoles<IdentityRole>()
+        //    .AddRoles<ApplicationRole>()
+        //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        services.AddIdentityServer()
-            .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+        //services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
+            //password options
+            options.Password.RequireDigit = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+
+            //other options
+            options.Lockout.AllowedForNewUsers = false;
+            options.SignIn.RequireConfirmedEmail = true;
+            options.SignIn.RequireConfirmedAccount = true;
+            options.SignIn.RequireConfirmedPhoneNumber = true;
+            options.User.RequireUniqueEmail = true;
+        })
+                .AddRoles<ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+        services.AddControllersWithViews();
 
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();

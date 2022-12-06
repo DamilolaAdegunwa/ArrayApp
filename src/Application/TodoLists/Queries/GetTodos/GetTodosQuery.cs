@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArrayApp.Application.TodoLists.Queries.GetTodos;
 
-[Authorize]
+//[Authorize]
 public record GetTodosQuery : IRequest<TodosVm>;
 
 public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>

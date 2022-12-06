@@ -5,8 +5,8 @@ namespace ArrayApp.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser
 {
-    public string RefreshToken { get; set; }
-    public string AccountConfirmationCode { get; set; }
+    public string? RefreshToken { get; set; }
+    public string? AccountConfirmationCode { get; set; }
     public UserType UserType { get; set; }
 }
 public static class UserExtensions

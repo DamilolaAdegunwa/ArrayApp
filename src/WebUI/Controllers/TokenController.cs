@@ -18,18 +18,18 @@ public class TokenController : BaseController
     private readonly ITokenSvc _tokenSvc;
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger _logger;
+    //private readonly ILogger _logger;
     public TokenController(
         ITokenSvc tokenSvc
         , ApplicationDbContext applicationDbContext
         , UserManager<ApplicationUser> userManager
-        , ILogger logger
-        ) : base( logger )
+        //, ILogger logger
+        ) //: base( logger )
     {
         _tokenSvc = tokenSvc;
         _applicationDbContext = applicationDbContext;
         _userManager = userManager;
-        _logger = logger;
+        //_logger = logger;
     }
 
     [HttpPost]/*Sign In - checked*/
