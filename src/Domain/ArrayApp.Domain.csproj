@@ -12,4 +12,41 @@
       <PackageReference Include="MediatR" Version="9.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Entities\AppAggregate\Events\" />
+      <Folder Include="Entities\AppAggregate\Handlers\" />
+      <Folder Include="Entities\AppAggregate\Specifications\" />
+      <Folder Include="Entities\ChatAggregate\Events\" />
+      <Folder Include="Entities\ChatAggregate\Handlers\" />
+      <Folder Include="Entities\ChatAggregate\Specifications\" />
+      <Folder Include="Entities\AdvertAggregate\Events\" />
+      <Folder Include="Entities\AdvertAggregate\Handlers\" />
+      <Folder Include="Entities\AdvertAggregate\Specifications\" />
+      <Folder Include="Entities\TopicAggregate\Events\" />
+      <Folder Include="Entities\TopicAggregate\Handlers\" />
+      <Folder Include="Entities\TopicAggregate\Specifications\" />
+      <Folder Include="Entities\FileAggregate\Events\" />
+      <Folder Include="Entities\FileAggregate\Handlers\" />
+      <Folder Include="Entities\FileAggregate\Specifications\" />
+      <Folder Include="Entities\CommentAggregate\Events\" />
+      <Folder Include="Entities\CommentAggregate\Handlers\" />
+      <Folder Include="Entities\CommentAggregate\Specifications\" />
+      <Folder Include="Entities\GroupAggregate\Events\" />
+      <Folder Include="Entities\GroupAggregate\Handlers\" />
+      <Folder Include="Entities\GroupAggregate\Specifications\" />
+      <Folder Include="Entities\_Integrators\" />
+      <Folder Include="Entities\SessionAggregate\Events\" />
+      <Folder Include="Entities\SessionAggregate\Handlers\" />
+      <Folder Include="Entities\SessionAggregate\Specifications\" />
+      <Folder Include="Entities\PostAggregate\Events\" />
+      <Folder Include="Entities\PostAggregate\Handlers\" />
+      <Folder Include="Entities\PostAggregate\Specifications\" />
+      <Folder Include="Entities\NotificationAggregate\Events\" />
+      <Folder Include="Entities\NotificationAggregate\Handlers\" />
+      <Folder Include="Entities\NotificationAggregate\Specifications\" />
+      <Folder Include="Entities\IdeaAggregate\Events\" />
+      <Folder Include="Entities\IdeaAggregate\Handlers\" />
+      <Folder Include="Entities\IdeaAggregate\Specifications\" />
+    </ItemGroup>
+
 </Project>
