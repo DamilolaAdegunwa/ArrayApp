@@ -33,3 +33,8 @@ public enum PaymentMethod
     BankTransfer,
     PayPal
 }
+
+public class Product
+{
+    public int Id { get; set; }
+}

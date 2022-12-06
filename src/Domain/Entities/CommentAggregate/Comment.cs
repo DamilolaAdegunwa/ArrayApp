@@ -30,3 +30,7 @@ public class Comment
     // The post, page, or other content that the comment is associated with
     public Content Content { get; set; }
 }
+public class Content
+{
+    public string Text { get; set; }
+}

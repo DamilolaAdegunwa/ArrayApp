@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 
 namespace ArrayApp.Domain.Entities.TopicAggregate;
 public class Topic
@@ -27,7 +28,7 @@ public class Topic
     public List<User> Followers { get; set; }
 
     // The topic's posts
-    public List<Post> Posts { get; set; }
+    public List<Idea> Posts { get; set; }
 
     // The topic's tags (if it has any)
     public List<string> Tags { get; set; }

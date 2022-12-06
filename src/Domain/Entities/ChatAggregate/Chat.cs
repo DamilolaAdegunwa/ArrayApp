@@ -32,3 +32,7 @@ public class Chat
     // The chat's picture (if it has one)
     public Image Picture { get; set; }
 }
+public class Message
+{
+    public string Name { get; set; }
+}
