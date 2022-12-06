@@ -46,6 +46,9 @@ public class Category
 public class Image
 {
 }
+public class User
+{
+}
 /*
 This Advert class includes properties for storing information about the advert's title, description, creation and modification dates, creator, price, location, active status, associated images, and category. Of course, you can add or remove properties from this class based on the specific requirements of your application.
 */
