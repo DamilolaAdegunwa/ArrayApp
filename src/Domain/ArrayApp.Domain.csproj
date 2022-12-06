@@ -16,25 +16,13 @@
       <Folder Include="Entities\AppAggregate\Specifications\" />
       <Folder Include="Entities\ChatAggregate\Specifications\" />
       <Folder Include="Entities\AdvertAggregate\Specifications\" />
-      <Folder Include="Entities\TopicAggregate\Events\" />
-      <Folder Include="Entities\TopicAggregate\Handlers\" />
       <Folder Include="Entities\TopicAggregate\Specifications\" />
-      <Folder Include="Entities\FileAggregate\Events\" />
-      <Folder Include="Entities\FileAggregate\Handlers\" />
       <Folder Include="Entities\FileAggregate\Specifications\" />
       <Folder Include="Entities\CommentAggregate\Specifications\" />
-      <Folder Include="Entities\GroupAggregate\Events\" />
-      <Folder Include="Entities\GroupAggregate\Handlers\" />
       <Folder Include="Entities\GroupAggregate\Specifications\" />
       <Folder Include="Entities\_Integrators\" />
-      <Folder Include="Entities\SessionAggregate\Events\" />
-      <Folder Include="Entities\SessionAggregate\Handlers\" />
       <Folder Include="Entities\SessionAggregate\Specifications\" />
-      <Folder Include="Entities\PostAggregate\Events\" />
-      <Folder Include="Entities\PostAggregate\Handlers\" />
-      <Folder Include="Entities\PostAggregate\Specifications\" />
-      <Folder Include="Entities\NotificationAggregate\Events\" />
-      <Folder Include="Entities\NotificationAggregate\Handlers\" />
+      <Folder Include="Entities\SubscriptionAggregate\Specifications\" />
       <Folder Include="Entities\NotificationAggregate\Specifications\" />
       <Folder Include="Entities\IdeaAggregate\Specifications\" />
     </ItemGroup>
