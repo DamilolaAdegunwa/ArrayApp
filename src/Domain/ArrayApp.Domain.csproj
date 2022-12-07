@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
       <PackageReference Include="MediatR" Version="9.0.0" />
     </ItemGroup>
 
@@ -20,11 +21,12 @@
       <Folder Include="Entities\FileAggregate\Specifications\" />
       <Folder Include="Entities\CommentAggregate\Specifications\" />
       <Folder Include="Entities\GroupAggregate\Specifications\" />
+      <Folder Include="Entities\TagAggregate\Events\" />
+      <Folder Include="Entities\TagAggregate\Specifications\" />
       <Folder Include="Entities\_Integrators\" />
       <Folder Include="Entities\SessionAggregate\Specifications\" />
       <Folder Include="Entities\SubscriptionAggregate\Specifications\" />
       <Folder Include="Entities\NotificationAggregate\Specifications\" />
-      <Folder Include="Entities\IdeaAggregate\Specifications\" />
     </ItemGroup>
 
 </Project>
