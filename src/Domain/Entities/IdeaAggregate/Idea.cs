@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.CategoryAggregate;
 using ArrayApp.Domain.Entities.CommentAggregate;
 using ArrayApp.Domain.Entities.TagAggregate;
 
 namespace ArrayApp.Domain.Entities.IdeaAggregate;
-public class Idea : BaseAuditableEntity
+public class Idea : BaseAuditableEntity, IAggregateRoot
 {
     public Idea()
     {
@@ -58,6 +59,23 @@ public class Idea : BaseAuditableEntity
         var newCommentAddedEvent = new NewCommentAddedToIdeaEvent(this, newComment);
         AddDomainEvent(newCommentAddedEvent);
     }
+
+    #region update-functions
+    public void UpdateTitle(string title)
+    {
+        Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
+    }
+
+    public void UpdateDescription(string description)
+    {
+        Description = Guard.Against.NullOrWhiteSpace(description, nameof(description));
+    }
+
+    public void UpdateContent(string content)
+    {
+        Content = Guard.Against.NullOrWhiteSpace(content, nameof(content));
+    }
+    #endregion
 }
 /*
  This Idea class includes properties for storing information about the idea's title, description, creation and modification dates, creator, status, rating, category, tags, and comments. Of course, you can add or remove properties from this class based on the specific requirements of your application.

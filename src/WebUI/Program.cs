@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Persistence;
+using ArrayApp.Infrastructure.Repositories;
+using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +28,7 @@ builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSectio
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IServiceHelper, ServiceHelper>();
 builder.Services.AddScoped<ITokenSvc, TokenService>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 #region jwt
 builder.Services.AddAuthentication(x => {
