@@ -16,7 +16,7 @@
       <Folder Include="Entities\AppAggregate\Specifications\" />
       <Folder Include="Entities\ChatAggregate\Specifications\" />
       <Folder Include="Entities\AdvertAggregate\Specifications\" />
-      <Folder Include="Entities\TopicAggregate\Specifications\" />
+      <Folder Include="Entities\CategoryAggregate\Specifications\" />
       <Folder Include="Entities\FileAggregate\Specifications\" />
       <Folder Include="Entities\CommentAggregate\Specifications\" />
       <Folder Include="Entities\GroupAggregate\Specifications\" />

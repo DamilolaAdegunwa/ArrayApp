@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.CategoryAggregate;
 using ArrayApp.Domain.Entities.CommentAggregate;
 
 namespace ArrayApp.Domain.Entities.IdeaAggregate;
-public class Idea
+public class Idea : BaseAuditableEntity
 {
     // The idea's title
     public string Title { get; set; }

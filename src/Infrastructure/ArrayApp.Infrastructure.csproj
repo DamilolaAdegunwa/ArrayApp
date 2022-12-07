@@ -24,4 +24,9 @@
         <ProjectReference Include="..\Application\ArrayApp.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Job\" />
+      <Folder Include="ServiceBus\" />
+    </ItemGroup>
+
 </Project>

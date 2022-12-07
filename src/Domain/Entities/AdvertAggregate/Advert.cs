@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Entities.CategoryAggregate;
 //using static System.Net.Mime.MediaTypeNames;
 
 namespace ArrayApp.Domain.Entities.AdvertAggregate;
@@ -40,9 +41,9 @@ public class Advert
     public Category Category { get; set; }
 }
 
-public class Category
-{
-}
+//public class Category
+//{
+//}
 public class Image
 {
 }

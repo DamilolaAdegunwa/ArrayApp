@@ -30,7 +30,7 @@ public class Notification
     public string Status { get; set; }
 
     // The notification's category (if it has one)
-    public Category Category { get; set; }
+    //public Category Category { get; set; }
 
     // The notification's tags (if it has any)
     public List<string> Tags { get; set; }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayApp.Domain.Entities.TopicAggregate.Handlers;
-public class TopicCreatedNotificationHandler
+namespace ArrayApp.Domain.Entities.CategoryAggregate.Handlers;
+public class CategoryRenamedNotificationHandler
 {
 }

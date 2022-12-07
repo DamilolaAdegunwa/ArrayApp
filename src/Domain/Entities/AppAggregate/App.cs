@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.CategoryAggregate;
 
 namespace ArrayApp.Domain.Entities.AppAggregate;
 public class App
