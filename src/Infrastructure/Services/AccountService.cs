@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
+using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Enums;
 
 namespace ArrayApp.Infrastructure.Services;
 public interface IAccountService

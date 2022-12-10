@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArrayApp.Domain.Entities.TagAggregate;
-public class Tag
+public class Tag : BaseAuditableEntity, IAggregateRoot
 {
     // The name of the tag.
     public string Name { get; set; }
@@ -18,10 +20,10 @@ public class Tag
     public DateTime LastUsed { get; set; }
 
     // The user who created the tag.
-    public User Creator { get; set; }
+    public ApplicationUser Creator { get; set; }
 
     // A list of users who have used the tag.
-    public List<User> Users { get; set; }
+    public List<ApplicationUser> Users { get; set; }
 
     // A description of the tag and its purpose.
     public string Description { get; set; }

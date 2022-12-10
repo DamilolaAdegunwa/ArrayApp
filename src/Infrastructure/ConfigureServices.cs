@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using ArrayApp.Domain.Entities;
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices

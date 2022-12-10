@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities.CommentAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence.Interceptors;
@@ -44,6 +46,13 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(builder);
+
+        //builder.Entity<Comment>()
+        //        .HasOne(c => c.Parent)
+        //        .WithOne(pc => pc.Parent)
+        //        .HasForeignKey<Comment>(pc => pc.Id)
+        //        .IsRequired()
+        //        .OnDelete(DeleteBehavior.NoAction);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -7,7 +7,7 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Application.Common.Models;
-
+using ArrayApp.Domain.Entities;
 namespace ArrayApp.WebUI.Controllers;
 //public class AccountController : Controller
 //{

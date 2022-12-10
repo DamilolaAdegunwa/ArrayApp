@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.FileAggregate;
+using ArrayApp.Domain.Entities.TagAggregate;
 
 namespace ArrayApp.Domain.Entities.GroupAggregate;
-public class Group
+public class Group : BaseAuditableEntity, IAggregateRoot
 {
     // The group's name
     public string Name { get; set; }
@@ -21,13 +24,13 @@ public class Group
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the group
-    public User Creator { get; set; }
+    public ApplicationUser Creator { get; set; }
 
     // The group's members
-    public List<User> Members { get; set; }
+    public List<ApplicationUser> Members { get; set; }
 
     // The group's picture (if it has one)
-    public Image Picture { get; set; }
+    public DataFile Picture { get; set; }
 
     // The group's privacy settings (e.g. "public" or "private")
     public string Privacy { get; set; }
@@ -36,5 +39,5 @@ public class Group
     public string Type { get; set; }
 
     // The group's tags (if it has any)
-    public List<string> Tags { get; set; }
+    public List<Tag> Tags { get; set; }
 }

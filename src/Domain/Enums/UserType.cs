@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayApp.Application.Common.Models;
+namespace ArrayApp.Domain.Enums;
 public enum UserType
 {
     Customer = 0,

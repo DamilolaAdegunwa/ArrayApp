@@ -1,5 +1,6 @@
 ﻿using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

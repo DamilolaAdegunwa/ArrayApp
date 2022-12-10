@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 
 namespace ArrayApp.Domain.Entities.SessionAggregate;
-public class Session
+public class Session : BaseAuditableEntity, IAggregateRoot
 {
     // The session's name
     public string Name { get; set; }
@@ -22,10 +23,10 @@ public class Session
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the session
-    public User Creator { get; set; }
+    public ApplicationUser Creator { get; set; }
 
     // The session's participants
-    public List<User> Participants { get; set; }
+    public List<ApplicationUser> Participants { get; set; }
 
     // The session's status (e.g. "active" or "inactive")
     public string Status { get; set; }

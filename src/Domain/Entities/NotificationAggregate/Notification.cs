@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.TagAggregate;
 
 namespace ArrayApp.Domain.Entities.NotificationAggregate;
-public class Notification
+public class Notification : BaseAuditableEntity, IAggregateRoot
 {
     // The notification's title
     public string Title { get; set; }
@@ -18,7 +20,7 @@ public class Notification
     public DateTime CreatedAt { get; set; }
 
     // The user who the notification is for
-    public User Recipient { get; set; }
+    public ApplicationUser Recipient { get; set; }
 
     // The notification's type (e.g. "alert" or "reminder")
     public string Type { get; set; }
@@ -33,5 +35,5 @@ public class Notification
     //public Category Category { get; set; }
 
     // The notification's tags (if it has any)
-    public List<string> Tags { get; set; }
+    public List<Tag> Tags { get; set; }
 }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 
 namespace ArrayApp.Domain.Entities.FileAggregate;
-public class File
+public class DataFile : BaseAuditableEntity, IAggregateRoot
 {
     // The file's name (including the file extension)
     public string Name { get; set; }

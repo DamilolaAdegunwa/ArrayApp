@@ -1,4 +1,5 @@
-﻿using ArrayApp.Infrastructure.Identity;
+﻿using ArrayApp.Domain.Entities;
+using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

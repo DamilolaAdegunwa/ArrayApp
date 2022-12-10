@@ -13,6 +13,7 @@ using Serilog;
 using System.Security.Claims;
 using Duende.IdentityServer;
 //using Swashbuckle.AspNetCore.Annotations;
+using ArrayApp.Domain.Entities;
 namespace ArrayApp.WebUI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = false)]

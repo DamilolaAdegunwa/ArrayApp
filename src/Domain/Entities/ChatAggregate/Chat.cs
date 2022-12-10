@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.FileAggregate;
 
 namespace ArrayApp.Domain.Entities.ChatAggregate;
-public class Chat
+public class Chat : BaseAuditableEntity, IAggregateRoot
 {
     // The chat's name
     public string Name { get; set; }
@@ -18,10 +20,10 @@ public class Chat
     public DateTime ModifiedAt { get; set; }
 
     // The users who are members of the chat
-    public List<User> Members { get; set; }
+    public List<ApplicationUser> Members { get; set; }
 
     // The messages that have been sent in the chat
-    public List<Message> Messages { get; set; }
+    public List<ChatMessage> Messages { get; set; }
 
     // The chat's type (e.g. "group" or "direct")
     public string Type { get; set; }
@@ -30,9 +32,9 @@ public class Chat
     public string Status { get; set; }
 
     // The chat's picture (if it has one)
-    public Image Picture { get; set; }
+    public DataFile Picture { get; set; }
 }
-public class Message
-{
-    public string Name { get; set; }
-}
+//public class ChatMessage
+//{
+//    public string Name { get; set; }
+//}

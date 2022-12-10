@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
+using ArrayApp.Domain.Entities.TagAggregate;
 
 namespace ArrayApp.Domain.Entities.CategoryAggregate;
-public class Category
+public class Category : BaseAuditableEntity, IAggregateRoot
 {
     // The Category's name
     public string Name { get; set; }
@@ -22,16 +24,16 @@ public class Category
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the Category
-    public User Creator { get; set; }
+    public ApplicationUser Creator { get; set; }
 
     // The Category's followers
-    public List<User> Followers { get; set; }
+    public List<ApplicationUser> Followers { get; set; }
 
     // The Category's posts
     public List<Idea> Posts { get; set; }
 
     // The Category's tags (if it has any)
-    public List<string> Tags { get; set; }
+    public List<Tag> Tags { get; set; }
 
     // The Category's category (if it has one)
     //public Category Category { get; set; }

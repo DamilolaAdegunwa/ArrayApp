@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.AdvertAggregate;
 using ArrayApp.Domain.Entities.CategoryAggregate;
+using ArrayApp.Domain.Entities.FileAggregate;
 
 namespace ArrayApp.Domain.Entities.AppAggregate;
-public class App
+public class App : BaseAuditableEntity, IAggregateRoot
 {
     // The app's name
     public string Name { get; set; }
@@ -22,7 +24,7 @@ public class App
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the app
-    public User Creator { get; set; }
+    public ApplicationUser Creator { get; set; }
 
     // The app's price
     public decimal Price { get; set; }
@@ -37,7 +39,7 @@ public class App
     public string Version { get; set; }
 
     // A list of screenshots associated with the app
-    public List<Image> Screenshots { get; set; }
+    public List<DataFile> Screenshots { get; set; }
 
     // The app's release notes
     public string ReleaseNotes { get; set; }

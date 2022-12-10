@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Application\ArrayApp.Application.csproj" />
+        <ProjectReference Include="..\Domain\ArrayApp.Domain.csproj" />
         <ProjectReference Include="..\Infrastructure\ArrayApp.Infrastructure.csproj" />
     </ItemGroup>
 
