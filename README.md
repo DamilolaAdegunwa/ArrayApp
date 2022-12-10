@@ -1,94 +1,343 @@
- <img align="left" width="116" height="116" src="https://raw.githubusercontent.com/jasontaylordev/CleanArchitecture/main/.github/icon.png" />
- 
- # Clean Architecture Solution Template
-[![Build](https://github.com/jasontaylordev/CleanArchitecture/actions/workflows/dotnet-build.yml/badge.svg)](https://github.com/jasontaylordev/CleanArchitecture/actions/workflows/dotnet-build.yml)
-[![CodeQL](https://github.com/jasontaylordev/CleanArchitecture/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jasontaylordev/CleanArchitecture/actions/workflows/codeql-analysis.yml)
-[![Nuget](https://img.shields.io/nuget/v/Clean.Architecture.Solution.Template?label=NuGet)](https://www.nuget.org/packages/Clean.Architecture.Solution.Template)
-[![Nuget](https://img.shields.io/nuget/dt/Clean.Architecture.Solution.Template?label=Downloads)](https://www.nuget.org/packages/Clean.Architecture.Solution.Template)
-[![Discord](https://img.shields.io/discord/893301913662148658?label=Discord)](https://discord.gg/p9YtBjfgGe)
-![Twitter Follow](https://img.shields.io/twitter/follow/jasontaylordev?label=Follow&style=social)
+Implement a login system for users. ✔️
 
+Design a user profile page.
 
-<br/>
+Add the ability for users to create and save ideas.
 
-This is a solution template for creating a Single Page App (SPA) with Angular and ASP.NET Core following the principles of Clean Architecture. Create a new project based on this template by clicking the above **Use this template** button or by installing and running the associated NuGet package (see Getting Started for full details). 
+Implement a search function to allow users to find ideas.
 
-## Learn about Clean Architecture
+Add the ability for users to comment on and rate ideas.
 
-[![Clean Architecture with ASP.NET Core 3.0 • Jason Taylor • GOTO 2019](https://img.youtube.com/vi/dK4Yb6-LxAk/0.jpg)](https://www.youtube.com/watch?v=dK4Yb6-LxAk)
+Implement a notification system to alert users when their ideas have been commented on or rated.
 
-## Technologies
+Add the ability for users to categorize their ideas.
 
-* [ASP.NET Core 7](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
-* [Entity Framework Core 7](https://docs.microsoft.com/en-us/ef/core/)
-* [Angular 14](https://angular.io/)
-* [MediatR](https://github.com/jbogard/MediatR)
-* [AutoMapper](https://automapper.org/)
-* [FluentValidation](https://fluentvalidation.net/)
-* [NUnit](https://nunit.org/), [FluentAssertions](https://fluentassertions.com/), [Moq](https://github.com/moq) & [Respawn](https://github.com/jbogard/Respawn)
+Implement a system for users to collaborate on ideas.
 
-## Getting Started
+Add the ability for users to share their ideas on social media.
 
-The easiest way to get started is to install the [NuGet package](https://www.nuget.org/packages/Clean.Architecture.Solution.Template) and run `dotnet new ca-sln`:
+Implement a system to track user activity and engagement on the app.
 
-1. Install the latest [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-2. Install the latest [Node.js LTS](https://nodejs.org/en/)
-3. Run `dotnet new install Clean.Architecture.Solution.Template` to install the project template
-4. Create a folder for your solution and cd into it (the template will use it as project name)
-5. Run `dotnet new ca-sln` to create a new project
-6. Navigate to `src/WebUI` and launch the project using `dotnet run`
+Implement a recommendation system to suggest ideas to users based on their interests.
 
-Check out my [blog post](https://jasontaylor.dev/clean-architecture-getting-started/) for more information.
+Add the ability for users to upload images and videos to their ideas.
 
-### Database Configuration
+Implement a system to monitor and moderate user-generated content.
 
-The template is configured to use an in-memory database by default. This ensures that all users will be able to run the solution without needing to set up additional infrastructure (e.g. SQL Server).
+Add the ability for users to create and join groups based on their interests.
 
-If you would like to use SQL Server, you will need to update **WebUI/appsettings.json** as follows:
+Implement a system to track user achievements and rewards.
 
-```json
-  "UseInMemoryDatabase": false,
-```
+Add the ability for users to set goals and track their progress.
 
-Verify that the **DefaultConnection** connection string within **appsettings.json** points to a valid SQL Server instance. 
+Implement a system for users to challenge each other to complete ideas.
 
-When you run the application the database will be automatically created (if necessary) and the latest migrations will be applied.
+Add the ability for users to search for other users and connect with them.
 
-### Database Migrations
+Implement a system for users to track their ideaapp usage and progress over time.
 
-To use `dotnet-ef` for your migrations first ensure that "UseInMemoryDatabase" is disabled, as described within previous section.
-Then, add the following flags to your command (values assume you are executing from repository root)
+Add the ability for users to customize their ideaapp experience by choosing different themes and layouts.
 
-* `--project src/Infrastructure` (optional if in this folder)
-* `--startup-project src/WebUI`
-* `--output-dir Persistence/Migrations`
+Add the ability for users to create and manage to-do lists.
 
-For example, to add a new migration from the root folder:
+Implement a system for users to set reminders and deadlines for their ideas.
 
- `dotnet ef migrations add "SampleMigration" --project src\Infrastructure --startup-project src\WebUI --output-dir Persistence\Migrations`
+Add the ability for users to create and share polls and surveys.
 
-## Overview
+Implement a system to track user feedback and suggestions.
 
-### Domain
+Add the ability for users to share and collaborate on mind maps and diagrams.
 
-This will contain all entities, enums, exceptions, interfaces, types and logic specific to the domain layer.
+Implement a system for users to track their progress on ideas and set benchmarks.
 
-### Application
+Add the ability for users to create and share calendars and schedules.
 
-This layer contains all application logic. It is dependent on the domain layer, but has no dependencies on any other layer or project. This layer defines interfaces that are implemented by outside layers. For example, if the application need to access a notification service, a new interface would be added to application and an implementation would be created within infrastructure.
+Implement a system for users to track their ideas and goals over time.
 
-### Infrastructure
+Add the ability for users to set privacy settings for their ideas.
 
-This layer contains classes for accessing external resources such as file systems, web services, smtp, and so on. These classes should be based on interfaces defined within the application layer.
+Implement a system for users to share and collaborate on documents and files.
 
-### WebUI
+Add the ability for users to create and share audio and video recordings.
 
-This layer is a single page application based on Angular 14 and ASP.NET Core 7. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only *Startup.cs* should reference Infrastructure.
+Implement a system for users to track their ideaapp usage and activity.
 
-## Support
+Add the ability for users to create and share quizzes and games.
 
-If you are having problems, please let us know by [raising a new issue](https://github.com/jasontaylordev/CleanArchitecture/issues/new/choose).
+Implement a system for users to receive notifications and alerts for important events.
 
-## License
+Add the ability for users to create and share presentations and slideshows.
 
-This project is licensed with the [MIT license](LICENSE).
+Implement a system for users to share and collaborate on projects and presentations.
+
+Add the ability for users to create and share notes and notes.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share polls and surveys.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share images and graphics.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share infographics and data visualizations.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share web pages and blogs.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share podcasts and audio recordings.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share videos and animations.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share ebooks and PDFs.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share mind maps and diagrams.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share interactive games and quizzes.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share forms and surveys.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share podcasts and audio recordings.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share reports and presentations.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share worksheets and spreadsheets.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share calendars and schedules.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share timelines and graphics.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share diagrams and flowcharts.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share mind maps and concept maps.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share graphs and charts.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share infographics and data visualizations.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share videos and animations.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share web pages and blogs.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share polls and surveys.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share quizzes and games.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share flashcards and study guides.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share puzzles and brainteasers.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share mazes and crosswords.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share riddles and jokes.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share puzzles and games.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share stories and poems.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share drawings and paintings.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share collages and scrapbooks.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share photo albums and galleries.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share recipes and meal plans.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share DIY projects and tutorials.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share crafts and projects.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share gardening and plant care guides.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share workout plans and exercises.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share travel guides and itineraries.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share reviews and ratings.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share gift ideas and lists.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share wish lists and recommendations.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share budget and finance tracking tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share event planning and organization tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share task and project management tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share shopping lists and grocery lists.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share checklists and to-do lists.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share note-taking and journaling tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share calendar and scheduling tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share recipe and meal planning tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share homework and study tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share fitness and wellness tracking tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+--
+Add the ability for users to create and share music and audio playback tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share photo and image editing tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share video and movie playback tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share book and ebook reading tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share weather and forecast tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share social media and communication tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share news and information tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share language and translation tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share gardening and plant care tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share DIY and home improvement tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share fashion and styling tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share health and wellness tracking tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share pet care and training tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share travel planning and organization tools.
+
+Implement a system for users to track their ideaapp usage and activity.
+
+Add the ability for users to create and share hobby and interest tracking tools.
+
+Implement a system for users to track their ideaapp usage and progress over time.
+
+Add the ability for users to create and share language learning and translation tools.
+
+Implement a system for users to track their ideaapp usage and activity.

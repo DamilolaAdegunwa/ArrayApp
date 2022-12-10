@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityModel;
 using Azure;
 using NSwag.Annotations;
+using Serilog;
 //using Swashbuckle.AspNetCore.Annotations;
 namespace ArrayApp.WebUI.Controllers;
 
@@ -42,6 +43,7 @@ public class TokenController : BaseController
     //    ]
     public async Task<IServiceResponse<TokenDTO>> Index([FromBody] LoginModel model)
     {//worked locally and online
+        Log.Information("trying to login user");
         return await HandleApiOperationAsync(async () => {
 
             var response = new ServiceResponse<TokenDTO>();
