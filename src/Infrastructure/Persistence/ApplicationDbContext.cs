@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence.Interceptors;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -35,6 +36,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<ApplicationRole> ApplicationRoles { get; set; } //=> Set<ApplicationRole>();
 
+    public DbSet<Idea> Ideas => Set<Idea>();
 
 
     protected override void OnModelCreating(ModelBuilder builder)

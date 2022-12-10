@@ -8,9 +8,16 @@ public class Result
         Errors = errors.ToArray();
     }
 
+    public Result()
+    {
+
+    }
+
     public bool Succeeded { get; set; }
 
     public string[] Errors { get; set; }
+
+    public object Data { get; set; }
 
     public static Result Success()
     {

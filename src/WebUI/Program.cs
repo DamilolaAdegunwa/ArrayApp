@@ -31,39 +31,57 @@ builder.Services.AddScoped<ITokenSvc, TokenService>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 #region jwt
+var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
+
 builder.Services.AddAuthentication(x => {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-            .AddJwtBearer(x => {
-                var jwtConfig = new JwtConfig();
+}).AddJwtBearer(x => 
+{
+    x.RequireHttpsMetadata= false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
+        ValidateIssuer= false,
+        ValidateAudience = false,
+    };
+});
 
-                builder.Configuration.Bind(Constants.Sections.AuthJwtBearer, jwtConfig);
+//builder.Services.AddAuthentication(x => {
+//    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//            .AddJwtBearer(x => {
+//                var jwtConfig = new JwtConfig();
 
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ClockSkew = TimeSpan.FromMinutes(3),
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.SecurityKey)),
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtConfig.Issuer,
-                    ValidateLifetime = true,
-                    ValidateAudience = false
-                };
-                x.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context => {
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        {
-                            context.Response.Headers.Add("Token-Expired", "true");
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-            })
-            ;
+//                builder.Configuration.Bind(Constants.Sections.AuthJwtBearer, jwtConfig);
+
+//                x.RequireHttpsMetadata = false;
+//                x.SaveToken = true;
+//                x.TokenValidationParameters = new TokenValidationParameters
+//                {
+//                    ClockSkew = TimeSpan.FromMinutes(3),
+//                    ValidateIssuerSigningKey = true,
+//                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.SecurityKey)),
+//                    ValidateIssuer = true,
+//                    ValidIssuer = jwtConfig.Issuer,
+//                    ValidateLifetime = true,
+//                    ValidateAudience = false
+//                };
+//                x.Events = new JwtBearerEvents
+//                {
+//                    OnAuthenticationFailed = context => {
+//                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+//                        {
+//                            context.Response.Headers.Add("Token-Expired", "true");
+//                        }
+//                        return Task.CompletedTask;
+//                    }
+//                };
+//            })
+//            ;
 #endregion
 
 var app = builder.Build();

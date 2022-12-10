@@ -1,4 +1,6 @@
 using System.Reflection;
+using ArrayApp.Application.Ideas.Commands;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 using AutoMapper;
 
 namespace ArrayApp.Application.Common.Mappings;
@@ -8,6 +10,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        CreateMap<Idea, CreateIdeaCommand>().ReverseMap();
     }
 
     private void ApplyMappingsFromAssembly(Assembly assembly)

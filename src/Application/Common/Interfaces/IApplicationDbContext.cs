@@ -1,4 +1,5 @@
 ﻿using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArrayApp.Application.Common.Interfaces;
@@ -10,4 +11,6 @@ public interface IApplicationDbContext
     DbSet<TodoItem> TodoItems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
+    DbSet<Idea> Ideas { get; }
 }

@@ -16,6 +16,7 @@ namespace ArrayApp.WebUI.Controllers;
 //        return View();
 //    }
 //}
+[Authorize]
 public class AccountController : BaseController
 {
     #region main account endpoints
@@ -53,7 +54,9 @@ public class AccountController : BaseController
 
             var response = new ServiceResponse<ApplicationUser>();
 
-            var profile = await _userManager.FindByNameAsync(User.FindFirst(JwtClaimTypes.Name)?.Value);
+            var name = User.FindFirst(JwtClaimTypes.Name)?.Value;
+
+            var profile = await _userManager.FindByNameAsync(name);
             response.Object = profile;
             return response;
         });

@@ -16,6 +16,7 @@ public interface ITokenSvc
     int TokenMaxMinute { get; }
     TokenDTO GenerateAccessTokenFromClaims(params Claim[] claims);
     ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+    TokenDTO GenerateAccessTokenFromClaimsV2(params Claim[] claims);
 }
 
 public class TokenService : ITokenSvc
@@ -47,6 +48,27 @@ public class TokenService : ITokenSvc
         return new TokenDTO
         {
             Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+            RefreshToken = GenerateRefreshToken(),
+            Expires = expires
+        };
+    }
+
+    public TokenDTO GenerateAccessTokenFromClaimsV2(params Claim[] claims)
+    {
+        var expires = DateTimeOffset.Now.AddSeconds(_jwtConfig.TokenDurationInSeconds);
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenKey = Encoding.ASCII.GetBytes(_jwtConfig.SecurityKey);
+        var tokenDescriptor = new SecurityTokenDescriptor 
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddSeconds(_jwtConfig.TokenDurationInSeconds),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
+        };
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenStr = tokenHandler.WriteToken(token);
+        return new TokenDTO
+        {
+            Token = tokenStr,
             RefreshToken = GenerateRefreshToken(),
             Expires = expires
         };

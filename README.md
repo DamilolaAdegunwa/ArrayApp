@@ -1,6 +1,6 @@
 Implement a login system for users. ✔️
 
-Design a user profile page.
+Design a user profile page.✔️
 
 Add the ability for users to create and save ideas.
 

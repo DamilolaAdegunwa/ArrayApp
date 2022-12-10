@@ -10,6 +10,8 @@ using IdentityModel;
 using Azure;
 using NSwag.Annotations;
 using Serilog;
+using System.Security.Claims;
+using Duende.IdentityServer;
 //using Swashbuckle.AspNetCore.Annotations;
 namespace ArrayApp.WebUI.Controllers;
 
@@ -19,17 +21,20 @@ public class TokenController : BaseController
     private readonly ITokenSvc _tokenSvc;
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     //private readonly ILogger _logger;
     public TokenController(
         ITokenSvc tokenSvc
         , ApplicationDbContext applicationDbContext
         , UserManager<ApplicationUser> userManager
+        , SignInManager<ApplicationUser> signInManager
         //, ILogger logger
         ) //: base( logger )
     {
         _tokenSvc = tokenSvc;
         _applicationDbContext = applicationDbContext;
         _userManager = userManager;
+        _signInManager = signInManager;
         //_logger = logger;
     }
 
@@ -77,6 +82,12 @@ public class TokenController : BaseController
                 await _userManager.UpdateAsync(user);
 
                 response.Object = token;
+
+                //HttpContext.SignInAsync(new ClaimsPrincipal( new ClaimsIdentity(userClaims, "array claim")));
+                //await HttpContext.SignInAsync(new IdentityServerUser("dammy"));
+                //await _signInManager.SignInAsync(user,false);
+
+                //var test = User.Identity.Name;
             }
 
             else
@@ -113,7 +124,7 @@ public class TokenController : BaseController
 
                 var userClaims = user.UserToClaims();
 
-                var token = _tokenSvc.GenerateAccessTokenFromClaims(userClaims.ToArray());
+                var token = _tokenSvc.GenerateAccessTokenFromClaimsV2(userClaims.ToArray());
 
                 user.RefreshToken = token.RefreshToken;
                 await _userManager.UpdateAsync(user);

@@ -1,10 +1,14 @@
-﻿using ArrayApp.Application.Common.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using ArrayApp.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace ArrayApp.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+
+    [Key]
+    public string Id { get; set; }
     public string? RefreshToken { get; set; }
     public string? AccountConfirmationCode { get; set; }
     public UserType UserType { get; set; }
