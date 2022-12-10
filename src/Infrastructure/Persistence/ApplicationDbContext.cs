@@ -2,8 +2,18 @@
 using System.Reflection.Emit;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities.AdvertAggregate;
+using ArrayApp.Domain.Entities.AppAggregate;
+using ArrayApp.Domain.Entities.CategoryAggregate;
+using ArrayApp.Domain.Entities.ChatAggregate;
 using ArrayApp.Domain.Entities.CommentAggregate;
+using ArrayApp.Domain.Entities.FileAggregate;
+using ArrayApp.Domain.Entities.GroupAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
+using ArrayApp.Domain.Entities.NotificationAggregate;
+using ArrayApp.Domain.Entities.SessionAggregate;
+using ArrayApp.Domain.Entities.SubscriptionAggregate;
+using ArrayApp.Domain.Entities.TagAggregate;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence.Interceptors;
 using Duende.IdentityServer.EntityFramework.Options;
@@ -40,6 +50,19 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<Idea> Ideas => Set<Idea>();
 
+    public DbSet<Advert> Adverts => Set<Advert>();
+    public DbSet<App> Apps => Set<App>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Chat> Chats => Set<Chat>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<DataFile> DataFiles => Set<DataFile>();
+    public DbSet<UserGroup> UserGroups => Set<UserGroup>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<Session> Sessions => Set<Session>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
+    public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Product> Products => Set<Product>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -20,7 +20,7 @@ public class Tag : BaseAuditableEntity, IAggregateRoot
     public DateTime LastUsed { get; set; }
 
     // The user who created the tag.
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // A list of users who have used the tag.
     public List<ApplicationUser> Users { get; set; }

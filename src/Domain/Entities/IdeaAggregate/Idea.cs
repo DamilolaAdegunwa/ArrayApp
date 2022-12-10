@@ -39,7 +39,7 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     public IEnumerable<Tag> Tags => _tags.AsReadOnly();
 
     // The idea's comments (if it has any)
-    private List<Comment> _comments { get; set; }
+    private List<Comment> _comments { get; set; } = new List<Comment>();
     public IEnumerable<Comment> Comments => _comments.AsReadOnly();
 
     public void AddTag(Tag newTag)

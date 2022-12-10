@@ -24,7 +24,7 @@ public class App : BaseAuditableEntity, IAggregateRoot
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the app
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The app's price
     public decimal Price { get; set; }

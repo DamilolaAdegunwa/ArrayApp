@@ -17,7 +17,7 @@ public class Comment : BaseAuditableEntity, IAggregateRoot
     public DateTime CreatedAt { get; set; }
 
     // The user who created the comment
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The comment's rating (if it has one)
     public int Rating { get; set; }

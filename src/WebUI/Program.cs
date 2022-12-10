@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
+using AutoMapper;
+using ArrayApp.Application.Common.Mappings;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.FeatureManagement;
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");  //Configuration.GetConnectionString("DefaultConnection");
@@ -83,6 +86,18 @@ builder.Services.AddAuthentication(x => {
 //            })
 //            ;
 #endregion
+
+// ===== Auto Mapper Configurations ====
+//var mappingConfig = new MapperConfiguration(mc =>
+//{
+//    mc.AddProfile(new MappingProfile());
+//});
+
+//IMapper mapper = mappingConfig.CreateMapper();
+//builder.Services.AddSingleton(mapper);
+//builder.Services.AddAutoMapper(typeof(Program));
+//builder.Services.AddFeatureManagement();
+//builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

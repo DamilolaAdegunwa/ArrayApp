@@ -9,7 +9,7 @@ using ArrayApp.Domain.Entities.FileAggregate;
 using ArrayApp.Domain.Entities.TagAggregate;
 
 namespace ArrayApp.Domain.Entities.GroupAggregate;
-public class Group : BaseAuditableEntity, IAggregateRoot
+public class UserGroup : BaseAuditableEntity, IAggregateRoot
 {
     // The group's name
     public string Name { get; set; }
@@ -24,7 +24,7 @@ public class Group : BaseAuditableEntity, IAggregateRoot
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the group
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The group's members
     public List<ApplicationUser> Members { get; set; }

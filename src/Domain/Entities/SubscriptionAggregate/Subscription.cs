@@ -35,7 +35,7 @@ public enum PaymentMethod
     PayPal
 }
 
-public class Product
-{
-    public int Id { get; set; }
-}
+//public class Product
+//{
+//    public int Id { get; set; }
+//}

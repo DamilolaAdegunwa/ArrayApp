@@ -23,7 +23,7 @@ public class Session : BaseAuditableEntity, IAggregateRoot
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the session
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The session's participants
     public List<ApplicationUser> Participants { get; set; }

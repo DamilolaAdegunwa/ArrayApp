@@ -25,7 +25,7 @@ public class Advert : BaseAuditableEntity, IAggregateRoot
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the advert
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The advert's price
     public decimal Price { get; set; }

@@ -24,7 +24,7 @@ public class Category : BaseAuditableEntity, IAggregateRoot
     public DateTime ModifiedAt { get; set; }
 
     // The user who created the Category
-    public ApplicationUser Creator { get; set; }
+    //public ApplicationUser Creator { get; set; }
 
     // The Category's followers
     public List<ApplicationUser> Followers { get; set; }
