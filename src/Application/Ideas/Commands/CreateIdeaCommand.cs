@@ -50,10 +50,7 @@ public class CreateIdeaCommandHandler : IRequestHandler<CreateIdeaCommand,int> /
                 Content = request.Content,
                 Status = request.Status,
                 Rating = request.Rating,
-                Category = new Category
-                {
-                    Id = request.CategoryId
-                }
+                CategoryId = request.CategoryId,
             };
             if (idea == null)
             {

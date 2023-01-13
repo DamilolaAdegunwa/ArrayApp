@@ -63,6 +63,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Test> Tests => Set<Test>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -33,6 +33,7 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
 
     // The idea's category (if it has one)
     public Category Category { get; set; }
+    public int CategoryId { get; set; }
 
     // The idea's tags (if it has any)
     private List<Tag> _tags { get; set; } = new List<Tag>();
