@@ -22,6 +22,8 @@ public interface IAccountService
 {
     Task<bool> AddUser(LoginModel model, string username);
     Task SignUp(LoginModel model);
+
+    Task<bool> SendResetPasswordOTP(string username, string otp);
 }
 public class AccountService : IAccountService
 {
@@ -216,5 +218,34 @@ public class AccountService : IAccountService
             throw new Exception(errMsg);
         }
         #endregion
+    }
+
+    public async Task<bool> SendResetPasswordOTP(string username, string otp)
+    {
+        //you'd need to email the account user the otp...
+        try
+        {
+            //first get the file
+            var filePath = Path.Combine(_hostingEnvironment.ContentRootPath, Constants.Url.ResetPasswordOTP);
+            if (File.Exists(filePath))
+            {
+                var fileString = File.ReadAllText(filePath);
+                if (!string.IsNullOrWhiteSpace(fileString))
+                {
+                    //var admin = "";
+                    //if (model.UserType == UserType.Administrator) { admin = "(Administrator)"; }
+                    fileString = fileString.Replace("{{UserName}}", $"{username}");
+                    fileString = fileString.Replace("{{OTP}}", $"{otp}");
+
+                    _svcHelper.SendEMail(username, fileString, Constants.Url.ResetPasswordSubject);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"{ex.Message} :: {MethodBase.GetCurrentMethod().Name} :: {ex.StackTrace} ");
+            return false;
+        }
+        return true;
     }
 }

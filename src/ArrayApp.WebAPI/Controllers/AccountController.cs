@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Domain.Entities;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+
 namespace ArrayApp.WebAPI.Controllers;
 //public class AccountController : Controller
 //{
@@ -78,7 +81,7 @@ public class AccountController : BaseController
 
     [HttpPost]
     [Route("AddUser")]
-    public async Task<ServiceResponse<bool>> AddUser(LoginModel model)
+    public async Task<IServiceResponse<bool>> AddUser(LoginModel model)
     {
         return await HandleApiOperationAsync(async () => {
             var response = new ServiceResponse<bool>();
@@ -87,4 +90,264 @@ public class AccountController : BaseController
             return response;
         });
     }
+
+    [HttpGet]
+    [Route("GetClaims")]
+    public async Task<IServiceResponse<ClaimsPrincipal>> GetIdentity()
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<ClaimsPrincipal>();
+            response.Object = User;
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetAllUsers")]
+    public async Task<IServiceResponse<List<ApplicationUser>>> GetAllUsers()
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<List<ApplicationUser>>();
+            var users = await _userManager.Users.ToListAsync();
+            response.Object = users;
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetUserById/{userId}")]
+    public async Task<ServiceResponse<ApplicationUser>> GetUserById(string userId)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<ApplicationUser>();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            response.Object = user;
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetUserByEmail/{email}")]
+    public async Task<ServiceResponse<ApplicationUser>> GetUserByEmail(string email)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<ApplicationUser>();
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            response.Object = user;
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetUserByUsername/{username}")]
+    public async Task<IServiceResponse<ApplicationUser>> GetUserByUsername(string username)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<ApplicationUser>();
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            response.Object = user;
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetAllRoles")]
+    public async Task<IServiceResponse<List<ApplicationRole>>> GetAllRoles()
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<List<ApplicationRole>>();
+            var roles = _roleManager.Roles.ToList();//.Select(role => role.Name).ToList();
+
+            if (roles == null)
+            {
+                response.ShortDescription = "roles not found";
+                return response;
+            }
+
+            response.Object = roles;
+            return response;
+        });
+    }
+
+    [HttpPost]
+    [Route("ResetRoles")]
+    public async Task<ServiceResponse<bool>> ResetRoles(ResetRolesModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var existingRoles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, existingRoles);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to reset roles for the user";
+                return response;
+            }
+
+            var rolesToAdd = model.RoleNames.Distinct();
+            result = await _userManager.AddToRolesAsync(user, rolesToAdd);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to assign new roles to the user";
+                return response;
+            }
+
+            response.Object = true;
+            return response;
+        });
+    }
+    [HttpPost]
+    [Route("ResetPassword")]
+    public async Task<ServiceResponse<bool>> ResetPassword(ResetPasswordModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to reset password for the user";
+                return response;
+            }
+
+            response.Object = true;
+            return response;
+        });
+    }
+    [HttpPost]
+    [Route("ChangePassword")]
+    public async Task<ServiceResponse<bool>> ChangePassword(ChangePasswordModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to change password for the user";
+                return response;
+            }
+
+            response.Object = true;
+            return response;
+        });
+    }
+    [HttpPost]
+    [Route("SendResetOTP")]
+    public async Task<ServiceResponse<bool>> SendResetOTP(SendResetOTPModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // TODO: Send reset OTP (e.g., via email or SMS)
+            var resp = await _accountService.SendResetPasswordOTP(model.Email, resetToken);
+            response.Object = true;
+            return response;
+        });
+    }
+    [HttpPost]
+    [Route("AddRolesToUser")]
+    public async Task<ServiceResponse<bool>> AddRolesToUser(AddRolesToUserModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var rolesToAdd = model.RoleNames.Distinct();
+            var result = await _userManager.AddToRolesAsync(user, rolesToAdd);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to add roles to the user";
+                return response;
+            }
+
+            response.Object = true;
+            return response;
+        });
+    }
+    [HttpPost]
+    [Route("RemoveRolesFromUser")]
+    public async Task<ServiceResponse<bool>> RemoveRolesFromUser(RemoveRolesFromUserModel model)
+    {
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<bool>();
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                response.ShortDescription = "User not found";
+                return response;
+            }
+
+            var rolesToRemove = model.RoleNames.Distinct();
+            var result = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            if (!result.Succeeded)
+            {
+                response.ShortDescription = "Failed to remove roles from the user";
+                return response;
+            }
+
+            response.Object = true;
+            return response;
+        });
+    }
+
 }

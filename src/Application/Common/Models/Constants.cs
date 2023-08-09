@@ -14,5 +14,7 @@ public class Constants
     public static class Url
     {
         public const string WelcomeEmail = "wwwroot/messaging/emailtemplates/welcome-email.html";
+        public const string ResetPasswordOTP = "wwwroot/messaging/emailtemplates/reset-password-email.html";
+        public const string ResetPasswordSubject = "Array App: Reset Your Password!";
     }
 }
