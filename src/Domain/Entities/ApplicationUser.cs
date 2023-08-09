@@ -6,8 +6,8 @@ namespace ArrayApp.Domain.Entities;
 public class ApplicationUser : IdentityUser
 {
 
-    [Key]
-    public string Id { get; set; }
+    //[Key]
+    //public string Id { get; set; }
     public string? RefreshToken { get; set; }
     public string? AccountConfirmationCode { get; set; }
     public UserType UserType { get; set; }
