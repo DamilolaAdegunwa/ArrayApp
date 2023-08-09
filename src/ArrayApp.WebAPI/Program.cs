@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using MABSwagger = Microsoft.AspNetCore.Builder.SwaggerBuilderExtensions;
 using System.Reflection.Metadata;
 using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Infrastructure.Services.Interfaces;
 
 namespace ArrayApp.WebAPI;
 
@@ -41,7 +42,7 @@ public class Program
         builder.Services.AddScoped<ITokenSvc, TokenService>();
         builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
         builder.Services.AddWebAPIServices();
-
+        builder.Services.AddScoped<IIdeaService, IdeaService>();
         #region jwt
         var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
 
