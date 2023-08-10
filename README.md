@@ -1,6 +1,6 @@
 Implement a login system for users.✔️
-Design a user profile page.
 Add the ability for users to create and save ideas.
+Design a user profile page.
 Implement a search function to allow users to find ideas.
 Add the ability for users to comment on and rate ideas.
 Implement a notification system to alert users when their ideas have been commented on or rated.
@@ -172,7 +172,28 @@ Add the ability for users to create and share language learning and translation 
 Implement a system for users to track their ideaapp usage and activity.
 
 
+Create a migration using EF Core
+--------------------------------
+Add-Migration MyDemoMigration
+dotnet ef migrations add MyDemoMigration
 
+
+Apply the migration using EF Core
+---------------------------------
+Update-Database
+dotnet ef database update
+
+
+Remove a migration using EF Core
+--------------------------------
+Remove-Migration
+dotnet ef migrations remove
+
+
+Revert a migration using EF Core
+--------------------------------
+Update-database MyInitialMigration
+dotnet ef database update MyInitialMigration
 
 
 servers

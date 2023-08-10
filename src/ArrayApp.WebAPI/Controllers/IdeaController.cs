@@ -854,7 +854,6 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-
     #region sample (commented!)
     //[HttpPost]
     //[ProducesResponseType(typeof(Result), (int)HttpStatusCode.OK)]

@@ -5,19 +5,48 @@ using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Domain.Entities.IdeaAggregate;
+using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ArrayApp.Infrastructure.Services;
 public class IdeaService : IIdeaService
 {
+    private readonly ILogger<IdeaService> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+    public IdeaService(ILogger<IdeaService> logger, IUnitOfWork unitOfWork)
+    {
+        _logger = logger;
+        _unitOfWork = unitOfWork;
+    }
     public Task<CommentResponse> CommentOnIdea(CommentRequest request)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IdeaResponse> CreateIdea(CreateIdeaRequest request)
+    public async Task<IdeaResponse> CreateIdea(CreateIdeaRequest request)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation($"now within the {nameof(CreateIdea)} method.");
+        try
+        {
+            var entity = new Idea { 
+                Content = request.Content,
+                CreatorUserId = request.AuthorId,
+                CreationTime = DateTime.Now,
+            };
+            var resp = await _unitOfWork.IdeaBaseRepository.AddAsync(entity);
+            var response = new IdeaResponse { 
+                Content = resp.Content,
+                Id = resp.Id,
+                AuthorId = request.AuthorId,
+            };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error occured while trying to create Idea");
+            return null;
+        }
     }
 
     public Task<string> DeleteComment(string ideaId)

@@ -17,13 +17,13 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     }
 
     // The idea's title (topic or theme was also a name I considered!)
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     // The idea's description
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     // The idea's content
-    public string Content { get; set; }
+    public string? Content { get; set; }
 
     // The idea's status (e.g. "pending" or "approved")
     public IdeaStatus Status { get; set; }
@@ -42,6 +42,10 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     // The idea's comments (if it has any)
     private List<Comment> _comments { get; set; } = new List<Comment>();
     public IEnumerable<Comment> Comments => _comments.AsReadOnly();
+
+    //the author
+    //public string AuthorId { get; set; }
+    //public ApplicationUser Author { get; set; }
 
     public void AddTag(Tag newTag)
     {

@@ -42,7 +42,20 @@ public class Program
         builder.Services.AddScoped<ITokenSvc, TokenService>();
         builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
         builder.Services.AddWebAPIServices();
+        builder.Services.AddScoped<IAdvertService, AdvertService>();
+        builder.Services.AddScoped<IAppService, AppService>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<IChatService, ChatService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IFileService, FileService>();
+        builder.Services.AddScoped<IUserGroupService, UserGroupService>();
         builder.Services.AddScoped<IIdeaService, IdeaService>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddScoped<ISessionService, SessionService>();
+        builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+        builder.Services.AddScoped<ITagService, TagService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        
         #region jwt
         var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
 
