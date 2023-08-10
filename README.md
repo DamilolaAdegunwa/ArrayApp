@@ -188,17 +188,17 @@ Sure! Here's an exhaustive list of controllers you might create for building a T
 
 1. `HomeController`: Responsible for handling the main home feed and user timelines.
 2. `UserController`: Handles user profiles, following/unfollowing users, and user-related actions.
-3. `TweetController`: Manages creating, deleting, and interacting with tweets.
-4. `CommentController`: Handles commenting on tweets and interacting with comments.
-5. `LikeController`: Manages liking and unliking tweets.
-6. `RetweetController`: Handles retweeting and unretweeting tweets.
+3. `TweetController`: Manages creating, deleting, and interacting with ideas.
+4. `CommentController`: Handles commenting on ideas and interacting with comments.
+5. `LikeController`: Manages liking and unliking ideas.
+6. `ReideaController`: Handles reideaing and unreideaing ideas.
 7. `NotificationController`: Manages user notifications, such as mentions and likes.
-8. `HashtagController`: Handles searching for and displaying tweets with specific hashtags.
-9. `ExploreController`: Displays trending topics, suggested users, and popular tweets.
+8. `HashtagController`: Handles searching for and displaying ideas with specific hashtags.
+9. `ExploreController`: Displays trending topics, suggested users, and popular ideas.
 10. `MessageController`: Manages direct messaging and conversations between users.
-11. `SearchController`: Handles searching for users, tweets, hashtags, etc.
+11. `SearchController`: Handles searching for users, ideas, hashtags, etc.
 12. `SettingsController`: Manages user account settings, privacy, and preferences.
-13. `ReportController`: Handles reporting tweets, users, or other content.
+13. `ReportController`: Handles reporting ideas, users, or other content.
 14. `BlockController`: Manages blocking and unblocking users.
 15. `FollowRequestController`: Handles user follow requests and approvals.
 16. `ListController`: Manages user-created lists of other users.
@@ -210,30 +210,30 @@ Sure! Here's an exhaustive list of controllers you might create for building a T
 HomeController Endpoints (Rough sketch)
 ------------------------
 
-1. `GET /idea/feed`: Get the main idea feed with tweets from followed users.
-2. `GET /idea/timeline/{username}`: Get the user's timeline with their tweets.
+1. `GET /idea/feed`: Get the main idea feed with ideas from followed users.
+2. `GET /idea/timeline/{username}`: Get the user's timeline with their ideas.
 3. `GET /idea/explore`: Get trending topics and suggested users.
-4. `GET /idea/search`: Search for tweets, users, hashtags, etc.
+4. `GET /idea/search`: Search for ideas, users, hashtags, etc.
 5. `GET /idea/notifications`: Get user notifications (mentions, likes, etc.).
 6. `GET /idea/messages`: Get direct messages and conversations.
 7. `GET /idea/profile/{username}`: Get user profile information.
-8. `POST /idea/tweet`: Create a new tweet.
-9. `POST /idea/comment`: Comment on a tweet.
-10. `POST /idea/like/{tweetId}`: Like a tweet.
-11. `POST /idea/unlike/{tweetId}`: Unlike a tweet.
-12. `POST /idea/retweet/{tweetId}`: Retweet a tweet.
-13. `POST /idea/unretweet/{tweetId}`: Unretweet a tweet.
+8. `POST /idea`: Create a new idea.
+9. `POST /idea/comment`: Comment on a idea.
+10. `POST /idea/like/{ideaId}`: Like a idea.
+11. `POST /idea/unlike/{ideaId}`: Unlike a idea.
+12. `POST /idea/reidea/{ideaId}`: Reidea a idea.
+13. `POST /idea/unreidea/{ideaId}`: Unreidea a idea.
 14. `POST /idea/follow/{username}`: Follow a user.
 15. `POST /idea/unfollow/{username}`: Unfollow a user.
 16. `POST /idea/message`: Send a direct message.
 17. `PUT /idea/profile/update`: Update user profile information.
-18. `DELETE /idea/tweet/{tweetId}`: Delete a tweet.
+18. `DELETE /idea/idea/{ideaId}`: Delete a idea.
 19. `DELETE /idea/comment/{commentId}`: Delete a comment.
 20. `DELETE /idea/message/{messageId}`: Delete a direct message.
 21. `GET /idea/settings`: Get user account settings.
 22. `PUT /idea/settings/update`: Update user account settings.
 23. `GET /idea/lists`: Get user-created lists.
-24. `GET /idea/lists/{listId}`: Get tweets from a specific user list.
+24. `GET /idea/lists/{listId}`: Get ideas from a specific user list.
 25. `POST /idea/lists/create`: Create a new user list.
 26. `PUT /idea/lists/{listId}/update`: Update a user list.
 27. `DELETE /idea/lists/{listId}/delete`: Delete a user list.

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using ArrayApp.Infrastructure.Services.Interfaces;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using Duende.IdentityServer.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ArrayApp.WebAPI.Controllers;
 
@@ -117,7 +118,7 @@ public class IdeaController : ApiControllerBase
     {
         try
         {
-            // Call the service to search for tweets, users, hashtags, etc.
+            // Call the service to search for ideas, users, hashtags, etc.
             var result = await _ideaService.Search(query);
 
             return Ok(new ApiResponse<SearchModel>
@@ -225,26 +226,26 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpPost("tweet")]
-    [ProducesResponseType(typeof(ApiResponse<TweetResponse>), (int)HttpStatusCode.OK)]
+    [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<IdeaResponse>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateTweet([FromBody] CreateTweetRequest request)
+    public async Task<IActionResult> CreateIdea([FromBody] CreateIdeaRequest request)
     {
         try
         {
-            // Call the service to create a new tweet
-            var result = await _ideaService.CreateTweet(request);
+            // Call the service to create a new idea
+            var result = await _ideaService.CreateIdea(request);
 
-            return Ok(new ApiResponse<TweetResponse>
+            return Ok(new ApiResponse<IdeaResponse>
             {
                 Code = SystemCodes.Successful,
                 Data = result,
-                Description = "Tweet created successfully",
+                Description = "Idea created successfully",
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while creating a tweet");
+            _logger.LogError(ex, "Error while creating a Idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -256,12 +257,12 @@ public class IdeaController : ApiControllerBase
     [HttpPost("comment")]
     [ProducesResponseType(typeof(ApiResponse<CommentResponse>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CommentOnTweet([FromBody] CommentRequest request)
+    public async Task<IActionResult> CommentOnIdea([FromBody] CommentRequest request)
     {
         try
         {
-            // Call the service to add a comment to a tweet
-            var result = await _ideaService.CommentOnTweet(request);
+            // Call the service to add a comment to an idea
+            var result = await _ideaService.CommentOnIdea(request);
 
             return Ok(new ApiResponse<CommentResponse>
             {
@@ -282,26 +283,26 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpPost("like/{tweetId}")]
+    [HttpPost("like/{ideaId}")]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> LikeTweet(string tweetId)
+    public async Task<IActionResult> LikeIdea(string ideaId)
     {
         try
         {
-            // Call the service to like a tweet
-            await _ideaService.LikeTweet(tweetId);
+            // Call the service to like a idea
+            await _ideaService.LikeIdea(ideaId);
 
             return Ok(new ApiResponse<string>
             {
                 Code = SystemCodes.Successful,
-                Data = "Tweet liked successfully",
+                Data = "Idea liked successfully",
                 Description = string.Empty,
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while liking a tweet");
+            _logger.LogError(ex, "Error while liking a Idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -310,26 +311,26 @@ public class IdeaController : ApiControllerBase
             });
         }
     }
-    [HttpPost("unlike/{tweetId}")]
+    [HttpPost("unlike/{ideaId}")]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> UnlikeTweet(string tweetId)
+    public async Task<IActionResult> UnlikeIdea(string ideaId)
     {
         try
         {
-            // Call the service to unlike a tweet
-            await _ideaService.UnlikeTweet(tweetId);
+            // Call the service to unlike a idea
+            await _ideaService.UnlikeIdea(ideaId);
 
             return Ok(new ApiResponse<string>
             {
                 Code = SystemCodes.Successful,
-                Data = "Tweet unliked successfully",
+                Data = "Idea unliked successfully",
                 Description = string.Empty,
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while unliking a tweet");
+            _logger.LogError(ex, "Error while unliking a idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -339,26 +340,26 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpPost("retweet/{tweetId}")]
-    [ProducesResponseType(typeof(ApiResponse<RetweetResponse>), (int)HttpStatusCode.OK)]
+    [HttpPost("share-idea/{ideaId}")]
+    [ProducesResponseType(typeof(ApiResponse<ShareIdeaResponse>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Retweet(string tweetId)
+    public async Task<IActionResult> ShareIdea(string ideaId)
     {
         try
         {
-            // Call the service to retweet a tweet
-            var result = await _ideaService.Retweet(tweetId);
+            // Call the service to reidea a idea
+            var result = await _ideaService.ShareIdea(ideaId);
 
-            return Ok(new ApiResponse<RetweetResponse>
+            return Ok(new ApiResponse<ShareIdeaResponse>
             {
                 Code = SystemCodes.Successful,
                 Data = result,
-                Description = "Tweet retweeted successfully",
+                Description = "Idea shared successfully",
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while retweeting a tweet");
+            _logger.LogError(ex, "Error while sharing an idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -367,26 +368,26 @@ public class IdeaController : ApiControllerBase
             });
         }
     }
-    [HttpPost("unretweet/{tweetId}")]
+    [HttpPost("unshare-idea/{ideaId}")]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Unretweet(string tweetId)
+    public async Task<IActionResult> UnshareIdea(string ideaId)
     {
         try
         {
-            // Call the service to unretweet a tweet
-            await _ideaService.Unretweet(tweetId);
+            // Call the service to unshare idea
+            await _ideaService.UnshareIdea(ideaId);
 
             return Ok(new ApiResponse<string>
             {
                 Code = SystemCodes.Successful,
-                Data = "Tweet unretweeted successfully",
+                Data = "Idea unreideaed successfully",
                 Description = string.Empty,
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while unretweeting a tweet");
+            _logger.LogError(ex, "Error while unreideaing a idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -510,26 +511,26 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpDelete("tweet/{tweetId}")]
+    [HttpDelete("idea/{ideaId}")]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> DeleteTweet(string tweetId)
+    public async Task<IActionResult> DeleteIdea(string ideaId)
     {
         try
         {
-            // Call the service to delete a tweet
-            await _ideaService.DeleteTweet(tweetId);
+            // Call the service to delete a idea
+            await _ideaService.DeleteIdea(ideaId);
 
             return Ok(new ApiResponse<string>
             {
                 Code = SystemCodes.Successful,
-                Data = "Tweet deleted successfully",
+                Data = "Idea deleted successfully",
                 Description = string.Empty,
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while deleting a tweet");
+            _logger.LogError(ex, "Error while deleting a idea");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -652,17 +653,17 @@ public class IdeaController : ApiControllerBase
             });
         }
     }
-    [HttpGet("lists")]
-    [ProducesResponseType(typeof(ApiResponse<List<UserList>>), (int)HttpStatusCode.OK)]
+    [HttpGet("list")]
+    [ProducesResponseType(typeof(ApiResponse<List<Idea>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> GetUserCreatedLists()
+    public async Task<IActionResult> GetAllIdeas()
     {
         try
         {
-            // Call the service to get user-created lists
-            var result = await _ideaService.GetUserCreatedLists();
+            // Call the service to get all ideas
+            var result = await _ideaService.GetAllIdeas();
 
-            return Ok(new ApiResponse<List<UserList>>
+            return Ok(new ApiResponse<List<Idea>>
             {
                 Code = SystemCodes.Successful,
                 Data = result,
@@ -681,26 +682,26 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpGet("lists/{listId}")]
-    [ProducesResponseType(typeof(ApiResponse<List<Tweet>>), (int)HttpStatusCode.OK)]
+    [HttpGet("lists/{userId}")]
+    [ProducesResponseType(typeof(ApiResponse<List<Idea>>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> GetTweetsFromUserList(string listId)
+    public async Task<IActionResult> GetIdeasFromUser(string userId)
     {
         try
         {
-            // Call the service to get tweets from a specific user list
-            var result = await _ideaService.GetTweetsFromUserList(listId);
+            // Call the service to get ideas from a specific user list
+            var result = await _ideaService.GetIdeasFromUser(userId);
 
-            return Ok(new ApiResponse<List<Tweet>>
+            return Ok(new ApiResponse<List<Idea>>
             {
                 Code = SystemCodes.Successful,
                 Data = result,
-                Description = "Tweets from user list retrieved successfully",
+                Description = "Ideas from user list retrieved successfully",
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while retrieving tweets from user list");
+            _logger.LogError(ex, "Error while retrieving ideas from user list");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
@@ -709,21 +710,21 @@ public class IdeaController : ApiControllerBase
             });
         }
     }
-    [HttpPost("lists/create")]
-    [ProducesResponseType(typeof(ApiResponse<UserList>), (int)HttpStatusCode.OK)]
+    [HttpPost("user-created-lists")]
+    [ProducesResponseType(typeof(ApiResponse<UserCreatedListResponse>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateUserList([FromBody] CreateUserListRequest request)
-    {
+    public async Task<IActionResult> CreateUserList([FromBody] UserCreatedListRequest request)
+    {//UserCreatedList
         try
         {
             // Call the service to create a new user list
-            var result = await _ideaService.CreateUserList(request);
+            var result = await _ideaService.GetUserCreatedLists(request);
 
-            return Ok(new ApiResponse<UserList>
+            return Ok(new ApiResponse<UserCreatedListResponse>
             {
                 Code = SystemCodes.Successful,
                 Data = result,
-                Description = "User list created successfully",
+                Description = "User created list successfully",
             });
         }
         catch (Exception ex)
@@ -738,15 +739,15 @@ public class IdeaController : ApiControllerBase
         }
     }
 
-    [HttpPut("lists/{listId}/update")]
+    [HttpPut("user-created-lists/update")]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> UpdateUserList(string listId, [FromBody] UpdateUserListRequest request)
+    public async Task<IActionResult> UpdateUserList([FromBody] UpdateUserCreatedListRequest request)
     {
         try
         {
             // Call the service to update a user list
-            await _ideaService.UpdateUserList(listId, request);
+            await _ideaService.UpdateUserCreatedList(request);
 
             return Ok(new ApiResponse<string>
             {
@@ -774,7 +775,7 @@ public class IdeaController : ApiControllerBase
         try
         {
             // Call the service to delete a user list
-            await _ideaService.DeleteUserList(listId);
+            await _ideaService.DeleteUserCreatedList(listId);
 
             return Ok(new ApiResponse<string>
             {
@@ -852,6 +853,8 @@ public class IdeaController : ApiControllerBase
             });
         }
     }
+
+
     #region sample (commented!)
     //[HttpPost]
     //[ProducesResponseType(typeof(Result), (int)HttpStatusCode.OK)]
