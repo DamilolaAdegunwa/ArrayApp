@@ -39,7 +39,7 @@ public class App : BaseAuditableEntity, IAggregateRoot
     public string Version { get; set; }
 
     // A list of screenshots associated with the app
-    public List<DataFile> Screenshots { get; set; }
+    public List<FileData> Screenshots { get; set; }
 
     // The app's release notes
     public string ReleaseNotes { get; set; }

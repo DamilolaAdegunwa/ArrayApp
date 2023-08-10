@@ -32,7 +32,7 @@ public class Chat : BaseAuditableEntity, IAggregateRoot
     public string Status { get; set; }
 
     // The chat's picture (if it has one)
-    public DataFile Picture { get; set; }
+    public FileData Picture { get; set; }
 }
 //public class ChatMessage
 //{

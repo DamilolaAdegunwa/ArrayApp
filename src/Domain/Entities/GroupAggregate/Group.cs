@@ -30,7 +30,7 @@ public class UserGroup : BaseAuditableEntity, IAggregateRoot
     public List<ApplicationUser> Members { get; set; }
 
     // The group's picture (if it has one)
-    public DataFile Picture { get; set; }
+    public FileData Picture { get; set; }
 
     // The group's privacy settings (e.g. "public" or "private")
     public string Privacy { get; set; }

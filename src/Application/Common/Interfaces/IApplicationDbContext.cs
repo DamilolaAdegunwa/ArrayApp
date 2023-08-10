@@ -30,7 +30,7 @@ public interface IApplicationDbContext
     DbSet<Chat> Chats { get; }
     DbSet<ChatMessage> ChatMessages { get; }
     DbSet<Comment> Comments { get; }
-    DbSet<DataFile> DataFiles { get; }
+    DbSet<FileData> DataFiles { get; }
     DbSet<UserGroup> UserGroups { get; }
     DbSet<Notification> Notifications { get; }
     DbSet<Session> Sessions { get; }

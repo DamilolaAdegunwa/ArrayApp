@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ArrayApp.Domain.Common.Interfaces;
 
 namespace ArrayApp.Domain.Entities.FileAggregate;
-public class DataFile : BaseAuditableEntity, IAggregateRoot
+public class FileData : BaseAuditableEntity, IAggregateRoot
 {
     // The file's name (including the file extension)
     public string Name { get; set; }

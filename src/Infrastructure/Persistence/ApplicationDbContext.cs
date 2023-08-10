@@ -56,7 +56,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Chat> Chats => Set<Chat>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<Comment> Comments => Set<Comment>();
-    public DbSet<DataFile> DataFiles => Set<DataFile>();
+    public DbSet<FileData> DataFiles => Set<FileData>();
     public DbSet<UserGroup> UserGroups => Set<UserGroup>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Session> Sessions => Set<Session>();

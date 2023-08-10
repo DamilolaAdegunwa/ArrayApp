@@ -37,7 +37,7 @@ public class Advert : BaseAuditableEntity, IAggregateRoot
     public bool IsActive { get; set; }
 
     // A list of images associated with the advert
-    public List<DataFile> Images { get; set; }
+    public List<FileData> Images { get; set; }
 
     // The advert's category
     public Category Category { get; set; }
