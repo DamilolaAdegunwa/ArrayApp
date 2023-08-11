@@ -47,7 +47,7 @@ public class Program
         builder.Services.AddScoped<ICategoryService, CategoryService>();
         builder.Services.AddScoped<IChatService, ChatService>();
         builder.Services.AddScoped<ICommentService, CommentService>();
-        builder.Services.AddScoped<IFileService, FileService>();
+        builder.Services.AddScoped<IFileDataService, FileDataService>();
         builder.Services.AddScoped<IUserGroupService, UserGroupService>();
         builder.Services.AddScoped<IIdeaService, IdeaService>();
         builder.Services.AddScoped<INotificationService, NotificationService>();

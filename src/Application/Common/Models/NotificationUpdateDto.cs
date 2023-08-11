@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArrayApp.Infrastructure.Services.Interfaces;
-public interface IFileService
+namespace ArrayApp.Application.Common.Models;
+public class NotificationUpdateDto
 {
 }

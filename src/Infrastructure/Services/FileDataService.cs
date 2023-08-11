@@ -7,19 +7,19 @@ using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Services.Interfaces;
 
 namespace ArrayApp.Infrastructure.Services;
-public class AppService : IAppService
+public class FileDataService : IFileDataService
 {
-    public Task<AppDto> CreateAppAsync(AppCreateDto appCreateDto)
+    public Task DeleteFileAsync(int fileId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<AppDto>> GetAllAppsAsync()
+    public Task<FileDataDto> GetFileByIdAsync(int fileId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<AppDto> GetAppByIdAsync(int appId)
+    public Task<FileDataDto> UploadFileAsync(FileDataUploadDto fileUploadDto)
     {
         throw new NotImplementedException();
     }
