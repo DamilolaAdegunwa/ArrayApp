@@ -25,4 +25,14 @@ public abstract class BaseAuditableEntity : BaseEntity
     public virtual DateTimeOffset? LastModificationTime { get; set; }
 
     public virtual string? LastModifierUserId { get; set; }
+
+    public BaseAuditableEntity() 
+    {
+        CreatorUserId = null;
+        DeleterUserId = null;
+        DeletionTime = null;
+        IsDeleted = false;
+        LastModificationTime = null;
+        LastModifierUserId = null;
+    }
 }

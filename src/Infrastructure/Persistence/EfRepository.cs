@@ -16,10 +16,10 @@ public class EfRepository<T> : RepositoryBase<T>, IBaseRepository<T> where T : c
 {
     public EfRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        //DbContext= dbContext;
+        DbContext= dbContext;
         DbContextSet = dbContext.Set<T>();
     }
-    //public ApplicationDbContext DbContext { get; }
+    public ApplicationDbContext DbContext { get; }
     public Microsoft.EntityFrameworkCore.DbSet<T> DbContextSet { get; }
 
 }

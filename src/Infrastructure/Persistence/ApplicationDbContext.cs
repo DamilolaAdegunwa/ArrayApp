@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿//using System.Data.Entity;
+//using System.Data.Entity;
+//using System.Data.Entity;
+//using System.Data.Entity;
+using System.Reflection;
 using System.Reflection.Emit;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Domain.Entities;
@@ -20,7 +24,9 @@ using Duende.IdentityServer.EntityFramework.Options;
 using MediatR;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace ArrayApp.Infrastructure.Persistence;
 
@@ -71,12 +77,55 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
         base.OnModelCreating(builder);
 
+        ////(ApplicationUser) json columns
+        //builder.Entity<ApplicationUser>().OwnsOne(
+        //    author => author.Contact, ownedNavigationBuilder =>
+        //    {
+        //        ownedNavigationBuilder.OwnsOne(contactDetails => contactDetails.Address);
+        //    });
+
+        ////on comments
         //builder.Entity<Comment>()
         //        .HasOne(c => c.Parent)
         //        .WithOne(pc => pc.Parent)
         //        .HasForeignKey<Comment>(pc => pc.Id)
         //        .IsRequired()
         //        .OnDelete(DeleteBehavior.NoAction);
+
+        ////map user (ApplicationUser) to contacts and Addresses table
+        builder.Entity<ApplicationUser>().OwnsOne(
+            author => author.Contact, ownedNavigationBuilder =>
+            {
+                ownedNavigationBuilder.ToTable(
+                "Contacts"
+                );
+                ownedNavigationBuilder.OwnsOne(
+                contactDetails => contactDetails.Address, ownedOwnedNavigationBuilder =>
+                {
+                    ownedOwnedNavigationBuilder.ToTable(
+                "Addresses"
+                );
+                });
+            });
+
+        ////(ApplicationUser) to json
+        //modelBuilder.Entity<ApplicationUser>().OwnsOne(
+        //author => author.Contact, ownedNavigationBuilder =>
+        //{
+        //    ownedNavigationBuilder.ToJson();
+        //    ownedNavigationBuilder.OwnsOne(contactDetails => contactDetails.Address);
+        //});
+
+        builder.Entity<Idea>().OwnsOne(
+        post => post.Metadata, ownedNavigationBuilder =>
+        {
+            ownedNavigationBuilder.ToJson();
+            ownedNavigationBuilder.OwnsMany(metadata => metadata.TopSearches);
+            ownedNavigationBuilder.OwnsMany(metadata => metadata.TopGeographies);
+            ownedNavigationBuilder.OwnsMany(
+            metadata => metadata.Updates,
+            ownedOwnedNavigationBuilder => ownedOwnedNavigationBuilder.OwnsMany(update => update.Commits));
+        });
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -90,4 +139,9 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
         return await base.SaveChangesAsync(cancellationToken);
     }
+
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True");
+    //}
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,10 +72,6 @@ public class CategoryController : ControllerBase
             });
         }
     }
-
-    // Add similar endpoints for other methods in the CategoryService
-
-    // Additional endpoints
 
     [HttpGet("totalcount")]
     [ProducesResponseType(typeof(ApiResponse<int>), (int)HttpStatusCode.OK)]

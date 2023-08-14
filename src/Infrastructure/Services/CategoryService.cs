@@ -35,6 +35,20 @@ public class CategoryService : ICategoryService
             throw new ArgumentException("Category name must not be empty", nameof(categoryCreateDto.Name));
         }
 
+        // Additional validation checks
+        if (string.IsNullOrEmpty(categoryCreateDto.Description))
+        {
+            throw new ArgumentException("Category Description must not be empty", nameof(categoryCreateDto.Description));
+        }
+
+        categoryCreateDto.Name = categoryCreateDto.Name?.Trim();
+        categoryCreateDto.Description = categoryCreateDto.Description?.Trim();
+        var exist = _unitOfWork.CategoryBaseRepository.DbContextSet.FirstOrDefault(c => c.Name.ToLower() == categoryCreateDto.Name.ToLower());
+        if (exist != null) 
+        {
+            throw new Exception("the category already exist!");
+        }
+
         // Business logic for creating a category
         var newCategory = new Category
         {
@@ -43,7 +57,7 @@ public class CategoryService : ICategoryService
         };
 
         await _unitOfWork.CategoryBaseRepository.AddAsync(newCategory);
-        await _unitOfWork.CategoryBaseRepository.SaveChangesAsync();
+        //await _unitOfWork.CategoryBaseRepository.SaveChangesAsync();
 
         return new CategoryDto
         {

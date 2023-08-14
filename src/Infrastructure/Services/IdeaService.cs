@@ -32,7 +32,7 @@ public class IdeaService : IIdeaService
             var entity = new Idea { 
                 Content = request.Content,
                 CreatorUserId = request.AuthorId,
-                CreationTime = DateTime.Now,
+                //CreationTime = DateTimeOffset.Now,
             };
             var resp = await _unitOfWork.IdeaBaseRepository.AddAsync(entity);
             var response = new IdeaResponse { 

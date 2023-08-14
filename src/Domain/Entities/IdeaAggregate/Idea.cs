@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
@@ -43,6 +45,8 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     private List<Comment> _comments { get; set; } = new List<Comment>();
     public IEnumerable<Comment> Comments => _comments.AsReadOnly();
 
+    // metadata
+    public PostMetadata? Metadata { get; set; }
     //the author
     //public string AuthorId { get; set; }
     //public ApplicationUser Author { get; set; }
@@ -118,3 +122,86 @@ public class NewCommentAddedToIdeaEvent : BaseEvent
 
 }
 #endregion
+
+public class PostMetadata
+{
+    public PostMetadata(int views)
+    {
+        Views = views;
+    }
+
+    public int Views { get; set; }
+
+    public List<SearchTerm> TopSearches { get; } = new List<SearchTerm>();
+    public List<Visits> TopGeographies { get; } = new List<Visits>();
+
+    public List<PostUpdate> Updates { get; } = new List<PostUpdate>();
+}
+public class SearchTerm
+{
+    public SearchTerm(string term, int count)
+    {
+        Term = term;
+        Count = count;
+    }
+
+    public string Term { get; private set; }
+    public int Count { get; private set; }
+}
+public class Visits
+{
+    public Visits(double latitude, double longitude, int count)
+    {
+        Latitude = latitude;
+        Longitude = longitude;
+        Count = count;
+    }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
+    public int Count { get; private set; }
+    public List<string>? Browsers { get; set; }
+}
+public class PostUpdate
+{
+    public PostUpdate(IPAddress postedFrom, DateTime updatedOn)
+    {
+        PostedFrom = postedFrom;
+        UpdatedOn = updatedOn;
+    }
+    public IPAddress PostedFrom { get; private set; }
+    public string? UpdatedBy { get; init; }
+    public DateTime UpdatedOn { get; private set; }
+    public List<Commit> Commits { get; } = new();
+}
+
+public class Commit
+{
+    public Commit(DateTime committedOn, string comment)
+    {
+        CommittedOn = committedOn;
+        Comment = comment;
+    }
+    public DateTime CommittedOn { get; private set; }
+    public string Comment { get; set; }
+}
+public class ContactDetails
+{
+    public Address Address { get; set; } = null!;
+    public string? Phone { get; set; }
+}
+
+public class Address
+{
+    public Address(string street, string city, string postcode, string country)
+    {
+        Street = street;
+        City = city;
+        Postcode = postcode;
+        Country = country;
+    }
+
+    public string Street { get; set; }
+    public string City { get; set; }
+    public string Postcode { get; set; }
+    public string Country { get; set; }
+}

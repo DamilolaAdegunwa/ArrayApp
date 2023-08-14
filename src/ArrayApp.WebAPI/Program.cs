@@ -12,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using ArrayApp.Application.Common.Mappings;
 using Microsoft.AspNetCore.Hosting;
-//using Microsoft.FeatureManagement;
 using MABSwagger = Microsoft.AspNetCore.Builder.SwaggerBuilderExtensions;
 using System.Reflection.Metadata;
 using ArrayApp.Application.Common.Interfaces;

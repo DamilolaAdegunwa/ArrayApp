@@ -30,10 +30,10 @@ public class Category : BaseAuditableEntity, IAggregateRoot
     //public List<ApplicationUser> Followers { get; set; }
 
     // The Category's posts
-    //public List<Idea> Posts { get; set; }
+    public List<Idea> Posts { get; set; }
 
     // The Category's tags (if it has any)
-    //public List<Tag> Tags { get; set; }
+    public List<Tag> Tags { get; set; }
 
     // The Category's category (if it has one)
     //public Category Category { get; set; }

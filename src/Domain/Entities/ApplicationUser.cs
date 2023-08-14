@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 using Microsoft.AspNetCore.Identity;
 
 namespace ArrayApp.Domain.Entities;
@@ -11,6 +12,7 @@ public class ApplicationUser : IdentityUser
     public string? RefreshToken { get; set; }
     public string? AccountConfirmationCode { get; set; }
     public UserType UserType { get; set; }
+    public ContactDetails Contact { get; set; }
 }
 public static class UserExtensions
 {
