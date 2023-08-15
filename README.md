@@ -260,3 +260,94 @@ HomeController Endpoints (Rough sketch)
 27. `DELETE /idea/lists/{listId}/delete`: Delete a user list.
 28. `GET /idea/analytics`: Get user engagement analytics.
 29. `GET /idea/admin`: Access administrative panel (if applicable).
+
+
+sql
+---
+1)
+code:
+var authorsInChigley = await context.Authors
+    .Where(author => author.Contact.Address.City == "Chigley")
+    .ToListAsync();
+sql:
+SELECT
+    [a].[Id],
+    [a].[Name],
+    JSON_QUERY([a].[Contact], '$') AS Contact
+FROM
+    [Authors] AS [a]
+WHERE
+    CAST(JSON_VALUE([a].[Contact], '$.Address.City') AS nvarchar(max)) = N'Chigley';
+
+2)sql
+DECLARE @p0 NVARCHAR(50);
+SET @p0 = 'Editor''s Picks';
+select * from [ArrayAppDb].[dbo].[Categories] where Name = @p0;
+
+3) sql
+UPDATE [Authors]
+SET [Contact] = JSON_MODIFY([Contact], 'strict $.Address', JSON_QUERY(@p0))
+OUTPUT 1
+WHERE [Id] = @p1;
+
+4)
+code:
+var postcodesInChigley = await context.Authors
+.Where(author => author.Contact.Address.City == "Chigley")
+.Select(author => author.Contact.Address.Postcode)
+.ToListAsync();
+
+sql:
+SELECT
+    CAST(JSON_VALUE([a].[Contact], '$.Address.Postcode') AS nvarchar(max))
+FROM
+    [Authors] AS [a]
+WHERE
+    CAST(JSON_VALUE([a].[Contact], '$.Address.City') AS nvarchar(max)) = N'Chigley'
+
+5)
+code:
+var orderedAddresses = await context.Authors
+    .Where(author => (author.Contact.Address.City == "Chigley" && author.Contact.Phone != null)
+                  || author.Name.StartsWith("D"))
+    .OrderBy(author => author.Contact.Phone)
+    .Select(author => author.Name + " (" +
+                     author.Contact.Address.Street + ", " +
+                     author.Contact.Address.City + " " +
+                     author.Contact.Address.Postcode + ")")
+    .ToListAsync();
+
+sql:
+SELECT ((((((([a].[Name] + N' (' +
+             CAST(JSON_VALUE([a].[Contact], '$.Address.Street') AS nvarchar(max))) + N', ' +
+             CAST(JSON_VALUE([a].[Contact], '$.Address.City') AS nvarchar(max))) + N' ') +
+         CAST(JSON_VALUE([a].[Contact], '$.Address.Postcode') AS nvarchar(max))) + N')'
+FROM [Authors] AS [a]
+WHERE (CAST(JSON_VALUE([a].[Contact], '$.Address.City') AS nvarchar(max)) = N'Chigley'
+       AND CAST(JSON_VALUE([a].[Contact], '$.Phone') AS nvarchar(max)) IS NOT NULL)
+       OR ([a].[Name] LIKE N'D%')
+ORDER BY CAST(JSON_VALUE([a].[Contact], '$.Phone') AS nvarchar(max));
+
+6)
+code:
+
+var postsWithViews = await context.Posts
+    .Where(post => post.Metadata!.Views > 3000)
+    .AsNoTracking()
+    .Select(post => new
+    {
+        post.Author!.Name,
+        Views = post.Metadata!.Views,
+        Searches = post.Metadata.TopSearches,
+        Commits = post.Metadata.Updates
+    })
+    .ToListAsync();
+
+sql:
+SELECT [a].[Name], CAST(JSON_VALUE([p].[Metadata], '$.Views') AS int),
+       JSON_QUERY([p].[Metadata], '$.TopSearches'),
+       [p].[Id], JSON_QUERY([p].[Metadata], '$.Updates')
+FROM [Posts] AS [p]
+LEFT JOIN [Authors] AS [a] ON [p].[AuthorId] = [a].[Id]
+WHERE CAST(JSON_VALUE([p].[Metadata], '$.Views') AS int) > 3000
+

@@ -126,6 +126,12 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
             metadata => metadata.Updates,
             ownedOwnedNavigationBuilder => ownedOwnedNavigationBuilder.OwnsMany(update => update.Commits));
         });
+
+        /*
+        modelBuilder.Entity<Blog>().Property(e => e.Id).UseHiLo();
+        modelBuilder.Entity<Post>().Property(e => e.Id).UseHiLo();
+        modelBuilder.Entity<Blog>(); use tpc mappint strategy
+         */
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

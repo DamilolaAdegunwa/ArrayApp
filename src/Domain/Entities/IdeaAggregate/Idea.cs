@@ -123,7 +123,7 @@ public class NewCommentAddedToIdeaEvent : BaseEvent
 }
 #endregion
 
-public class PostMetadata
+public class PostMetadata : BaseAuditableEntity, IAggregateRoot
 {
     public PostMetadata(int views)
     {
@@ -137,7 +137,7 @@ public class PostMetadata
 
     public List<PostUpdate> Updates { get; } = new List<PostUpdate>();
 }
-public class SearchTerm
+public class SearchTerm : BaseAuditableEntity, IAggregateRoot
 {
     public SearchTerm(string term, int count)
     {
@@ -148,7 +148,7 @@ public class SearchTerm
     public string Term { get; private set; }
     public int Count { get; private set; }
 }
-public class Visits
+public class Visits : BaseAuditableEntity, IAggregateRoot
 {
     public Visits(double latitude, double longitude, int count)
     {
@@ -161,7 +161,7 @@ public class Visits
     public int Count { get; private set; }
     public List<string>? Browsers { get; set; }
 }
-public class PostUpdate
+public class PostUpdate : BaseAuditableEntity, IAggregateRoot
 {
     public PostUpdate(IPAddress postedFrom, DateTime updatedOn)
     {
@@ -174,7 +174,7 @@ public class PostUpdate
     public List<Commit> Commits { get; } = new();
 }
 
-public class Commit
+public class Commit : BaseAuditableEntity, IAggregateRoot
 {
     public Commit(DateTime committedOn, string comment)
     {
@@ -184,13 +184,13 @@ public class Commit
     public DateTime CommittedOn { get; private set; }
     public string Comment { get; set; }
 }
-public class ContactDetails
+public class ContactDetails : BaseAuditableEntity, IAggregateRoot
 {
     public Address Address { get; set; } = null!;
     public string? Phone { get; set; }
 }
 
-public class Address
+public class Address : BaseAuditableEntity, IAggregateRoot
 {
     public Address(string street, string city, string postcode, string country)
     {
