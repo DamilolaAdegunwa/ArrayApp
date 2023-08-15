@@ -108,6 +108,9 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
                 });
             });
 
+        //as no key!
+        //builder.Entity<Browser>().HasNoKey();
+
         ////(ApplicationUser) to json
         //modelBuilder.Entity<ApplicationUser>().OwnsOne(
         //author => author.Contact, ownedNavigationBuilder =>

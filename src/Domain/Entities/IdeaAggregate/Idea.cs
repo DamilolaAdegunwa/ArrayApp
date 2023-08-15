@@ -137,7 +137,7 @@ public class PostMetadata : BaseAuditableEntity, IAggregateRoot
 
     public List<PostUpdate> Updates { get; } = new List<PostUpdate>();
 }
-public class SearchTerm : BaseAuditableEntity, IAggregateRoot
+public class SearchTerm //: BaseAuditableEntity, IAggregateRoot
 {
     public SearchTerm(string term, int count)
     {
@@ -148,8 +148,9 @@ public class SearchTerm : BaseAuditableEntity, IAggregateRoot
     public string Term { get; private set; }
     public int Count { get; private set; }
 }
-public class Visits : BaseAuditableEntity, IAggregateRoot
+public class Visits //: BaseAuditableEntity, IAggregateRoot
 {
+    public Visits() { }
     public Visits(double latitude, double longitude, int count)
     {
         Latitude = latitude;
@@ -159,9 +160,18 @@ public class Visits : BaseAuditableEntity, IAggregateRoot
     public double Latitude { get; private set; }
     public double Longitude { get; private set; }
     public int Count { get; private set; }
-    public List<string>? Browsers { get; set; }
+    //public List<Browser>? Browsers { get; set; }
 }
-public class PostUpdate : BaseAuditableEntity, IAggregateRoot
+
+public class Browser : BaseAuditableEntity, IAggregateRoot
+{
+    public Browser() { }
+    public string Name { get; set; }
+    public Visits Visits { get; set; }
+    public int VisitsId { get; set; }
+}
+
+public class PostUpdate //: BaseAuditableEntity, IAggregateRoot
 {
     public PostUpdate(IPAddress postedFrom, DateTime updatedOn)
     {
@@ -174,7 +184,7 @@ public class PostUpdate : BaseAuditableEntity, IAggregateRoot
     public List<Commit> Commits { get; } = new();
 }
 
-public class Commit : BaseAuditableEntity, IAggregateRoot
+public class Commit //: BaseAuditableEntity, IAggregateRoot
 {
     public Commit(DateTime committedOn, string comment)
     {
