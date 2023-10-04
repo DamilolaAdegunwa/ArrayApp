@@ -30,6 +30,7 @@ public class AccountController : BaseController
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly IServiceHelper _serviceHelper;
     private readonly IAccountService _accountService;
+    public readonly IConfiguration _configuration;
     public AccountController(
         //ILogger<AccountController> logger
          SignInManager<ApplicationUser> signInManager
@@ -38,6 +39,7 @@ public class AccountController : BaseController
         , ApplicationDbContext applicationDbContext
         , IServiceHelper serviceHelper
         , IAccountService accountService
+        , IConfiguration configuration
         ) //: base(logger)
     {
         //_logger = logger;
@@ -47,6 +49,7 @@ public class AccountController : BaseController
         _applicationDbContext = applicationDbContext;
         _serviceHelper = serviceHelper;
         _accountService = accountService;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -93,11 +96,72 @@ public class AccountController : BaseController
 
     [HttpGet]
     [Route("GetClaims")]
-    public async Task<IServiceResponse<ClaimsPrincipal>> GetIdentity()
+    //public async Task<IServiceResponse<ClaimsPrincipal>> GetIdentity()
+    public async Task<IServiceResponse<List<ClaimDto>>> GetClaims()
     {
+        //.Claims.ToList()[0].
+        //var x = new ClaimsPrincipal().Claims.ToList();
         return await HandleApiOperationAsync(async () => {
-            var response = new ServiceResponse<ClaimsPrincipal>();
-            response.Object = User;
+            var response = new ServiceResponse<List<ClaimDto>>();
+            response.Object = User.Claims.ToList<Claim>().Select(c => new ClaimDto { 
+                Issuer = c.Issuer,
+                OriginalIssuer = c.OriginalIssuer,
+                Properties = c.Properties,
+                Type = c.Type,
+                Value = c.Value,
+                ValueType = c.ValueType
+            }).ToList();
+            return response;
+        });
+    }
+
+    [HttpGet]
+    [Route("GetClaimsIdentity")]
+    public async Task<IServiceResponse<List<ClaimsIdentityDto>>> ClaimsIdentity()
+    {
+        //var x = User.Identities.ToList()[0].IsAuthenticated;
+        //.Claims.ToList()[0].
+        //var x = new ClaimsPrincipal().Claims.ToList();
+        return await HandleApiOperationAsync(async () => {
+            var response = new ServiceResponse<List<ClaimsIdentityDto>>();
+            response.Object = User.Identities.ToList().Select(c => new ClaimsIdentityDto
+            {
+                Actor = new ClaimsIdentityActorDto() { 
+                    AuthenticationType = c?.Actor?.AuthenticationType,
+                    IsAuthenticated = c?.Actor?.IsAuthenticated??false,
+                    BootstrapContext = c?.Actor?.BootstrapContext,
+                    Claims = c?.Actor?.Claims.Select(d => new ClaimDto {
+                        Issuer = d.Issuer,
+                        OriginalIssuer = d.OriginalIssuer,
+                        Properties = d.Properties,
+                        Type = d.Type,
+                        Value = d.Value,
+                        ValueType = d.ValueType
+                    }).ToList(),
+                    Label = c?.Actor?.Label,
+                    Name = c?.Actor?.Name,
+                    NameClaimType = c?.Actor?.NameClaimType,
+                    RoleClaimType = c?.Actor?.RoleClaimType,
+                    
+                },
+                AuthenticationType = c?.AuthenticationType,
+                IsAuthenticated = c?.IsAuthenticated??false,
+                BootstrapContext = c?.BootstrapContext,
+                Claims = c?.Claims.Select(e => new ClaimDto
+                {
+                    Issuer = e.Issuer,
+                    OriginalIssuer = e.OriginalIssuer,
+                    Properties = e.Properties,
+                    Type = e.Type,
+                    Value = e.Value,
+                    ValueType = e.ValueType
+                }).ToList(),
+                Label = c?.Label,
+                Name = c?.Label,
+                NameClaimType = c?.NameClaimType,
+                RoleClaimType = c?.RoleClaimType,
+                
+            }).ToList();
             return response;
         });
     }

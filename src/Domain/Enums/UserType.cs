@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace ArrayApp.Domain.Enums;
 public enum UserType
 {
-    Customer = 0,
+    None = 0,
     Administrator = 1,
+    Customer = 2,
 }

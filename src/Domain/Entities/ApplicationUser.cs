@@ -12,7 +12,7 @@ public class ApplicationUser : IdentityUser
     public string? RefreshToken { get; set; }
     public string? AccountConfirmationCode { get; set; }
     public UserType UserType { get; set; }
-    public ContactDetails Contact { get; set; }
+    public ContactDetails? Contact { get; set; }
 }
 public static class UserExtensions
 {

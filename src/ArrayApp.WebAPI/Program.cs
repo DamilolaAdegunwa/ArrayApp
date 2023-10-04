@@ -16,16 +16,21 @@ using MABSwagger = Microsoft.AspNetCore.Builder.SwaggerBuilderExtensions;
 using System.Reflection.Metadata;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Infrastructure.Services.Interfaces;
-
+using Steeltoe.Extensions.Configuration.ConfigServer;
 namespace ArrayApp.WebAPI;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args)
+            .AddConfigServer()
+            ;
 
         string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        string name = builder.Configuration["name"];
+        string age = builder.Configuration["age"];
+        string country = builder.Configuration["country"];
         // Add services to the container.
 
         builder.Services.AddControllers();

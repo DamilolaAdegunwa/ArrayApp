@@ -7,6 +7,12 @@ namespace ArrayApp.WebAPI.Controllers;
 [ApiController]
 public class ValuesController : ControllerBase
 {
+    public readonly IConfiguration _configuration;
+    public ValuesController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+        //var name = configuration.["AllowedHosts"];
+    }
     // GET: api/<ValuesController>
     [HttpGet]
     public IEnumerable<string> Get()

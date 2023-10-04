@@ -49,56 +49,64 @@ public class TokenController : BaseController
     //    ]
     public async Task<IServiceResponse<TokenDTO>> Index([FromBody] LoginModel model)
     {//worked locally and online
-        Log.Information("trying to login user");
-        return await HandleApiOperationAsync(async () => {
+        try
+        {
+            Log.Information("trying to login user");
+            return await HandleApiOperationAsync(async () => {
 
-            var response = new ServiceResponse<TokenDTO>();
+                var response = new ServiceResponse<TokenDTO>();
 
-            var user = await _userManager.FindByNameAsync(model.UserName)
-                    ?? await _userManager.FindByEmailAsync(model.UserName);
+                var user = await _userManager.FindByNameAsync(model.UserName)
+                        ?? await _userManager.FindByEmailAsync(model.UserName);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-
-                if (!user.IsConfirmed())
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
 
-                    response.Code = ((int)HttpStatusCode.BadRequest).ToString();
-                    response.ShortDescription = "Account not active. Please activate your acccount to continue.";
-                    return response;
+                    if (!user.IsConfirmed())
+                    {
+
+                        response.Code = ((int)HttpStatusCode.BadRequest).ToString();
+                        response.ShortDescription = "Account not active. Please activate your acccount to continue.";
+                        return response;
+                    }
+
+                    if (user.AccountLocked())
+                    {
+                        response.Code = ((int)HttpStatusCode.BadRequest).ToString();
+                        response.ShortDescription = "Account locked. Please contact the system administrator.";
+                        return response;
+                    }
+
+                    var userClaims = user.UserToClaims();
+
+                    var token = _tokenSvc.GenerateAccessTokenFromClaims(userClaims.ToArray());
+
+                    user.RefreshToken = token.RefreshToken;
+                    await _userManager.UpdateAsync(user);
+
+                    response.Object = token;
+
+                    //HttpContext.SignInAsync(new ClaimsPrincipal( new ClaimsIdentity(userClaims, "array claim")));
+                    //await HttpContext.SignInAsync(new IdentityServerUser("dammy"));
+                    //await _signInManager.SignInAsync(user,false);
+
+                    //var test = User.Identity.Name;
                 }
 
-                if (user.AccountLocked())
+                else
                 {
                     response.Code = ((int)HttpStatusCode.BadRequest).ToString();
-                    response.ShortDescription = "Account locked. Please contact the system administrator.";
-                    return response;
+                    response.ShortDescription = "Invalid credentials supplied.";
                 }
 
-                var userClaims = user.UserToClaims();
-
-                var token = _tokenSvc.GenerateAccessTokenFromClaims(userClaims.ToArray());
-
-                user.RefreshToken = token.RefreshToken;
-                await _userManager.UpdateAsync(user);
-
-                response.Object = token;
-
-                //HttpContext.SignInAsync(new ClaimsPrincipal( new ClaimsIdentity(userClaims, "array claim")));
-                //await HttpContext.SignInAsync(new IdentityServerUser("dammy"));
-                //await _signInManager.SignInAsync(user,false);
-
-                //var test = User.Identity.Name;
-            }
-
-            else
-            {
-                response.Code = ((int)HttpStatusCode.BadRequest).ToString();
-                response.ShortDescription = "Invalid credentials supplied.";
-            }
-
-            return response;
-        });
+                return response;
+            });
+        }
+        catch (Exception ex)
+        {
+            Log.Error($"{ex.Message} :: {ex.StackTrace} :: {ex?.InnerException?.Message} :: {ex?.InnerException?.StackTrace}");
+            throw;
+        }
     }
 
     [HttpPost]

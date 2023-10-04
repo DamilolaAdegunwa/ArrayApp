@@ -196,7 +196,7 @@ public class Commit //: BaseAuditableEntity, IAggregateRoot
 }
 public class ContactDetails : BaseAuditableEntity, IAggregateRoot
 {
-    public Address Address { get; set; } = null!;
+    public Address? Address { get; set; }
     public string? Phone { get; set; }
 }
 
