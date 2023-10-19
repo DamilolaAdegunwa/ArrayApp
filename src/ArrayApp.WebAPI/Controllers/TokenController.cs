@@ -149,3 +149,10 @@ public class TokenController : BaseController
         });
     }
 }
+/*
+ {
+  "userName": "damee1993@gmail.com",
+  "password": "Damilola#123",
+  "userType": 0
+}
+ */

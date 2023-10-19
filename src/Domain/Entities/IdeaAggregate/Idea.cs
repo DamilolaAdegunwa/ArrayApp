@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -24,7 +25,7 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     // The idea's description
     public string? Description { get; set; }
 
-    // The idea's content
+    // The idea's content (might need to activate html or not)
     public string? Content { get; set; }
 
     // The idea's status (e.g. "pending" or "approved")
@@ -48,8 +49,10 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     // metadata
     public PostMetadata? Metadata { get; set; }
     //the author
+
     //public string AuthorId { get; set; }
-    //public ApplicationUser Author { get; set; }
+    [ForeignKey(nameof(CreatorUserId))]
+    public ApplicationUser Author { get; set; }
 
     public void AddTag(Tag newTag)
     {
@@ -92,7 +95,8 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
 public enum IdeaStatus
 {
     Pending = 0,
-    Approved = 1
+    Approved = 1,
+    Banned = 2
 }
 
 #region other event models

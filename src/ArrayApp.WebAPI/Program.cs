@@ -38,14 +38,14 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-        builder.Services.AddApplicationServices();
-        builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddApplicationServices();// from the application's dll
+        builder.Services.AddInfrastructureServices(builder.Configuration);// from the infrastructure dll
         builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).Bind(options));
         builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<IServiceHelper, ServiceHelper>();
         builder.Services.AddScoped<ITokenSvc, TokenService>();
         builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-        builder.Services.AddWebAPIServices();
+        builder.Services.AddWebAPIServices();// web api services
         builder.Services.AddScoped<IAdvertService, AdvertService>();
         builder.Services.AddScoped<IAppService, AppService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -59,15 +59,19 @@ public class Program
         builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
         builder.Services.AddScoped<ITagService, TagService>();
         builder.Services.AddScoped<IProductService, ProductService>();
-        
+
         #region jwt
         var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
 
-        builder.Services.AddAuthentication(x => {
+        builder.Services.AddAuthentication(x =>
+        {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(x =>
         {
+            x.Authority = "https://YOUR_AUTH0_DOMAIN";
+            x.Audience = "YOUR_AUDIENCE";
+            //----
             x.RequireHttpsMetadata = false;
             x.SaveToken = true;
             x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -76,8 +80,13 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
+                //---
+                ValidAudiences = new string[] { "YOUR_AUDIENCE" },
+                ValidIssuer = "YOUR_AUTH0_DOMAIN"
             };
         });
+        //simplified version
+        //builder.Services.AddAuthentication().AddJwtBearer(); //?? new feature
         #endregion
 
         var app = builder.Build();

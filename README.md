@@ -351,3 +351,81 @@ FROM [Posts] AS [p]
 LEFT JOIN [Authors] AS [a] ON [p].[AuthorId] = [a].[Id]
 WHERE CAST(JSON_VALUE([p].[Metadata], '$.Views') AS int) > 3000
 
+Login Credential:
+-----------------
+ {
+  "userName": "damee1993@gmail.com",
+  "password": "Damilola#123",
+  "userType": 0
+}
+
+sample login
+------------
+{
+  "code": "200",
+  "shortDescription": "SUCCESS",
+  "object": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxOTk1YmJiLWI0NmMtNGI5YS1iZmQ4LWVkZDQzYjAxNWRiYiIsIm5hbWUiOiJkYW1lZTE5OTNAZ21haWwuY29tIiwiZW1haWwiOiJkYW1lZTE5OTNAZ21haWwuY29tIiwibmJmIjoxNjk3NDQ2OTQ3LCJleHAiOjE2OTc2MjY5NDgsImlzcyI6IkFycmF5QXBwLldlYlVJLklzc3VlciIsImF1ZCI6IkFycmF5QXBwLldlYlVJLkF1ZGllbmNlIn0.JogQrMoXDTNTH8LhXMaUBgMhA6HgwCua-dstIQLRYL4",
+    "refreshToken": "xgXLPGLbfjBwY8LaJR4M72/YhTj/zELklvBUWikwAsg=",
+    "expires": "2023-10-18T12:02:28.0021367+01:00"
+  },
+  "validationErrors": {}
+}
+------------
+{{"alg":"HS256","typ":"JWT"}.{"sub":"your_username","jti":"53eac3e5-ec8f-43eb-bd20-367a6075980a","exp":1697456969,"iss":"https://www.example.com","aud":"WebAppVerify_Audience"}}
+
+------------
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYW1pbG9sYV9hZGVndW53YSIsImp0aSI6IjE1MWJlNjEzLTEzODgtNDI0NS05YmY3LWQzMWY0NWU1ZmM4YSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJhZG1pbiIsIm1hbmFnZXIiXSwiZXhwIjoxNjk3NTc1NzU3LCJpc3MiOiJXZWJBcHBWZXJpZnlfSXNzdWVyIiwiYXVkIjoiV2ViQXBwVmVyaWZ5X0F1ZGllbmNlIn0.5c_10rD7oHEsw2gSuVjezAvMrkMug1-pX8B8-czPURo"
+}
+------------
+#region others
+//--
+//ActorValidationParameters = default,
+//AlgorithmValidator = default,
+//AudienceValidator = default,
+//AuthenticationType = default,
+//ClockSkew = default,
+//ConfigurationManager = default,
+//CryptoProviderFactory = default,
+//IgnoreTrailingSlashWhenValidatingAudience = default,
+//IssuerSigningKeyResolver = default,
+//IssuerSigningKeyResolverUsingConfiguration = default,
+//IssuerSigningKeys = default,
+//IssuerSigningKeyValidator = default,
+//IssuerSigningKeyValidatorUsingConfiguration = default,
+//ValidAlgorithms = default,
+//IssuerValidator = default,
+//IssuerValidatorUsingConfiguration = default,
+//LifetimeValidator = default,
+//NameClaimType = default,
+//NameClaimTypeRetriever = default,
+//PropertyBag = default,
+//RequireAudience = default,
+//RequireExpirationTime = default,
+//RequireSignedTokens = default,
+//RoleClaimType = default,
+//RoleClaimTypeRetriever = default,
+//SaveSigninToken = default,
+//SignatureValidator = default,
+//SignatureValidatorUsingConfiguration = default,
+//TokenDecryptionKey = default,
+//TryAllIssuerSigningKeys = default,
+//TokenDecryptionKeyResolver = default,
+//TokenDecryptionKeys = default,
+//TokenReader = default,
+//TokenReplayCache = default,
+//ValidateActor = default,
+//ValidAudiences = default,
+//TokenReplayValidator = default,
+//TypeValidator = default,
+//ValidateLifetime = default,
+//ValidateTokenReplay = default,
+//ValidIssuers = default,
+//ValidTypes = default,
+#endregion
+----------
+{
+  "email": "damee1993@gmail.com",
+  "password": "Password#123"
+}

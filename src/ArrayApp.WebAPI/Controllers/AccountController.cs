@@ -52,6 +52,14 @@ public class AccountController : BaseController
         _configuration = configuration;
     }
 
+    //[AllowAnonymous]
+    [HttpGet]
+    [Route("ping")]
+    public IActionResult Ping()
+    {
+        return Ok("the account controller was reached!");
+    }
+
     [HttpGet]
     [Route("GetProfile")]
     public async Task<IServiceResponse<ApplicationUser>> GetCurrentUserProfile()
@@ -413,5 +421,167 @@ public class AccountController : BaseController
             return response;
         });
     }
+    // Endpoint to create a new role
+    [HttpPost("roles")]
+    public async Task<IActionResult> CreateRole([FromBody] RoleViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var role = new ApplicationRole { Name = model.Name };
+        var result = await _roleManager.CreateAsync(role);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Role created successfully" });
+        }
+        else
+        {
+            return BadRequest(new { Message = "Failed to create role", Errors = result.Errors });
+        }
+    }
+
+    // Endpoint to get all roles
+    [HttpGet("roles")]
+    public IActionResult GetAllRolesV2()
+    {
+        var roles = _roleManager.Roles.ToList();
+        return Ok(roles);
+    }
+
+    // Endpoint to get a role by name
+    [HttpGet("roles/{roleName}")]
+    public async Task<IActionResult> GetRoleByName(string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+
+        if (role != null)
+        {
+            return Ok(role);
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+    // Endpoint to delete a role by name
+    [HttpDelete("roles/{roleName}")]
+    public async Task<IActionResult> DeleteRole(string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+
+        if (role != null)
+        {
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Role deleted successfully" });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Failed to delete role", Errors = result.Errors });
+            }
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpGet("roles/search")]
+    public IActionResult SearchRoles(
+    string search = "",
+    int page = 1,
+    int pageSize = 10,
+    string orderBy = "Name",
+    bool ascending = true)
+    {
+        IQueryable<ApplicationRole> query = _roleManager.Roles;
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(r => r.Name.Contains(search));
+        }
+
+        // Ordering
+        if (ascending)
+        {
+            query = query.OrderBy(r => r.Name);
+        }
+        else
+        {
+            query = query.OrderByDescending(r => r.Name);
+        }
+
+        // Pagination
+        var totalCount = query.Count();
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+        var roles = query.ToList();
+
+        return Ok(new
+        {
+            Roles = roles,
+            TotalCount = totalCount,
+            TotalPages = totalPages,
+            CurrentPage = page
+        });
+    }
+
+    // Endpoint to get all roles a user has
+    [HttpGet("users/{userId}/roles")]
+    public async Task<IActionResult> GetUserRoles(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user != null)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            return Ok(userRoles);
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+    // Endpoint to get all users with a particular role
+    [HttpGet("roles/{roleName}/users")]
+    public IActionResult GetUsersInRole(string roleName)
+    {
+        var usersInRole = _userManager.Users
+            .Where(u => _userManager.IsInRoleAsync(u, roleName).Result)
+            .ToList();
+
+        return Ok(usersInRole);
+    }
+    // Endpoint to get users who have any of the specified roles
+    [HttpGet("users/roles/any")]
+    public IActionResult GetUsersInAnyRole([FromQuery] string[] roleNames)
+    {
+        var usersInRoles = _userManager.Users
+            .Where(u => roleNames.Any(role => _userManager.IsInRoleAsync(u, role).Result))
+            .ToList();
+
+        return Ok(usersInRoles);
+    }
+
+    // Endpoint to get users who have all of the specified roles
+    [HttpGet("users/roles/all")]
+    public IActionResult GetUsersInAllRoles([FromQuery] string[] roleNames)
+    {
+        var usersInRoles = _userManager.Users
+            .Where(u => roleNames.All(role => _userManager.IsInRoleAsync(u, role).Result))
+            .ToList();
+
+        return Ok(usersInRoles);
+    }
+
 
 }
