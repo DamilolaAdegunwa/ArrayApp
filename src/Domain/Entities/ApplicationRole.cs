@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace ArrayApp.Domain.Entities;
-public class ApplicationRole : IdentityRole
+public class ApplicationRole : IdentityRole<int>
 {
     public ApplicationRole()
     {

@@ -9,5 +9,5 @@ public class IdeaResponse
 {
     public string Content { get; set; }
     public int Id { get; set; }
-    public string AuthorId { get; set; }
+    public int AuthorId { get; set; }
 }

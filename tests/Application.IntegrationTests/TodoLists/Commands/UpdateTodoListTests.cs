@@ -65,7 +65,7 @@ public class UpdateTodoListTests : BaseTestFixture
 
         list.Should().NotBeNull();
         list!.Title.Should().Be(command.Title);
-        list.LastModifierUserId.Should().NotBeNull();
+        list.LastModifierUserId.Should().Be(0);
         list.LastModifierUserId.Should().Be(userId);
         list.LastModificationTime.Should().NotBeNull();
         list.LastModificationTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

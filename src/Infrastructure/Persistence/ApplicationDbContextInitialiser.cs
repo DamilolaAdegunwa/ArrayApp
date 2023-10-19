@@ -58,7 +58,7 @@ public class ApplicationDbContextInitialiser
             //var administratorRole = new ApplicationRole("Administrator");
             //var adm = await _roleManager.FindByNameAsync("Administrator");
             //var adm = await _context.ApplicationRoles.FirstOrDefaultAsync(r => r.Name != null && r.Name.ToLower() == "Administrator".ToLower()); //_roleManager.FindByNameAsync("Administrator");
-            var adm = await _context.ApplicationRoles.FirstOrDefaultAsync(r => true);
+            var adm = await _context.Roles.FirstOrDefaultAsync(r => true);
             if (adm != null) { return; }
 
             var administratorRole = new ApplicationRole { Name = "Administrator" };

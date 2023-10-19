@@ -19,7 +19,7 @@ public partial class Testing
     private static IConfiguration _configuration = null!;
     private static IServiceScopeFactory _scopeFactory = null!;
     private static Checkpoint _checkpoint = null!;
-    private static string? _currentUserId;
+    private static int _currentUserId;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
@@ -43,22 +43,22 @@ public partial class Testing
         return await mediator.Send(request);
     }
 
-    public static string? GetCurrentUserId()
+    public static int GetCurrentUserId()
     {
         return _currentUserId;
     }
 
-    public static async Task<string> RunAsDefaultUserAsync()
+    public static async Task<int> RunAsDefaultUserAsync()
     {
         return await RunAsUserAsync("test@local", "Testing1234!", Array.Empty<string>());
     }
 
-    public static async Task<string> RunAsAdministratorAsync()
+    public static async Task<int> RunAsAdministratorAsync()
     {
         return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] { "Administrator" });
     }
 
-    public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
+    public static async Task<int> RunAsUserAsync(string userName, string password, string[] roles)
     {
         using var scope = _scopeFactory.CreateScope();
 
@@ -96,7 +96,7 @@ public partial class Testing
     {
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
 
-        _currentUserId = null;
+        _currentUserId = 0;
     }
 
     public static async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues)

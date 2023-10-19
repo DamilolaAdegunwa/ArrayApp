@@ -8,5 +8,5 @@ namespace ArrayApp.Application.Common.Models;
 public class CreateIdeaRequest
 {
     public string Content { get; set; }
-    public string AuthorId { get; set; }
+    public int AuthorId { get; set; }
 }

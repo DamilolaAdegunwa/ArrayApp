@@ -53,7 +53,7 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
         item!.Id.Should().Be(command.ListId);
         item.Note.Should().Be(command.Note);
         item.Priority.Should().Be(command.Priority);
-        item.LastModifierUserId.Should().NotBeNull();
+        item.LastModifierUserId.Should().Be(0);
         item.LastModifierUserId.Should().Be(userId);
         item.LastModificationTime.Should().NotBeNull();
         item.LastModificationTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

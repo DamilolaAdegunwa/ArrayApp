@@ -23,6 +23,8 @@ using ArrayApp.Infrastructure.Persistence.Interceptors;
 using Duende.IdentityServer.EntityFramework.Options;
 using MediatR;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -30,7 +32,7 @@ using static Duende.IdentityServer.Models.IdentityResources;
 
 namespace ArrayApp.Infrastructure.Persistence;
 
-public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int> /*ApiAuthorizationDbContext<ApplicationUser>*/, IApplicationDbContext
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
@@ -40,7 +42,8 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
         IOptions<OperationalStoreOptions> operationalStoreOptions,
         IMediator mediator,
         AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor) 
-        : base(options, operationalStoreOptions)
+        //: base(options, operationalStoreOptions)
+        : base(options)
     {
         _mediator = mediator;
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
@@ -50,9 +53,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
-    public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
-
-    public DbSet<ApplicationRole> ApplicationRoles { get; set; } //=> Set<ApplicationRole>();
+    //public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
+    //public DbSet<ApplicationRole> ApplicationRoles { get; set; } //=> Set<ApplicationRole>();
+    //public DbSet<ApplicationRole> Roles { get; set; } //=> Set<ApplicationRole>();
+    //public DbSet<ApplicationRole> ApplicationRoles { get; set; } //=> Set<ApplicationRole>();
 
     public DbSet<Idea> Ideas => Set<Idea>();
 
@@ -69,7 +73,13 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Product> Products => Set<Product>();
-    public DbSet<Test> Tests => Set<Test>();
+    //public DbSet<Test> Tests => Set<Test>();
+    public DbSet<ApplicationUserRole> UserRoles { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<UserPermission> UserPermissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

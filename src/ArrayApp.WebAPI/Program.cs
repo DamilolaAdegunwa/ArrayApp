@@ -59,6 +59,7 @@ public class Program
         builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
         builder.Services.AddScoped<ITagService, TagService>();
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
         #region jwt
         var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
@@ -144,9 +145,40 @@ public class Program
 
         app.UseAuthorization();
 
-
         app.MapControllers();
 
         app.Run();
     }
 }
+/*
+ -- Insert roles into AspNetRoles table
+INSERT INTO AspNetRoles (Name)
+VALUES
+    ('admin'),
+    ('manager'),
+    ('finance'),
+    ('accountant'),
+    ('business'),
+    ('marketing'),
+    ('hr'),
+    ('security'),
+    ('operations'),
+    ('support'),
+    ('customercare'),
+    ('ceo'),
+    ('audit');
+
+-- Insert permissions into Permissions table
+INSERT INTO Permissions (Name)
+VALUES
+    ('dashboard_edit_and_view'),
+    ('dashboard_view'),
+    ('payment_edit_and_view'),
+    ('payment_view'),
+    ('subscription_edit_and_view'),
+    ('subscription_view'),
+    ('campaign_edit_and_view'),
+    ('campaign_view'),
+    ('moderator_edit_and_view'),
+    ('moderator_view');
+ */

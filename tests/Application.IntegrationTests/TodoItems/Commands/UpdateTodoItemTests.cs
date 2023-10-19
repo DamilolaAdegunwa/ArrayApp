@@ -47,7 +47,7 @@ public class UpdateTodoItemTests : BaseTestFixture
 
         item.Should().NotBeNull();
         item!.Title.Should().Be(command.Title);
-        item.LastModifierUserId.Should().NotBeNull();
+        item.LastModifierUserId.Should().Be(0);
         item.LastModifierUserId.Should().Be(userId);
         item.LastModificationTime.Should().NotBeNull();
         item.LastModificationTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

@@ -14,9 +14,9 @@ public abstract class BaseAuditableEntity : BaseEntity
 
     public virtual DateTimeOffset CreationTime { get; set; } = DateTimeOffset.Now;
 
-    public virtual string? CreatorUserId { get; set; }
+    public virtual int CreatorUserId { get; set; }
 
-    public virtual string? DeleterUserId { get; set; }
+    public virtual int? DeleterUserId { get; set; }
 
     public virtual DateTimeOffset? DeletionTime { get; set; }
 
@@ -24,15 +24,15 @@ public abstract class BaseAuditableEntity : BaseEntity
 
     public virtual DateTimeOffset? LastModificationTime { get; set; }
 
-    public virtual string? LastModifierUserId { get; set; }
+    public virtual int LastModifierUserId { get; set; }
 
     public BaseAuditableEntity() 
     {
-        CreatorUserId = null;
+        CreatorUserId = 0;
         DeleterUserId = null;
         DeletionTime = null;
         IsDeleted = false;
         LastModificationTime = null;
-        LastModifierUserId = null;
+        LastModifierUserId = 0;
     }
 }
