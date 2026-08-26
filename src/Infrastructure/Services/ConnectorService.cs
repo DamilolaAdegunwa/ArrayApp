@@ -55,9 +55,25 @@ public class ConnectorService : IConnectorService
                 refKey = $"card-{action.Id + 200}";
                 externalUrl = $"https://trello.com/c/{refKey}";
                 break;
+            case ConnectorType.Asana:
+                refKey = $"asana-task-{action.Id + 800}";
+                externalUrl = $"https://app.asana.com/0/1204/{action.Id + 800}";
+                break;
+            case ConnectorType.Monday:
+                refKey = $"pulse-{action.Id + 500}";
+                externalUrl = $"https://arrayapp.monday.com/boards/101/pulses/{action.Id + 500}";
+                break;
+            case ConnectorType.Teams:
+                refKey = $"teams-thread-{Guid.NewGuid().ToString().Substring(0, 8)}";
+                externalUrl = "https://teams.microsoft.com/l/message/general";
+                break;
             case ConnectorType.Linear:
                 refKey = $"LIN-{action.Id + 300}";
                 externalUrl = $"https://linear.app/team/issue/{refKey}";
+                break;
+            case ConnectorType.Notion:
+                refKey = $"notion-page-{action.Id + 900}";
+                externalUrl = $"https://notion.so/arrayapp/page-{action.Id + 900}";
                 break;
             default:
                 refKey = $"EXT-{action.Id}";

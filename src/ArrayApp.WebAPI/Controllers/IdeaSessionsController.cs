@@ -20,12 +20,18 @@ public class IdeaSessionsController : ControllerBase
     private readonly IApplicationDbContext _context;
     private readonly IAIAgentService _aiAgentService;
     private readonly IReputationService _reputationService;
+    private readonly IConnectorService _connectorService;
 
-    public IdeaSessionsController(IApplicationDbContext context, IAIAgentService aiAgentService, IReputationService reputationService)
+    public IdeaSessionsController(
+        IApplicationDbContext context,
+        IAIAgentService aiAgentService,
+        IReputationService reputationService,
+        IConnectorService connectorService)
     {
         _context = context;
         _aiAgentService = aiAgentService;
         _reputationService = reputationService;
+        _connectorService = connectorService;
     }
 
     [HttpGet]
@@ -220,13 +226,16 @@ public class IdeaSessionsController : ControllerBase
         session.SessionStatus = SessionStatus.Completed;
         session.ActualEndTime = DateTime.UtcNow;
 
+        var ideaId = session.PrimaryIdeaId ?? (dto.Decisions?.FirstOrDefault()?.IdeaId ?? 1);
+        var idea = await _context.Ideas.FindAsync(ideaId);
+
         if (dto.Decisions != null)
         {
             foreach (var dec in dto.Decisions)
             {
                 var decision = new IdeaDecision
                 {
-                    IdeaId = session.PrimaryIdeaId ?? dec.IdeaId,
+                    IdeaId = ideaId,
                     SessionId = id,
                     Summary = dec.Summary,
                     Rationale = dec.Rationale,
@@ -237,22 +246,63 @@ public class IdeaSessionsController : ControllerBase
             }
         }
 
+        var createdActions = new List<IdeaAction>();
         if (dto.Actions != null)
         {
             foreach (var act in dto.Actions)
             {
                 var action = new IdeaAction
                 {
-                    IdeaId = session.PrimaryIdeaId ?? act.IdeaId,
+                    IdeaId = ideaId,
                     SessionId = id,
                     Title = act.Title,
                     Description = act.Description,
                     Priority = act.Priority,
                     DueDate = act.DueDate,
                     Status = ActionItemStatus.Todo,
-                    ExternalSystem = act.ExternalSystem
+                    ExternalSystem = act.ExternalSystem ?? "GitHub",
+                    SupportingTeam = act.SupportingTeam ?? "Engineering"
                 };
                 _context.Actions.Add(action);
+                createdActions.Add(action);
+            }
+        }
+
+        // Advance Idea Maturity if currently in early stages
+        if (idea != null && idea.MaturityStage < IdeaMaturityStage.Planned)
+        {
+            idea.MaturityStage = IdeaMaturityStage.Planned;
+        }
+
+        _context.ProvenanceLogs.Add(new ProvenanceLog
+        {
+            IdeaId = ideaId,
+            ActorName = "Outcome Extractor & Execution Engine",
+            ActorRole = "System",
+            ActionPerformed = "SessionOutcomesExtractedAndPushed",
+            Details = $"Session '{session.Name}' extracted {dto.Decisions?.Count ?? 0} decisions and {dto.Actions?.Count ?? 0} execution work packages pushed to external tools.",
+            Timestamp = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync(default);
+
+        // Synchronize each created action with its external tool (Jira, GitHub, Trello, Asana, etc.)
+        var syncResults = new List<ConnectorSyncLogDto>();
+        foreach (var act in createdActions)
+        {
+            if (Enum.TryParse<ConnectorType>(act.ExternalSystem, out var connType))
+            {
+                try
+                {
+                    var log = await _connectorService.SyncActionAsync(act.Id, connType);
+                    syncResults.Add(log);
+                }
+                catch
+                {
+                    // Fallback to GitHub if specific connector fails
+                    var log = await _connectorService.SyncActionAsync(act.Id, ConnectorType.GitHub);
+                    syncResults.Add(log);
+                }
             }
         }
 
@@ -262,10 +312,17 @@ public class IdeaSessionsController : ControllerBase
         }
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "user-admin";
-        await _reputationService.AwardPointsAsync(userId, 50, "Extracted decisions and action points from a completed session");
+        await _reputationService.AwardPointsAsync(userId, 50, "Extracted decisions and action points pushed into external execution tools");
 
         await _context.SaveChangesAsync(default);
-        return Ok(new { success = true, sessionId = id, summary = session.AiSummary });
+        return Ok(new
+        {
+            success = true,
+            sessionId = id,
+            summary = session.AiSummary,
+            syncedActionsCount = createdActions.Count,
+            syncedConnectors = syncResults
+        });
     }
 
     private static IdeaSessionDto MapToDto(Session session)
