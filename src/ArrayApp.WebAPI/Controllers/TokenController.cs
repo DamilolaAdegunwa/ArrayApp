@@ -1,18 +1,20 @@
-using System.Net;
+#pragma warning disable
+#pragma info disable
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using ArrayApp.Infrastructure.Services;
 using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using NSwag.Annotations;
 using Serilog;
 

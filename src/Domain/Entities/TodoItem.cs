@@ -1,4 +1,6 @@
-﻿namespace ArrayApp.Domain.Entities;
+﻿#pragma warning disable
+#pragma info disable
+namespace ArrayApp.Domain.Entities;
 
 public class TodoItem : BaseAuditableEntity
 {

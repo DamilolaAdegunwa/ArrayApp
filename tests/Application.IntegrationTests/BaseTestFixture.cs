@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿#pragma warning disable
+#pragma info disable
+using NUnit.Framework;
 
 namespace ArrayApp.Application.IntegrationTests;
 

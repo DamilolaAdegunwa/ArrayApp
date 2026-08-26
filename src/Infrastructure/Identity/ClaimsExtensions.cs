@@ -1,11 +1,13 @@
+#pragma warning disable
+#pragma info disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using IdentityModel;
 using ArrayApp.Domain.Entities;
+using IdentityModel;
 
 namespace ArrayApp.Infrastructure.Identity;
 public static class ClaimsExtensions

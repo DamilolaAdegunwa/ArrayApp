@@ -1,19 +1,21 @@
-﻿using System.Net;
+﻿#pragma warning disable
+#pragma info disable
+using System.Net;
+using System.Security.Claims;
 using ArrayApp.Application.Common.Models;
+//using Swashbuckle.AspNetCore.Annotations;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using ArrayApp.Infrastructure.Services;
+using Azure;
+using Duende.IdentityServer;
+using IdentityModel;
 //using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using IdentityModel;
-using Azure;
 using NSwag.Annotations;
 using Serilog;
-using System.Security.Claims;
-using Duende.IdentityServer;
-//using Swashbuckle.AspNetCore.Annotations;
-using ArrayApp.Domain.Entities;
 namespace ArrayApp.WebUI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = false)]

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#pragma warning disable
+#pragma info disable
+using System.ComponentModel.DataAnnotations;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using Microsoft.AspNetCore.Identity;
 

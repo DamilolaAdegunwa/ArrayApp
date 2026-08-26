@@ -1,3 +1,5 @@
+#pragma warning disable
+#pragma info disable
 using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;

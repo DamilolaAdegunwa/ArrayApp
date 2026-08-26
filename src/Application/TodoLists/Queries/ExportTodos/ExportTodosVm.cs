@@ -1,4 +1,6 @@
-﻿namespace ArrayApp.Application.TodoLists.Queries.ExportTodos;
+﻿#pragma warning disable
+#pragma info disable
+namespace ArrayApp.Application.TodoLists.Queries.ExportTodos;
 
 public class ExportTodosVm
 {

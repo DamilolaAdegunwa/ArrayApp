@@ -1,8 +1,10 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿#pragma warning disable
+#pragma info disable
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Security;
 using ArrayApp.Domain.Enums;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

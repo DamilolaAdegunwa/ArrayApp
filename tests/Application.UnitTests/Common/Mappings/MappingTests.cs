@@ -1,10 +1,12 @@
+#pragma warning disable
+#pragma info disable
 using System.Runtime.Serialization;
-using AutoMapper;
-using AutoMapper.Internal;
 using ArrayApp.Application.Common.Mappings;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Application.TodoLists.Queries.GetTodos;
 using ArrayApp.Domain.Entities;
+using AutoMapper;
+using AutoMapper.Internal;
 using NUnit.Framework;
 
 namespace ArrayApp.Application.UnitTests.Common.Mappings;

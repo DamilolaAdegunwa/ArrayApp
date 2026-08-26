@@ -1,5 +1,8 @@
+#pragma warning disable
+#pragma info disable
 using System.Data;
 using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Files;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
@@ -9,7 +12,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ArrayApp.Domain.Entities;
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices

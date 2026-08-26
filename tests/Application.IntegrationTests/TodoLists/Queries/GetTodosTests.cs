@@ -1,4 +1,6 @@
-﻿using ArrayApp.Application.TodoLists.Queries.GetTodos;
+﻿#pragma warning disable
+#pragma info disable
+using ArrayApp.Application.TodoLists.Queries.GetTodos;
 using ArrayApp.Domain.Entities;
 using ArrayApp.Domain.ValueObjects;
 using FluentAssertions;

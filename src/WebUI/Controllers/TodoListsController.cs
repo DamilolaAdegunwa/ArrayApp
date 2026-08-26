@@ -1,4 +1,6 @@
-﻿using ArrayApp.Application.TodoLists.Commands.CreateTodoList;
+﻿#pragma warning disable
+#pragma info disable
+using ArrayApp.Application.TodoLists.Commands.CreateTodoList;
 using ArrayApp.Application.TodoLists.Commands.DeleteTodoList;
 using ArrayApp.Application.TodoLists.Commands.UpdateTodoList;
 using ArrayApp.Application.TodoLists.Queries.ExportTodos;

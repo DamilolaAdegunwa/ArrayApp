@@ -1,4 +1,6 @@
-﻿using ArrayApp.Application.Common.Interfaces;
+﻿#pragma warning disable
+#pragma info disable
+using ArrayApp.Application.Common.Interfaces;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 

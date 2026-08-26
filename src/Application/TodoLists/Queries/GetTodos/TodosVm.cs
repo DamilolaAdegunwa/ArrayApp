@@ -1,4 +1,6 @@
-﻿namespace ArrayApp.Application.TodoLists.Queries.GetTodos;
+﻿#pragma warning disable
+#pragma info disable
+namespace ArrayApp.Application.TodoLists.Queries.GetTodos;
 
 public class TodosVm
 {
