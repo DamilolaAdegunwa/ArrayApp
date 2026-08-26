@@ -265,6 +265,7 @@ public class DiscussionMessageDto
     public string? AiAgentType { get; set; }
     public string? AttachmentUrl { get; set; }
     public string? AttachmentName { get; set; }
+    public int VotesCount { get; set; }
     public DateTime Created { get; set; }
 }
 

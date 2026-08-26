@@ -92,6 +92,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<SessionParticipant> SessionParticipants => Set<SessionParticipant>();
     public DbSet<SessionPoll> SessionPolls => Set<SessionPoll>();
     public DbSet<SessionPollOption> SessionPollOptions => Set<SessionPollOption>();
+    public DbSet<InnovationCampaign> InnovationCampaigns => Set<InnovationCampaign>();
 
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
     public DbSet<Permission> Permissions { get; set; }

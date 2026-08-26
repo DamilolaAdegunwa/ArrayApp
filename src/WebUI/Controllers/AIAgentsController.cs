@@ -74,4 +74,59 @@ public class AIAgentsController : ControllerBase
         var answer = await _aiAgentService.AnswerMentorQuestionAsync(ideaId, question, userRole);
         return Ok(new { ideaId, question, userRole, answer });
     }
+
+    [HttpPost("detect-duplicates")]
+    public async Task<ActionResult<List<DuplicateIdeaResultDto>>> DetectDuplicates([FromBody] DetectDuplicatesRequestDto dto)
+    {
+        var results = await _aiAgentService.DetectDuplicatesAsync(dto.Title, dto.Description);
+        return Ok(results);
+    }
+
+    [HttpGet("cluster-ideas")]
+    public async Task<ActionResult<List<IdeaClusterDto>>> ClusterIdeas()
+    {
+        var clusters = await _aiAgentService.ClusterIdeasAsync();
+        return Ok(clusters);
+    }
+
+    [HttpPost("sessions/{sessionId}/synthesize-mindmap")]
+    public async Task<ActionResult<SynthesizedMindMapDto>> SynthesizeMindMap(int sessionId)
+    {
+        var result = await _aiAgentService.SynthesizeMindMapAsync(sessionId);
+        return Ok(result);
+    }
+
+    [HttpPost("triage-idea/{ideaId}")]
+    public async Task<ActionResult<IdeaTriageResultDto>> TriageIdea(int ideaId)
+    {
+        var result = await _aiAgentService.TriageIdeaAsync(ideaId);
+        return Ok(result);
+    }
+
+    [HttpGet("swot/{ideaId}")]
+    public async Task<ActionResult<IdeaSwotAnalysisDto>> GetSwotAnalysis(int ideaId)
+    {
+        var result = await _aiAgentService.GenerateSwotAnalysisAsync(ideaId);
+        return Ok(result);
+    }
+
+    [HttpPost("chat-with-ideabot")]
+    public async Task<ActionResult<IdeaBotChatResponseDto>> ChatWithIdeaBot([FromBody] ChatWithIdeaBotRequestDto dto)
+    {
+        var result = await _aiAgentService.ChatWithIdeaBotAsync(dto.IdeaId, dto.Message, dto.IntentMode ?? "General");
+        return Ok(result);
+    }
+}
+
+public class ChatWithIdeaBotRequestDto
+{
+    public int IdeaId { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public string? IntentMode { get; set; } // General, PatentSearch, GrantDraft
+}
+
+public class DetectDuplicatesRequestDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
 }

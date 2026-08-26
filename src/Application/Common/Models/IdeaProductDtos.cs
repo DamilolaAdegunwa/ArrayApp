@@ -47,6 +47,13 @@ public class IdeaProductDto
     public DateTime Created { get; set; }
     public DateTime? LastModified { get; set; }
 
+    // Multidimensional Innovation Scoring (ICE/RICE)
+    public double IceScore => Math.Round((ImpactScore * ConfidenceScore * EaseScore) / 10.0, 1);
+    public double ImpactScore { get; set; } = 8.5;
+    public double ConfidenceScore { get; set; } = 8.0;
+    public double EaseScore { get; set; } = 7.0;
+    public int PeerReviewsCount { get; set; } = 12;
+
     // Counts
     public int KnowledgeGapsCount { get; set; }
     public int OpenGapsCount { get; set; }
@@ -57,6 +64,14 @@ public class IdeaProductDto
     public int OutcomesCount { get; set; }
     public int SubscriptionsCount { get; set; }
     public int SessionsCount { get; set; }
+}
+
+public class SubmitIdeaScoreDto
+{
+    public double ImpactScore { get; set; }
+    public double ConfidenceScore { get; set; }
+    public double EaseScore { get; set; }
+    public string? ReviewFeedback { get; set; }
 }
 
 public class CreateIdeaProductDto

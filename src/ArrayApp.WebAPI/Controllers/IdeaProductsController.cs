@@ -123,7 +123,62 @@ public class IdeaProductsController : ControllerBase
         return Ok(new { success = true, role = dto.Role.ToString() });
     }
 
+    [HttpPost("{id}/score")]
+    public async Task<IActionResult> SubmitScore(int id, [FromBody] SubmitIdeaScoreDto dto)
+    {
+        var idea = await _context.Ideas.FindAsync(id);
+        if (idea == null) return NotFound();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "user-demo";
+        await _reputationService.AwardPointsAsync(userId, 20, $"Submitted peer review & multidimensional evaluation on Idea #{id}");
+
+        _context.ProvenanceLogs.Add(new ProvenanceLog
+        {
+            IdeaId = id,
+            ActorName = User.Identity?.Name ?? "Peer Reviewer",
+            ActorRole = "Professional",
+            ActionPerformed = "MultidimensionalScoreSubmitted",
+            Details = $"Impact: {dto.ImpactScore}/10, Confidence: {dto.ConfidenceScore}/10, Ease: {dto.EaseScore}/10. Feedback: {dto.ReviewFeedback}",
+            Timestamp = DateTime.UtcNow
+        });
+
+        await _context.SaveChangesAsync(default);
+        return Ok(new { success = true, ideaId = id, calculatedIceScore = Math.Round((dto.ImpactScore * dto.ConfidenceScore * dto.EaseScore) / 10.0, 1) });
+    }
+
     #region Knowledge Gaps Endpoints
+    [HttpGet("gaps/all")]
+    public async Task<ActionResult<List<KnowledgeGapDto>>> GetAllCrowdsourcedGaps([FromQuery] string? domain, [FromQuery] KnowledgeGapStatus? status)
+    {
+        var query = _context.KnowledgeGaps.Include(g => g.Idea).AsNoTracking();
+        if (!string.IsNullOrWhiteSpace(domain))
+        {
+            query = query.Where(g => g.DomainArea.ToLower().Contains(domain.ToLower()));
+        }
+        if (status.HasValue)
+        {
+            query = query.Where(g => g.Status == status.Value);
+        }
+
+        var gaps = await query.OrderByDescending(g => g.Priority)
+            .Select(g => new KnowledgeGapDto
+            {
+                Id = g.Id,
+                IdeaId = g.IdeaId,
+                Title = g.Title,
+                Description = g.Description,
+                DomainArea = g.DomainArea,
+                Priority = g.Priority,
+                Status = g.Status,
+                ResolutionDetails = g.ResolutionDetails,
+                SupportingEvidenceUrl = g.SupportingEvidenceUrl,
+                ResolvedAt = g.ResolvedAt
+            })
+            .ToListAsync();
+
+        return Ok(gaps);
+    }
+
     [HttpGet("{id}/gaps")]
     public async Task<ActionResult<List<KnowledgeGapDto>>> GetKnowledgeGaps(int id)
     {

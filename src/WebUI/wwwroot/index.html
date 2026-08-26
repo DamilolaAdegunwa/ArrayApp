@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArrayApp - Closed-Loop Idea Cultivation & Intelligence Operating System (.NET 10 & React)</title>
+  <title>ArrayApp - Executive Success Metrics, ROI Analytics & Knowledge Uplift (.NET 10 & React)</title>
   
   <!-- React 18 & Babel CDN -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -37,8 +37,8 @@
     .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     .stage-pill { font-size: 0.68rem; padding: 2px 8px; border-radius: 9999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-    .tool-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
-    .voice-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .metric-card { transition: all 0.2s ease-in-out; }
+    .metric-card:hover { transform: translateY(-2px); border-color: rgba(34, 197, 94, 0.4); }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-brand-500 selection:text-white">
@@ -48,275 +48,81 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // Maturity Stages Definition
-    const STAGES = [
-      { id: 0, name: 'Raw', color: 'bg-slate-800 text-slate-300 border-slate-700' },
-      { id: 1, name: 'Exploring', color: 'bg-blue-950 text-blue-300 border-blue-800' },
-      { id: 2, name: 'Structured', color: 'bg-indigo-950 text-indigo-300 border-indigo-800' },
-      { id: 3, name: 'Validating', color: 'bg-purple-950 text-purple-300 border-purple-800' },
-      { id: 4, name: 'Experimenting', color: 'bg-pink-950 text-pink-300 border-pink-800' },
-      { id: 5, name: 'Planned', color: 'bg-amber-950 text-amber-300 border-amber-800' },
-      { id: 6, name: 'Building', color: 'bg-emerald-950 text-emerald-300 border-emerald-800' },
-      { id: 7, name: 'Implemented', color: 'bg-teal-950 text-teal-300 border-teal-800' },
-      { id: 8, name: 'Measured', color: 'bg-cyan-950 text-cyan-300 border-cyan-800' },
-      { id: 9, name: 'Evolving', color: 'bg-sky-950 text-sky-300 border-sky-800' }
+    const METRIC_DIMENSIONS = [
+      { id: 'executive', name: 'Executive Overview & ROI', icon: 'fa-chart-pie', color: 'text-brand-400 bg-brand-950/60 border-brand-800' },
+      { id: 'pipeline', name: 'Pipeline Velocity & Conversion', icon: 'fa-timeline', color: 'text-sky-400 bg-sky-950/60 border-sky-800' },
+      { id: 'collaboration', name: 'Knowledge Uplift & Roles', icon: 'fa-users', color: 'text-purple-400 bg-purple-950/60 border-purple-800' },
+      { id: 'ai-dividend', name: 'AI Efficiency Dividend', icon: 'fa-brain', color: 'text-amber-400 bg-amber-950/60 border-amber-800' },
+      { id: 'integrations', name: 'Productivity Stack Sync', icon: 'fa-plug-circle-bolt', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800' }
     ];
-
-    // Participant Roles Definition
-    const ROLES = [
-      { id: 'Student', name: 'Student', desc: 'Learner & Inquisitor', icon: 'fa-graduation-cap', color: 'text-amber-400 bg-amber-950/60 border-amber-800/60' },
-      { id: 'Sponsor', name: 'Sponsor', desc: 'Funder & Resource Patron', icon: 'fa-gem', color: 'text-purple-400 bg-purple-950/60 border-purple-800/60' },
-      { id: 'Professional', name: 'Professional / Expert', desc: 'Domain Specialist', icon: 'fa-microscope', color: 'text-blue-400 bg-blue-950/60 border-blue-800/60' },
-      { id: 'Authority', name: 'Authority', desc: 'Regulator & Sign-off', icon: 'fa-landmark', color: 'text-rose-400 bg-rose-950/60 border-rose-800/60' },
-      { id: 'Actioner', name: 'Actioner', desc: 'Execution & Engineering Lead', icon: 'fa-screwdriver-wrench', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60' },
-      { id: 'Audience', name: 'Audience', desc: 'Observer & Feedback Tester', icon: 'fa-users', color: 'text-slate-300 bg-slate-800/60 border-slate-700/60' }
-    ];
-
-    // Connectors Definition
-    const CONNECTOR_BADGES = {
-      Jira: { name: 'Jira', color: 'bg-blue-900/60 text-blue-300 border-blue-700', icon: 'fa-square-check' },
-      GitHub: { name: 'GitHub', color: 'bg-slate-800 text-slate-200 border-slate-700', icon: 'fa-brands fa-github' },
-      Trello: { name: 'Trello', color: 'bg-sky-900/60 text-sky-300 border-sky-700', icon: 'fa-trello' },
-      Asana: { name: 'Asana', color: 'bg-rose-900/60 text-rose-300 border-rose-700', icon: 'fa-circle-dot' },
-      Linear: { name: 'Linear', color: 'bg-purple-900/60 text-purple-300 border-purple-700', icon: 'fa-cubes' },
-      Slack: { name: 'Slack', color: 'bg-emerald-900/60 text-emerald-300 border-emerald-700', icon: 'fa-slack' },
-      Monday: { name: 'Monday', color: 'bg-amber-900/60 text-amber-300 border-amber-700', icon: 'fa-chart-simple' }
-    };
 
     function App() {
-      const [currentTab, setCurrentTab] = useState('session'); // default to live workshop
-      const [currentUser, setCurrentUser] = useState({ id: 'user-elena', name: 'Dr. Elena Vance', role: 'Professional' });
-      const [ideas, setIdeas] = useState([]);
-      const [selectedIdea, setSelectedIdea] = useState(null);
-      const [showExtractModal, setShowExtractModal] = useState(false);
-      const [showNewIdeaModal, setShowNewIdeaModal] = useState(false);
+      const [currentTab, setCurrentTab] = useState('executive');
+      const [currentUser, setCurrentUser] = useState({ id: 'user-elena', name: 'Dr. Elena Vance', role: 'Professional', points: 1420 });
+      const [showReportModal, setShowReportModal] = useState(false);
       const [syncAlert, setSyncAlert] = useState(null);
 
-      // Live Virtual Workshop State
-      const [sessionParticipants, setSessionParticipants] = useState([
-        { name: 'Dr. Elena Vance (Host)', role: 'Professional', isHost: true },
-        { name: 'Marcus Thorne', role: 'Sponsor' },
-        { name: 'Sarah Chen', role: 'Actioner' },
-        { name: 'Devon Miller', role: 'Student' },
-        { name: 'Chief Health Inspector', role: 'Authority' },
-        { name: 'Critic Bot (AI)', role: 'Researcher', isAi: true }
-      ]);
-      const [activeSpeaker, setActiveSpeaker] = useState('Dr. Elena Vance (Host)');
-      const [canvasNodes, setCanvasNodes] = useState([
-        { id: 1, type: 'MindMapNode', text: '🌱 Optical NPK Soil Probe', x: 220, y: 110, color: '#86EFAC', author: 'Elena (Host)', votes: 14 },
-        { id: 2, type: 'Sticky', text: 'Need sapphire optical glass window to resist scratches', x: 430, y: 60, color: '#FEF08A', author: 'Sarah (Actioner)', votes: 8 },
-        { id: 3, type: 'Risk', text: '⚠️ Moisture condensation inside optical chamber in tropics', x: 430, y: 170, color: '#FECACA', author: 'Critic Bot (AI)', votes: 11 },
-        { id: 4, type: 'Action', text: '✅ Integrate Gore-Tex acoustic breathable vent', x: 640, y: 170, color: '#BFDBFE', author: 'Elena (Host)', votes: 9 },
-        { id: 5, type: 'SponsorPledge', text: '💎 Innovation Fund pledged $25,000 for 100 pilot PCB units', x: 220, y: 260, color: '#E9D5FF', author: 'Marcus (Sponsor)', votes: 16 }
-      ]);
-      const [sessionMessages, setSessionMessages] = useState([
-        { sender: 'Dr. Elena Vance (Host)', role: 'Professional', text: 'Welcome everyone! Today we are extracting concrete execution work packages from our optical soil probe session.', time: '10:30 AM' },
-        { sender: 'Marcus Thorne', role: 'Sponsor', text: 'Our innovation fund is ready to sponsor the 100 prototype units. Let us make sure follow-up tickets are pushed to Jira and GitHub.', time: '10:31 AM' },
-        { sender: 'Critic Bot (AI)', role: 'Researcher', isAi: true, text: '⚠️ Risk flag: Firmware power profile must be verified before battery ordering.', time: '10:32 AM' },
-        { sender: 'Sarah Chen', role: 'Actioner', text: 'I will take the IP67 waterproof enclosure task in Jira and sync PCB CAD files to GitHub.', time: '10:33 AM' }
-      ]);
-      const [decisions, setDecisions] = useState([
-        { title: 'Adopt Nordic nRF52840 MCU with BLE + LoRaWAN', rationale: 'Lowest deep sleep current (1.8uA), enabling 18-month battery life with a 2W solar panel.', author: 'Elena Vance' },
-        { title: 'Standardize on Swahili Dialect Audio Prompts', rationale: 'Overcomes literacy barriers and boosted cooperative fertilizer adherence to 88%.', author: 'Elena Vance' }
-      ]);
-
-      // Extraction Modal Working State
-      const [extractTasks, setExtractTasks] = useState([
-        { id: 101, title: 'Design & 3D print IP67 waterproof probe enclosure', tool: 'GitHub', assignee: 'Sarah Chen (Actioner)', priority: 'High', days: 4 },
-        { id: 102, title: 'Quantize edge neural net for nutrient inference (64KB RAM)', tool: 'Jira', assignee: 'Elena Vance (Professional)', priority: 'High', days: 6 },
-        { id: 103, title: 'Procure 100 units Nordic nRF52840 BLE/LoRa modules', tool: 'Trello', assignee: 'Marcus Thorne (Sponsor)', priority: 'Medium', days: 3 },
-        { id: 104, title: 'Conduct regulatory calibration presentation with Agriculture Ministry', tool: 'Asana', assignee: 'Authority Lead', priority: 'Medium', days: 12 },
-        { id: 105, title: 'Dispatch Twilio voice notification test across 40 trial handsets', tool: 'Linear', assignee: 'Devon Miller (Student)', priority: 'Low', days: 5 }
-      ]);
-
-      // Live Execution Kanban State (Closing the Loop)
-      const [kanbanActions, setKanbanActions] = useState([
-        { id: 1, title: 'Design IP67 waterproof probe enclosure', desc: 'Enclosure must protect optical lenses from dirt while allowing soil insertion.', status: 'Done', priority: 'High', tool: 'GitHub', ref: 'issue#12', url: 'https://github.com/arrayapp/soil-probe/issues/12', owner: 'Sarah Chen', impact: 'Enclosure successfully tested in 500-acre field trial.' },
-        { id: 2, title: 'Compile quantized edge neural network', desc: 'Convert TensorFlow Lite model into C++ array runnable on 64KB MCU.', status: 'InProgress', priority: 'High', tool: 'Jira', ref: 'IDEA-104', url: 'https://jira.atlassian.net/browse/IDEA-104', owner: 'Elena Vance', impact: 'NPK inference accuracy validated at 94% r².' },
-        { id: 3, title: 'Procure 100 units Nordic MCU modules', desc: 'Funded via Marcus Thorne sponsor pledge.', status: 'InProgress', priority: 'Medium', tool: 'Trello', ref: 'card-203', url: 'https://trello.com/c/card-203', owner: 'Marcus Thorne', impact: 'BOM cost kept under $40.' },
-        { id: 4, title: 'Conduct regulatory safety presentation', desc: 'Present calibration data to safety and calibration board.', status: 'Todo', priority: 'Medium', tool: 'Asana', ref: 'asana-task-881', url: 'https://app.asana.com/0/1204/881', owner: 'Chief Inspector', impact: 'Required for national cooperative distribution.' },
-        { id: 5, title: 'Voice notification test across 40 handsets', desc: 'Measure compliance between local dialect voice vs text SMS.', status: 'Done', priority: 'Low', tool: 'Linear', ref: 'LIN-302', url: 'https://linear.app/team/issue/LIN-302', owner: 'Devon Miller', impact: 'Audio voice prompt cohort achieved 88% adherence vs 47% SMS.' }
-      ]);
-
-      // Closed-Loop Participant Attribution Log
-      const [participantAttributions, setParticipantAttributions] = useState([
-        { name: 'Dr. Elena Vance (Host)', role: 'Professional', badge: 'Master Idea Builder', points: 1420, impactNarrative: 'Formulated core optical hypothesis in Session #1 -> Guided firmware architecture -> Pushed Jira IDEA-104 -> Realized 94% NPK estimation accuracy across 500 trial acres.' },
-        { name: 'Marcus Thorne (Sponsor)', role: 'Sponsor', badge: 'Idea Sponsor & Patron', points: 980, impactNarrative: 'Pledged $25,000 funding in Session #2 -> Created Trello card-203 -> Financed 100 pilot sensor units saving cooperative farmers $45,000 in commercial testing fees.' },
-        { name: 'Sarah Chen (Actioner)', role: 'Actioner', badge: 'Action Leader', points: 760, impactNarrative: 'Claimed IP67 mechanical task in Session #3 -> Pushed GitHub Issue #12 -> 3D printed durable enclosures that survived 30-day tropical field immersion.' },
-        { name: 'Devon Miller (Student)', role: 'Student', badge: 'Knowledge Contributor', points: 410, impactNarrative: 'Asked soil moisture variance question in Session #3 -> Led to Linear LIN-302 dialect audio trial -> Proved 88% farmer adherence rate.' }
-      ]);
-
-      // Load initial Ideas
-      useEffect(() => {
-        fetch('/api/IdeaProducts')
-          .then(r => r.json())
-          .then(data => {
-            setIdeas(data);
-            if (data.length > 0) setSelectedIdea(data[0]);
-          })
-          .catch(e => console.error(e));
-      }, []);
-
-      // Handle Role Switch
-      const handleRoleSwitch = (newRole) => {
-        setCurrentUser(prev => ({ ...prev, role: newRole }));
-        setSessionParticipants(prev => prev.map(p => p.name.includes(currentUser.name) ? { ...p, role: newRole } : p));
-        setSessionMessages(prev => [...prev, {
-          sender: 'System',
-          role: 'System',
-          text: `🔄 ${currentUser.name} self-assigned role as ${newRole}.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }]);
-      };
-
-      // Add Canvas Node
-      const addCanvasNode = (type, color, defaultText) => {
-        const text = prompt(`Enter ${type} note text:`, defaultText || '');
-        if (!text) return;
-        const newNode = {
-          id: Date.now(),
-          type,
-          text,
-          x: 150 + Math.floor(Math.random() * 400),
-          y: 80 + Math.floor(Math.random() * 200),
-          color,
-          author: `${currentUser.name} (${currentUser.role})`,
-          votes: 1
-        };
-        setCanvasNodes(prev => [...prev, newNode]);
-      };
-
-      const voteCanvasNode = (nodeId) => {
-        setCanvasNodes(prev => prev.map(n => n.id === nodeId ? { ...n, votes: n.votes + 1 } : n));
-      };
-
-      // Chat Message
-      const [chatInput, setChatInput] = useState('');
-      const handleSendChat = () => {
-        if (!chatInput.trim()) return;
-        const newMsg = {
-          sender: `${currentUser.name}`,
-          role: currentUser.role,
-          text: chatInput,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setSessionMessages(prev => [...prev, newMsg]);
-        setChatInput('');
-        setActiveSpeaker(currentUser.name);
-        setTimeout(() => setActiveSpeaker(''), 4000);
-      };
-
-      // Role-Specific Action Tool Handlers
-      const handleSponsorPledge = () => {
-        const amount = prompt('Enter sponsorship / grant pledge amount ($):', '25,000');
-        if (!amount) return;
-        const desc = prompt('Enter resource description:', '100 pilot PCB sensor boards & solar cells');
-        addCanvasNode('SponsorPledge', '#E9D5FF', `💎 Sponsor Pledge: $${amount} - ${desc}`);
-        setSessionMessages(prev => [...prev, {
-          sender: currentUser.name,
-          role: 'Sponsor',
-          text: `🎉 PLEDGE ANNOUNCEMENT: Committing $${amount} and ${desc} towards this idea!`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }]);
-      };
-
-      const handleAuthoritySignoff = () => {
-        const standard = prompt('Enter regulatory standard / compliance sign-off:', 'ISO-14040 Agricultural Sensor Standard');
-        if (!standard) return;
-        setDecisions(prev => [...prev, {
-          title: `🏛️ Authority Approval: ${standard}`,
-          rationale: `Formally signed off by ${currentUser.name} as compliant with regional precision agriculture guidelines.`,
-          author: currentUser.name
-        }]);
-      };
-
-      const handleActionerClaim = () => {
-        const task = prompt('Enter engineering/action task to claim:', 'Assemble 20 PCB prototypes with Gore-Tex vents');
-        if (!task) return;
-        addCanvasNode('Action', '#BFDBFE', `🛠️ Claimed: ${task}`);
-      };
-
-      const handleProfessionalResolve = () => {
-        const gap = prompt('Enter knowledge gap to resolve:', 'Wavelength calibration for volcanic soils');
-        if (!gap) return;
-        const solution = prompt('Enter technical resolution:', 'Applied dual-reference LED baseline offset algorithm.');
-        setDecisions(prev => [...prev, {
-          title: `🔬 Domain Knowledge Resolved: ${gap}`,
-          rationale: solution,
-          author: currentUser.name
-        }]);
-      };
-
-      const handleStudentQuestion = () => {
-        const q = prompt('Ask a clarifying question to the experts & AI:');
-        if (!q) return;
-        setSessionMessages(prev => [...prev, {
-          sender: currentUser.name,
-          role: 'Student',
-          text: `🎓 LEARNER QUESTION: ${q}`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }]);
-      };
-
-      // Execute Extraction & Push to PM Tools (Closing the Loop)
-      const handleConfirmExtractionAndPush = async () => {
-        try {
-          const res = await fetch('/api/IdeaSessions/1/extract-outcomes', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sessionId: 1,
-              sessionNotes: 'Completed sprint review with 6 role-assigned contributors and AI facilitator. Extracted 5 follow-up execution tickets.',
-              decisions: decisions.map(d => ({ ideaId: 1, summary: d.title, rationale: d.rationale, context: 'Live Session #3' })),
-              actions: extractTasks.map(t => ({
-                ideaId: 1,
-                title: t.title,
-                description: `Assigned during sprint to ${t.assignee}`,
-                priority: t.priority === 'High' ? 2 : t.priority === 'Medium' ? 1 : 0,
-                dueDate: new Date(Date.now() + t.days * 86400000).toISOString(),
-                externalSystem: t.tool
-              })),
-              generateAiSummary: true
-            })
-          });
-
-          const data = await res.json();
-          setShowExtractModal(false);
-          setSyncAlert({
-            title: '🚀 Tickets Dispatched to External Tools & Stage Advanced!',
-            message: `Successfully synchronized ${extractTasks.length} work items into Jira, GitHub, Trello, Asana, and Linear. Idea advanced to "Building" stage.`
-          });
-
-          // Switch to Kanban to view the execution loop
-          setCurrentTab('kanban');
-        } catch (err) {
-          console.error(err);
-          setShowExtractModal(false);
-          setCurrentTab('kanban');
+      // Success Metrics State
+      const [metrics, setMetrics] = useState({
+        participation: {
+          activeUsers: 1240,
+          sessionsHosted: 84,
+          ideasSubmitted: 312,
+          roleDistribution: [
+            { role: 'Professional / Expert', percent: 28, count: 347, color: 'bg-blue-500' },
+            { role: 'Actioner / Implementer', percent: 24, count: 298, color: 'bg-emerald-500' },
+            { role: 'Sponsor / Patron', percent: 14, count: 174, color: 'bg-purple-500' },
+            { role: 'Student / Novice', percent: 18, count: 223, color: 'bg-amber-500' },
+            { role: 'Authority / Stakeholder', percent: 6, count: 74, color: 'bg-rose-500' },
+            { role: 'Audience / Observer', percent: 10, count: 124, color: 'bg-slate-500' }
+          ]
+        },
+        pipeline: {
+          implementationRate: 18.5, // 18.5% conversion vs 5-10% standard
+          daysToFirstAction: 3.2,    // 3.2 days vs 21 days
+          reviewedRate: 82.5,
+          plannedRate: 64.0,
+          inProgressRate: 48.0,
+          executedCount: 58
+        },
+        outcomeImpact: {
+          costSavings: '$420,000+',
+          newRevenue: '$1,250,000+',
+          platformRoi: 340, // 340% ROI
+          implementedProjects: 58
+        },
+        collaboration: {
+          preExpertiseScore: 4.2,
+          postExpertiseScore: 8.6,
+          upliftPercent: 104.7,
+          satisfactionScore: 94.2
+        },
+        aiDividend: {
+          timeSavedPercent: 35.0, // 35% time cut
+          creativityBoostPercent: 38.0,
+          duplicateBlockersPrevented: 46,
+          hoursSavedPerYear: 1420
+        },
+        integrations: {
+          jiraTasks: 142,
+          gitHubIssues: 98,
+          asanaTasks: 76,
+          trelloCards: 54,
+          slackAlerts: 1840,
+          cloudDocs: 320
         }
-      };
+      });
 
-      // Simulate Two-Way External Webhook Callback (Closing the execution loop)
-      const handleSimulateWebhook = (actionId, targetStatus) => {
-        setKanbanActions(prev => prev.map(a => {
-          if (a.id === actionId) {
-            return {
-              ...a,
-              status: targetStatus,
-              impact: targetStatus === 'Done' ? 'Completed & verified! Generated real-time cost savings and updated reputation score.' : a.impact
-            };
-          }
-          return a;
-        }));
+      const handleExportReport = () => {
         setSyncAlert({
-          title: `⚡ Webhook Callback Received from External Tool!`,
-          message: `Ticket #${actionId} updated to "${targetStatus}". Participant received +50 Reputation Points and closed the innovation realization loop!`
+          title: '📊 Executive Stakeholder Report Generated!',
+          message: 'Downloaded "ArrayApp_Innovation_ROI_Report_Q3_2026.pdf" with verifiable financial impact and adoption metrics.'
         });
       };
 
       return (
         <div className="flex flex-col min-h-screen">
-          {/* Global Top Navigation */}
+          {/* Header */}
           <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
@@ -327,50 +133,31 @@
                   <span className="font-extrabold text-xl tracking-tight text-white">ArrayApp</span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-brand-500/20 text-brand-400 border border-brand-500/30">.NET 10 & React</span>
                 </div>
-                <p className="text-xs text-slate-400">Closed-Loop Idea Cultivation, Maturation & Execution Ecosystem</p>
+                <p className="text-xs text-slate-400">Executive Success Metrics, Implementation Rate & Innovation ROI</p>
               </div>
             </div>
 
-            {/* Navigation Tabs */}
+            {/* Nav Tabs */}
             <nav className="flex items-center bg-slate-850 p-1.5 rounded-2xl border border-slate-750 space-x-1">
-              <button onClick={() => setCurrentTab('session')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'session' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
-                <i className="fa-solid fa-users-viewfinder"></i> Live Session Studio
+              <button onClick={() => setCurrentTab('executive')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'executive' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-chart-pie"></i> Executive ROI
               </button>
-              <button onClick={() => setCurrentTab('kanban')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'kanban' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
-                <i className="fa-solid fa-list-check"></i> Action & PM Sync
+              <button onClick={() => setCurrentTab('pipeline')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'pipeline' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-timeline"></i> Pipeline Velocity
               </button>
-              <button onClick={() => setCurrentTab('lifecycle')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'lifecycle' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
-                <i className="fa-solid fa-timeline"></i> Lifecycle & Attribution
-              </button>
-              <button onClick={() => setCurrentTab('pipeline')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'pipeline' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
-                <i className="fa-solid fa-seedling"></i> Maturation Pipeline
-              </button>
-              <button onClick={() => setCurrentTab('leaderboard')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'leaderboard' ? 'bg-yellow-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
-                <i className="fa-solid fa-trophy"></i> Leaderboard & ROI
+              <button onClick={() => setCurrentTab('collaboration')} className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'collaboration' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-brain"></i> Knowledge Uplift
               </button>
             </nav>
 
-            {/* Active Role Selector */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-                <span className="text-xs text-slate-400">Acting as:</span>
-                <select 
-                  value={currentUser.role} 
-                  onChange={(e) => handleRoleSwitch(e.target.value)}
-                  className="bg-slate-900 text-brand-400 font-bold text-xs rounded-lg px-2 py-1 border border-slate-700 focus:outline-none focus:border-brand-500"
-                >
-                  {ROLES.map(r => (
-                    <option key={r.id} value={r.id}>{r.name}</option>
-                  ))}
-                </select>
-              </div>
-              <button onClick={() => setShowNewIdeaModal(true)} className="px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-brand-600/30 transition-all">
-                <i className="fa-solid fa-plus"></i> Post Idea
+              <button onClick={handleExportReport} className="px-4 py-2 bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-500 hover:to-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 flex items-center gap-2">
+                <i className="fa-solid fa-file-arrow-down"></i> Export Executive Report
               </button>
             </div>
           </header>
 
-          {/* Real-time Notification Banner */}
+          {/* Toast */}
           {syncAlert && (
             <div className="bg-brand-950/90 border-b border-brand-800 px-6 py-2.5 flex items-center justify-between text-xs text-brand-200">
               <div className="flex items-center gap-2">
@@ -384,562 +171,228 @@
             </div>
           )}
 
-          {/* Main Workspace Container */}
+          {/* Main Container */}
           <main className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
 
-            {/* 1. LIVE COLLABORATIVE SESSION STUDIO */}
-            {currentTab === 'session' && (
-              <div className="space-y-6">
-                {/* Session Header Banner */}
-                <div className="p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2.5">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse">
-                        <span className="h-2 w-2 rounded-full bg-rose-500"></span> LIVE VIRTUAL WORKSHOP
-                      </span>
-                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                        Idea #1: Soil & Crop Health Monitor
-                      </span>
-                    </div>
-                    <h1 className="text-xl font-black text-white mt-2">AI Soil Probe Hardware & Firmware Sprint #3</h1>
-                    <p className="text-xs text-slate-400 mt-0.5">Originator: Dr. Elena Vance • 6 Role-Assigned Collaborators • Live 2D Mind-Map Canvas • AI Critic Facilitator</p>
-                  </div>
-
-                  {/* Extract Outcomes & Push to Execution CTA */}
-                  <div className="flex items-center gap-3">
-                    {activeSpeaker && (
-                      <div className="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800/80 px-3 py-1.5 rounded-xl voice-pulse">
-                        <i className="fa-solid fa-microphone text-emerald-400 text-xs"></i>
-                        <span className="text-xs font-bold text-emerald-300">{activeSpeaker} speaking...</span>
-                      </div>
-                    )}
-                    <button onClick={() => setShowExtractModal(true)} className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-black flex items-center gap-2 shadow-lg shadow-purple-600/30 transition-all">
-                      <i className="fa-solid fa-cloud-arrow-up"></i> Extract Outcomes & Push to PM Tools (Jira, Trello, Asana)
-                    </button>
-                  </div>
-                </div>
-
-                {/* Role Tools Banner */}
-                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Role Tools ({currentUser.role}):</span>
-                    {currentUser.role === 'Sponsor' && (
-                      <button onClick={handleSponsorPledge} className="px-3 py-1.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/40 hover:bg-purple-600/30 text-xs font-bold flex items-center gap-1.5">
-                        <i className="fa-solid fa-gem"></i> Pledge Funding / Enclosures
-                      </button>
-                    )}
-                    {currentUser.role === 'Authority' && (
-                      <button onClick={handleAuthoritySignoff} className="px-3 py-1.5 rounded-xl bg-rose-600/20 text-rose-300 border border-rose-500/40 hover:bg-rose-600/30 text-xs font-bold flex items-center gap-1.5">
-                        <i className="fa-solid fa-landmark"></i> Issue Regulatory Sign-off
-                      </button>
-                    )}
-                    {currentUser.role === 'Actioner' && (
-                      <button onClick={handleActionerClaim} className="px-3 py-1.5 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 text-xs font-bold flex items-center gap-1.5">
-                        <i className="fa-solid fa-screwdriver-wrench"></i> Claim Engineering Task
-                      </button>
-                    )}
-                    {currentUser.role === 'Professional' && (
-                      <button onClick={handleProfessionalResolve} className="px-3 py-1.5 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/40 hover:bg-blue-600/30 text-xs font-bold flex items-center gap-1.5">
-                        <i className="fa-solid fa-microscope"></i> Resolve Knowledge Gap
-                      </button>
-                    )}
-                    {currentUser.role === 'Student' && (
-                      <button onClick={handleStudentQuestion} className="px-3 py-1.5 rounded-xl bg-amber-600/20 text-amber-300 border border-amber-500/40 hover:bg-amber-600/30 text-xs font-bold flex items-center gap-1.5">
-                        <i className="fa-solid fa-graduation-cap"></i> Ask Clarifying Question
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800">
-                    <span className="text-[11px] text-slate-500 font-semibold mr-1">Canvas Note:</span>
-                    <button onClick={() => addCanvasNode('Sticky', '#FEF08A')} className="px-2 py-1 rounded text-[11px] font-bold bg-yellow-400/20 text-yellow-300 hover:bg-yellow-400/30">Sticky</button>
-                    <button onClick={() => addCanvasNode('Risk', '#FECACA')} className="px-2 py-1 rounded text-[11px] font-bold bg-rose-400/20 text-rose-300 hover:bg-rose-400/30">Risk</button>
-                    <button onClick={() => addCanvasNode('Action', '#BFDBFE')} className="px-2 py-1 rounded text-[11px] font-bold bg-blue-400/20 text-blue-300 hover:bg-blue-400/30">Action</button>
-                    <button onClick={() => addCanvasNode('MindMapNode', '#86EFAC')} className="px-2 py-1 rounded text-[11px] font-bold bg-emerald-400/20 text-emerald-300 hover:bg-emerald-400/30">Branch</button>
-                  </div>
-                </div>
-
-                {/* Studio Grid: 2D Canvas + Multi-Role Chat Feed */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Collaborative Infinite Canvas */}
-                  <div className="lg:col-span-2 space-y-4">
-                    <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                        <div className="flex items-center gap-2">
-                          <i className="fa-solid fa-diagram-project text-brand-400"></i>
-                          <span className="text-sm font-bold text-white">Live Whiteboard & Mind-Map Canvas</span>
-                        </div>
-                        <span className="text-[11px] text-slate-400">Click node to upvote • Changes persist to lifecycle</span>
-                      </div>
-
-                      <div className="relative h-[380px] bg-slate-950 rounded-2xl border border-slate-800/80 p-4 overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
-                        {canvasNodes.map(node => (
-                          <div 
-                            key={node.id}
-                            onClick={() => voteCanvasNode(node.id)}
-                            style={{ left: `${node.x}px`, top: `${node.y}px`, backgroundColor: node.color }}
-                            className="absolute p-3 rounded-2xl shadow-xl text-slate-900 text-xs font-semibold cursor-pointer border border-black/10 transition-transform hover:scale-105 select-none max-w-xs"
-                          >
-                            <div className="flex items-center justify-between gap-3 mb-1 text-[10px] text-slate-700 font-bold">
-                              <span>{node.author}</span>
-                              <span className="px-1.5 py-0.5 rounded bg-black/10"><i className="fa-solid fa-thumbs-up"></i> {node.votes}</span>
-                            </div>
-                            <p className="leading-snug">{node.text}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Decisions Log */}
-                    <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <i className="fa-solid fa-gavel text-amber-400"></i> Ratified Decisions Log ({decisions.length})
-                      </span>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {decisions.map((d, idx) => (
-                          <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
-                            <p className="font-bold text-white">{d.title}</p>
-                            <p className="text-[11px] text-slate-400">{d.rationale}</p>
-                            <span className="text-[10px] text-slate-500 font-semibold">Decided by: {d.author}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Multi-Role Live Stream & Chat */}
-                  <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col h-[580px]">
-                    <div className="pb-3 border-b border-slate-800">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                          <i className="fa-solid fa-users text-sky-400"></i> Attendees ({sessionParticipants.length})
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">Room Connected</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {sessionParticipants.map((p, idx) => (
-                          <span key={idx} className={`text-[10px] px-2 py-0.5 rounded-lg border flex items-center gap-1 ${p.isAi ? 'bg-amber-950/60 text-amber-300 border-amber-800' : 'bg-slate-800 text-slate-300 border-slate-700'}`}>
-                            <span className={`h-1.5 w-1.5 rounded-full ${p.isAi ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
-                            {p.name} ({p.role})
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto scrollbar-thin py-3 space-y-3">
-                      {sessionMessages.map((m, idx) => (
-                        <div key={idx} className="text-xs space-y-1">
-                          <div className="flex items-center justify-between text-[10px] text-slate-400">
-                            <span className={`font-bold flex items-center gap-1 ${m.isAi ? 'text-amber-400' : m.role === 'Sponsor' ? 'text-purple-400' : m.role === 'Authority' ? 'text-rose-400' : m.role === 'Student' ? 'text-amber-300' : 'text-emerald-400'}`}>
-                              {m.isAi && <i className="fa-solid fa-robot"></i>}
-                              {m.sender} <span className="text-[9px] font-normal text-slate-500">({m.role})</span>
-                            </span>
-                            <span>{m.time}</span>
-                          </div>
-                          <div className={`p-2.5 rounded-2xl border leading-relaxed ${m.isAi ? 'bg-amber-950/30 border-amber-800/40 text-amber-100' : m.role === 'Sponsor' ? 'bg-purple-950/30 border-purple-800/40 text-purple-100' : 'bg-slate-800/80 border-slate-700/60 text-slate-200'}`}>
-                            {m.text}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-800 flex gap-2">
-                      <input 
-                        type="text"
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
-                        placeholder={`Message as ${currentUser.role}...`}
-                        className="flex-1 bg-slate-950 border border-slate-800 text-xs rounded-xl px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-brand-500"
-                      />
-                      <button onClick={handleSendChat} className="px-3.5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-all">
-                        <i className="fa-solid fa-paper-plane"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 2. IDEA-TO-EXECUTION KANBAN & EXTERNAL PM TOOLS SYNC */}
-            {currentTab === 'kanban' && (
+            {/* 1. EXECUTIVE ROI & TOP-LEVEL IMPACT */}
+            {currentTab === 'executive' && (
               <div className="space-y-6">
                 <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h1 className="text-xl font-black text-white flex items-center gap-2">
-                      <i className="fa-solid fa-list-check text-rose-400"></i> Idea-to-Execution Kanban & PM Connectors
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-brand-950 text-brand-300 border border-brand-800">
+                      EXECUTIVE BUSINESS IMPACT & PLATFORM ROI
+                    </span>
+                    <h1 className="text-xl font-black text-white mt-1.5 flex items-center gap-2">
+                      <i className="fa-solid fa-chart-pie text-brand-400"></i> Demonstrable Innovation ROI & Outcomes
                     </h1>
-                    <p className="text-xs text-slate-400 mt-1">
-                      Action items extracted from sessions synchronized with <strong>Jira, GitHub, Trello, Asana, and Linear</strong>.
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Proving that IdeaApp drives real business outcomes: quantified cost savings, accelerated cycle times, and an 18.5% implementation conversion rate.
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 font-semibold">Active Connectors:</span>
-                    <span className="tool-badge bg-blue-900/60 text-blue-300 border border-blue-700"><i className="fa-brands fa-jira"></i> Jira</span>
-                    <span className="tool-badge bg-slate-800 text-slate-200 border border-slate-700"><i className="fa-brands fa-github"></i> GitHub</span>
-                    <span className="tool-badge bg-sky-900/60 text-sky-300 border border-sky-700"><i className="fa-brands fa-trello"></i> Trello</span>
-                    <span className="tool-badge bg-rose-900/60 text-rose-300 border border-rose-700">Asana</span>
-                    <span className="tool-badge bg-purple-900/60 text-purple-300 border border-purple-700">Linear</span>
+                  <div className="flex items-center gap-2 text-right">
+                    <span className="text-2xl font-black text-brand-400">340%</span>
+                    <span className="text-xs text-slate-400 text-left">Calculated<br/>Platform ROI</span>
                   </div>
                 </div>
 
-                {/* Kanban 4 Columns */}
+                {/* 4 Key Executive Impact Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {/* Todo */}
-                  <div className="p-4 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-slate-400 pb-2 border-b border-slate-800">
-                      <span>📋 TO DO</span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                        {kanbanActions.filter(a => a.status === 'Todo').length}
-                      </span>
+                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 metric-card space-y-2">
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 flex items-center justify-between">
+                      <span>Cost Savings Realized</span>
+                      <i className="fa-solid fa-arrow-trend-up"></i>
+                    </span>
+                    <h2 className="text-2xl font-black text-white">{metrics.outcomeImpact.costSavings}</h2>
+                    <p className="text-[11px] text-slate-400">Validated across 58 executed projects & open-hardware tooling.</p>
+                  </div>
+
+                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 metric-card space-y-2">
+                    <span className="text-[10px] uppercase font-bold text-sky-400 flex items-center justify-between">
+                      <span>Implementation Rate</span>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-950 text-sky-300">vs 5-10% Industry</span>
+                    </span>
+                    <h2 className="text-2xl font-black text-white">{metrics.pipeline.implementationRate}%</h2>
+                    <p className="text-[11px] text-slate-400">Percentage of submitted ideas advancing to production projects.</p>
+                  </div>
+
+                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 metric-card space-y-2">
+                    <span className="text-[10px] uppercase font-bold text-purple-400 flex items-center justify-between">
+                      <span>Time to First Action</span>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-300">85% Faster</span>
+                    </span>
+                    <h2 className="text-2xl font-black text-white">{metrics.pipeline.daysToFirstAction} Days</h2>
+                    <p className="text-[11px] text-slate-400">Average time from submission to Jira/GitHub ticket dispatch.</p>
+                  </div>
+
+                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 metric-card space-y-2">
+                    <span className="text-[10px] uppercase font-bold text-amber-400 flex items-center justify-between">
+                      <span>AI Efficiency Dividend</span>
+                      <i className="fa-solid fa-bolt"></i>
+                    </span>
+                    <h2 className="text-2xl font-black text-white">35% Cut</h2>
+                    <p className="text-[11px] text-slate-400">Reduction in workshop cycle time with +38% creativity gain.</p>
+                  </div>
+                </div>
+
+                {/* Role Breakdown & Productivity Stack Synchronizations */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Role Distribution */}
+                  <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div>
+                        <h3 className="text-sm font-bold text-white">Cross-Functional Role Participation Mix</h3>
+                        <span className="text-[10px] text-slate-400">1,240 Total Active Innovators</span>
+                      </div>
+                      <span className="text-xs text-brand-400 font-bold">Diverse Coverage</span>
                     </div>
+
                     <div className="space-y-3">
-                      {kanbanActions.filter(a => a.status === 'Todo').map(act => (
-                        <div key={act.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5 text-xs hover:border-slate-700 transition-all">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-white leading-snug">{act.title}</span>
-                            <span className={`tool-badge border ${CONNECTOR_BADGES[act.tool]?.color || 'bg-slate-800'}`}>{act.tool}</span>
+                      {metrics.participation.roleDistribution.map((r, i) => (
+                        <div key={i} className="space-y-1 text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-slate-300 font-medium">{r.role}</span>
+                            <span className="text-slate-400">{r.count} ({r.percent}%)</span>
                           </div>
-                          <p className="text-[11px] text-slate-400">{act.desc}</p>
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[10px]">
-                            <span className="text-slate-400"><i className="fa-solid fa-user"></i> {act.owner}</span>
-                            <a href={act.url} target="_blank" className="text-sky-400 hover:underline font-semibold flex items-center gap-1">
-                              {act.ref} <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                            </a>
+                          <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden">
+                            <div className={`h-full ${r.color}`} style={{ width: `${r.percent}%` }}></div>
                           </div>
-                          <button onClick={() => handleSimulateWebhook(act.id, 'InProgress')} className="w-full py-1.5 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30 rounded-xl text-[10px] font-bold">
-                            ⚡ Simulate Start in {act.tool}
-                          </button>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* In Progress */}
-                  <div className="p-4 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-blue-400 pb-2 border-b border-slate-800">
-                      <span>⚡ IN PROGRESS</span>
-                      <span className="px-2 py-0.5 rounded-full bg-blue-950 text-blue-300">
-                        {kanbanActions.filter(a => a.status === 'InProgress').length}
-                      </span>
+                  {/* Productivity Stack Integration Volume */}
+                  <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div>
+                        <h3 className="text-sm font-bold text-white">Ecosystem Integration & Workflow Push</h3>
+                        <span className="text-[10px] text-slate-400">Directly synchronized into existing engineering stacks</span>
+                      </div>
+                      <span className="text-xs text-sky-400 font-bold">25+ Connectors</span>
                     </div>
-                    <div className="space-y-3">
-                      {kanbanActions.filter(a => a.status === 'InProgress').map(act => (
-                        <div key={act.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5 text-xs hover:border-slate-700 transition-all">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-white leading-snug">{act.title}</span>
-                            <span className={`tool-badge border ${CONNECTOR_BADGES[act.tool]?.color || 'bg-slate-800'}`}>{act.tool}</span>
-                          </div>
-                          <p className="text-[11px] text-slate-400">{act.desc}</p>
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[10px]">
-                            <span className="text-slate-400"><i className="fa-solid fa-user"></i> {act.owner}</span>
-                            <a href={act.url} target="_blank" className="text-sky-400 hover:underline font-semibold flex items-center gap-1">
-                              {act.ref} <i className="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                            </a>
-                          </div>
-                          <button onClick={() => handleSimulateWebhook(act.id, 'Done')} className="w-full py-1.5 bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30 rounded-xl text-[10px] font-bold">
-                            ✅ Simulate Complete in {act.tool}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
-                  {/* In Review */}
-                  <div className="p-4 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-amber-400 pb-2 border-b border-slate-800">
-                      <span>🔍 VALIDATION REVIEW</span>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-950 text-amber-300">0</span>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-slate-950/60 border border-dashed border-slate-800 text-center text-xs text-slate-500 py-10">
-                      No tickets pending review.
-                    </div>
-                  </div>
-
-                  {/* Done & Realized */}
-                  <div className="p-4 rounded-3xl bg-slate-900/80 border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-brand-400 pb-2 border-b border-slate-800">
-                      <span>🎉 DONE & REALIZED</span>
-                      <span className="px-2 py-0.5 rounded-full bg-brand-950 text-brand-300">
-                        {kanbanActions.filter(a => a.status === 'Done').length}
-                      </span>
-                    </div>
-                    <div className="space-y-3">
-                      {kanbanActions.filter(a => a.status === 'Done').map(act => (
-                        <div key={act.id} className="p-4 rounded-2xl bg-slate-950 border border-brand-900/40 space-y-2.5 text-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-white leading-snug">{act.title}</span>
-                            <span className="text-[10px] text-brand-400 font-bold"><i className="fa-solid fa-circle-check"></i> Realized</span>
-                          </div>
-                          <p className="text-[11px] text-slate-300 bg-brand-950/30 p-2 rounded-lg border border-brand-900/30">{act.impact}</p>
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[10px] text-slate-500">
-                            <span>Completed by: {act.owner}</span>
-                            <span className="tool-badge bg-slate-800 text-slate-300">{act.tool}</span>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-500 font-bold block">Jira Issues</span>
+                        <strong className="text-white text-lg font-black">{metrics.integrations.jiraTasks}</strong>
+                        <span className="text-[10px] text-sky-400 block">Epics & Stories</span>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-500 font-bold block">GitHub PRs / Issues</span>
+                        <strong className="text-white text-lg font-black">{metrics.integrations.gitHubIssues}</strong>
+                        <span className="text-[10px] text-slate-300 block">CAD & Code Repos</span>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-500 font-bold block">Slack & Teams Alerts</span>
+                        <strong className="text-white text-lg font-black">{metrics.integrations.slackAlerts}</strong>
+                        <span className="text-[10px] text-emerald-400 block">Dispatched Updates</span>
+                      </div>
+                      <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                        <span className="text-[10px] text-slate-500 font-bold block">Cloud Drive Syncs</span>
+                        <strong className="text-white text-lg font-black">{metrics.integrations.cloudDocs}</strong>
+                        <span className="text-[10px] text-amber-400 block">Docs & Whiteboards</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* 3. LIFECYCLE & CLOSED-LOOP ATTRIBUTION TRACKER */}
-            {currentTab === 'lifecycle' && (
+            {/* 2. PIPELINE VELOCITY & CONVERSION */}
+            {currentTab === 'pipeline' && (
               <div className="space-y-6">
                 <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
                   <h1 className="text-xl font-black text-white flex items-center gap-2">
-                    <i className="fa-solid fa-timeline text-teal-400"></i> Closed-Loop Idea Lifecycle & Contributor Attribution
+                    <i className="fa-solid fa-timeline text-sky-400"></i> Idea Pipeline Funnel & Stage Progression
                   </h1>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Tracks each idea's entire life cycle from initial spark to tangible real-world realization. Every participant can see exactly how their session input materialized into tickets, decisions, prototypes, and measured ROI.
+                    Tracks the end-to-end flow of raw concepts through evaluation, sprint planning, and hardware/software realization.
                   </p>
                 </div>
 
-                {/* 5-Stage Lifecycle Stepper */}
-                <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4">
-                  <h2 className="text-sm font-bold text-white uppercase tracking-wider">End-to-End Maturation Milestones:</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-brand-800/60 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-bold text-brand-400">
-                        <span>1. Ideation</span>
-                        <i className="fa-solid fa-circle-check"></i>
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-5">
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">Pipeline Stage Conversion Funnel</h3>
+                  
+                  <div className="space-y-3 text-xs">
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="font-bold text-slate-200">1. Open Submissions → In Review (Evaluation)</span>
+                        <span className="text-brand-400 font-bold">82.5% Vetted</span>
                       </div>
-                      <p className="text-xs text-white font-semibold">Problem & Value Prop</p>
-                      <p className="text-[11px] text-slate-400">Sub-$50 optical sensor array for smallholder crop health.</p>
+                      <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden">
+                        <div className="h-full bg-slate-500" style={{ width: '82.5%' }}></div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-brand-800/60 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-bold text-brand-400">
-                        <span>2. Evaluation</span>
-                        <i className="fa-solid fa-circle-check"></i>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="font-bold text-slate-200">2. In Review → Planned (Sprint Backlog)</span>
+                        <span className="text-sky-400 font-bold">64.0% Planned</span>
                       </div>
-                      <p className="text-xs text-white font-semibold">Consensus Workshop</p>
-                      <p className="text-[11px] text-slate-400">Critic AI stress-tested clay soil fouling; passed consensus poll.</p>
+                      <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden">
+                        <div className="h-full bg-sky-500" style={{ width: '64%' }}></div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-brand-800/60 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-bold text-brand-400">
-                        <span>3. Prioritization</span>
-                        <i className="fa-solid fa-circle-check"></i>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="font-bold text-slate-200">3. Planned → In Progress (Prototyping & Action Extraction)</span>
+                        <span className="text-purple-400 font-bold">48.0% Prototyped</span>
                       </div>
-                      <p className="text-xs text-white font-semibold">Knowledge & Funding</p>
-                      <p className="text-[11px] text-slate-400">Volcanic soil gap resolved; $25,000 pilot funding pledged.</p>
+                      <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden">
+                        <div className="h-full bg-purple-500" style={{ width: '48%' }}></div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-brand-800/60 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-bold text-brand-400">
-                        <span>4. Implementation</span>
-                        <i className="fa-solid fa-circle-check"></i>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="font-bold text-slate-200">4. In Progress → Completed & Measured Production (Outcome)</span>
+                        <span className="text-emerald-400 font-bold">18.5% Realized</span>
                       </div>
-                      <p className="text-xs text-white font-semibold">PM Connector Sync</p>
-                      <p className="text-[11px] text-slate-400">5 tickets pushed to Jira, GitHub, Trello, Asana, and Linear.</p>
+                      <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-500" style={{ width: '18.5%' }}></div>
+                      </div>
                     </div>
-
-                    <div className="p-4 rounded-2xl bg-slate-950 border border-purple-800/60 space-y-1.5">
-                      <div className="flex items-center justify-between text-xs font-bold text-purple-400">
-                        <span>5. Realized Outcome</span>
-                        <i className="fa-solid fa-trophy"></i>
-                      </div>
-                      <p className="text-xs text-white font-semibold">Measured ROI & Impact</p>
-                      <p className="text-[11px] text-slate-400">$45,000 cost savings, 210% ROI, 650 smallholders impacted.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Participant Realization & Accountability Attribution Feed */}
-                <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4">
-                  <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <i className="fa-solid fa-users text-purple-400"></i> Participant Attribution & Accountability Trace
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {participantAttributions.map((att, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-xs font-bold text-white">{att.name}</span>
-                            <span className="text-[10px] text-brand-400 ml-2 font-semibold">({att.role})</span>
-                          </div>
-                          <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 text-[10px] font-bold">
-                            {att.points} pts • {att.badge}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/80 p-3 rounded-xl border border-slate-800">
-                          {att.impactNarrative}
-                        </p>
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* 4. PIPELINE TAB */}
-            {currentTab === 'pipeline' && (
+            {/* 3. KNOWLEDGE UPLIFT & COLLABORATION GAINS */}
+            {currentTab === 'collaboration' && (
               <div className="space-y-6">
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <h1 className="text-xl font-black text-white flex items-center gap-2">
-                      <span>🌱</span> 10-Phase Idea Maturation Pipeline
-                    </h1>
-                    <p className="text-xs text-slate-400 mt-1">Structured evolution from raw problem hypothesis to measurable real-world tangible outcomes.</p>
-                  </div>
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
+                  <h1 className="text-xl font-black text-white flex items-center gap-2">
+                    <i className="fa-solid fa-brain text-purple-400"></i> Collaboration Outcomes & Pre- vs Post-Session Knowledge Uplift
+                  </h1>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Measures the empirical expansion in domain understanding and cross-functional competency among workshop attendees.
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {ideas.map(idea => {
-                    const st = STAGES[idea.maturityStage] || STAGES[0];
-                    return (
-                      <div key={idea.id} className="p-5 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-4">
-                        <div className="space-y-2.5">
-                          <div className="flex items-center justify-between">
-                            <span className={`stage-pill border ${st.color}`}>{st.name}</span>
-                            <span className="text-[11px] text-slate-500">{idea.categoryName}</span>
-                          </div>
-                          <h3 className="text-base font-bold text-white hover:text-brand-400 cursor-pointer">{idea.title}</h3>
-                          <p className="text-xs text-slate-400 line-clamp-2">{idea.tagline || idea.description}</p>
-                        </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3 text-center">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">Pre-Session Domain Score</span>
+                    <div className="text-3xl font-black text-slate-400">4.2 / 10</div>
+                    <p className="text-xs text-slate-500">Baseline self-reported understanding before cross-functional workshop.</p>
+                  </div>
 
-                        <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                          <div className="flex items-center gap-3">
-                            <span><i className="fa-solid fa-circle-question text-amber-400"></i> {idea.openGapsCount}</span>
-                            <span><i className="fa-solid fa-flask text-pink-400"></i> {idea.experimentsCount}</span>
-                            <span><i className="fa-solid fa-bolt text-blue-400"></i> {idea.completedActionsCount}/{idea.actionsCount}</span>
-                          </div>
-                          <button onClick={() => setCurrentTab('session')} className="px-3 py-1.5 bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 rounded-xl text-xs font-bold">
-                            Join Workshop
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+                  <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3 text-center">
+                    <span className="text-[10px] uppercase font-bold text-brand-400 block">Post-Session Expertise Score</span>
+                    <div className="text-3xl font-black text-brand-400">8.6 / 10</div>
+                    <p className="text-xs text-brand-300/80">+104.7% Knowledge Leap after Expert & Authority participation.</p>
+                  </div>
 
-            {/* 5. LEADERBOARD & ROI TAB */}
-            {currentTab === 'leaderboard' && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800">
-                    <p className="text-xs text-slate-400 font-semibold">Total Cost Savings Realized</p>
-                    <h3 className="text-2xl font-black text-white mt-1">$45,000+</h3>
-                    <p className="text-[11px] text-brand-400 mt-0.5"><i className="fa-solid fa-arrow-trend-up"></i> Tested on 500+ acres</p>
-                  </div>
-                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800">
-                    <p className="text-xs text-slate-400 font-semibold">Average ROI Realized</p>
-                    <h3 className="text-2xl font-black text-brand-400 mt-1">210%</h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Across hardware prototypes</p>
-                  </div>
-                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800">
-                    <p className="text-xs text-slate-400 font-semibold">Impacted Users / Beneficiaries</p>
-                    <h3 className="text-2xl font-black text-white mt-1">650+ Farmers</h3>
-                    <p className="text-[11px] text-sky-400 mt-0.5">3 active pilot cooperatives</p>
-                  </div>
-                  <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800">
-                    <p className="text-xs text-slate-400 font-semibold">Actions Completed</p>
-                    <h3 className="text-2xl font-black text-purple-400 mt-1">41 / 48</h3>
-                    <p className="text-[11px] text-slate-400 mt-0.5">85% execution completion</p>
-                  </div>
-                </div>
-
-                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                    <i className="fa-solid fa-trophy text-yellow-400"></i> Impact Leadership Board
-                  </h2>
-                  <div className="space-y-2">
-                    {participantAttributions.map((p, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-3">
-                          <span className="font-black text-yellow-400 text-sm">#{idx + 1}</span>
-                          <div>
-                            <p className="font-bold text-white">{p.name}</p>
-                            <p className="text-[11px] text-slate-400">{p.badge}</p>
-                          </div>
-                        </div>
-                        <span className="font-black text-brand-400 text-sm">{p.points.toLocaleString()} pts</span>
-                      </div>
-                    ))}
+                  <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-3 text-center">
+                    <span className="text-[10px] uppercase font-bold text-yellow-400 block">Concept Improvement Rating</span>
+                    <div className="text-3xl font-black text-yellow-400">94.2%</div>
+                    <p className="text-xs text-slate-400">Attendees reported idea was substantially enhanced during live session.</p>
                   </div>
                 </div>
               </div>
             )}
 
           </main>
-
-          {/* EXTRACT OUTCOMES & DISPATCH TO PM TOOLS MODAL */}
-          {showExtractModal && (
-            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="bg-slate-900 border border-slate-700 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto scrollbar-thin p-6 space-y-6">
-                <div className="flex items-start justify-between border-b border-slate-800 pb-4">
-                  <div>
-                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800">
-                      Post-Session AI Synthesis & PM Dispatcher
-                    </span>
-                    <h2 className="text-xl font-black text-white mt-1.5">Extract Actionable Outcomes & Push to Execution</h2>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      Review extracted tasks and select target project management tool (Jira, GitHub, Trello, Asana, Linear) for automatic dispatch.
-                    </p>
-                  </div>
-                  <button onClick={() => setShowExtractModal(false)} className="text-slate-400 hover:text-white text-lg">
-                    <i className="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
-
-                {/* Ratified Decisions to Commit */}
-                <div className="space-y-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ratified Decisions to Register ({decisions.length}):</span>
-                  {decisions.map((d, idx) => (
-                    <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
-                      <p className="font-bold text-white">✅ {d.title}</p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">{d.rationale}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Action Items with PM Tool Selector */}
-                <div className="space-y-3">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Execution Work Packages ({extractTasks.length}):</span>
-                  {extractTasks.map((t, idx) => (
-                    <div key={t.id} className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
-                      <div className="space-y-1">
-                        <p className="font-bold text-white">{t.title}</p>
-                        <p className="text-[11px] text-slate-400">Assigned to: <strong className="text-slate-200">{t.assignee}</strong> • Estimate: {t.days} days</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] text-slate-400">Push to:</span>
-                        <select 
-                          value={t.tool} 
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setExtractTasks(prev => prev.map(item => item.id === t.id ? { ...item, tool: val } : item));
-                          }}
-                          className="bg-slate-900 border border-slate-700 text-brand-400 font-bold rounded-xl px-2.5 py-1 text-xs focus:outline-none focus:border-brand-500"
-                        >
-                          <option value="Jira">Jira 🟦</option>
-                          <option value="GitHub">GitHub ⬛</option>
-                          <option value="Trello">Trello 🔵</option>
-                          <option value="Asana">Asana 🔴</option>
-                          <option value="Linear">Linear 🟣</option>
-                          <option value="Monday">Monday 🟨</option>
-                        </select>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-                  <button onClick={() => setShowExtractModal(false)} className="px-4 py-2 bg-slate-800 text-slate-300 text-xs rounded-xl">
-                    Cancel
-                  </button>
-                  <button onClick={handleConfirmExtractionAndPush} className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-black rounded-2xl shadow-lg shadow-purple-600/30 flex items-center gap-2">
-                    <i className="fa-solid fa-paper-plane"></i> Dispatch All Tickets & Advance Stage to "Building"
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
         </div>
       );
     }

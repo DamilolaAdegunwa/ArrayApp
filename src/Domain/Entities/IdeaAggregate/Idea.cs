@@ -66,6 +66,10 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     public int? MergedIntoIdeaId { get; set; }
     public Idea? MergedIntoIdea { get; set; }
 
+    // Innovation Campaign Link
+    public int? CampaignId { get; set; }
+    public InnovationCampaign? Campaign { get; set; }
+
     // The idea's category (if it has one)
     public Category? Category { get; set; }
     public int CategoryId { get; set; }

@@ -31,6 +31,7 @@ public class DiscussionMessage : BaseAuditableEntity, IAggregateRoot
 
     public string? AttachmentUrl { get; set; }
     public string? AttachmentName { get; set; }
+    public int VotesCount { get; set; }
 
     public int? ParentMessageId { get; set; }
     public DiscussionMessage? ParentMessage { get; set; }

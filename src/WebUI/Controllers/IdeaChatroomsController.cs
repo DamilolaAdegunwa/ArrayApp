@@ -127,7 +127,20 @@ public class IdeaChatroomsController : ControllerBase
             Content = message.Content,
             AttachmentUrl = message.AttachmentUrl,
             AttachmentName = message.AttachmentName,
+            VotesCount = message.VotesCount,
             Created = message.CreationTime.DateTime
         });
+    }
+
+    [HttpPost("messages/{messageId}/vote")]
+    public async Task<IActionResult> VoteMessage(int messageId)
+    {
+        var message = await _context.DiscussionMessages.FindAsync(messageId);
+        if (message == null) return NotFound();
+
+        message.VotesCount += 1;
+        await _context.SaveChangesAsync(default);
+
+        return Ok(new { success = true, messageId, newVotesCount = message.VotesCount });
     }
 }

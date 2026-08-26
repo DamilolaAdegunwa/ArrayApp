@@ -54,4 +54,5 @@ public interface IApplicationDbContext
     DbSet<SessionParticipant> SessionParticipants { get; }
     DbSet<SessionPoll> SessionPolls { get; }
     DbSet<SessionPollOption> SessionPollOptions { get; }
+    DbSet<InnovationCampaign> InnovationCampaigns { get; }
 }
