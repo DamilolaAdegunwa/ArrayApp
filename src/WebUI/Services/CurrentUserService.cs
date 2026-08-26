@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 using ArrayApp.Application.Common.Interfaces;
 
@@ -13,5 +13,13 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string? UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    public int UserId
+    {
+        get
+        {
+            var val = _httpContextAccessor.HttpContext?.User?.FindFirstValue("UserId")
+                      ?? _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(val, out var id) ? id : 0;
+        }
+    }
 }

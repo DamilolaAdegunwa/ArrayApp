@@ -146,6 +146,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<ArrayApp.Infrastructure.Hubs.IdeaSessionHub>("/hubs/ideasession");
+        app.MapHub<ArrayApp.Infrastructure.Hubs.IdeaChatHub>("/hubs/ideachat");
 
         app.Run();
     }

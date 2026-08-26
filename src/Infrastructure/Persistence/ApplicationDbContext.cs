@@ -1,4 +1,4 @@
-﻿//using System.Data.Entity;
+//using System.Data.Entity;
 //using System.Data.Entity;
 //using System.Data.Entity;
 //using System.Data.Entity;
@@ -73,11 +73,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Subscription> Subscriptions => Set<Subscription>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<Product> Products => Set<Product>();
-    //public DbSet<Test> Tests => Set<Test>();
+    public DbSet<KnowledgeGap> KnowledgeGaps => Set<KnowledgeGap>();
+    public DbSet<IdeaHypothesis> Hypotheses => Set<IdeaHypothesis>();
+    public DbSet<IdeaExperiment> Experiments => Set<IdeaExperiment>();
+    public DbSet<IdeaDecision> Decisions => Set<IdeaDecision>();
+    public DbSet<IdeaAction> Actions => Set<IdeaAction>();
+    public DbSet<IdeaOutcome> Outcomes => Set<IdeaOutcome>();
+    public DbSet<IdeaCanvasNode> CanvasNodes => Set<IdeaCanvasNode>();
+    public DbSet<IdeaSubscription> IdeaSubscriptions => Set<IdeaSubscription>();
+    public DbSet<DiscussionChannel> DiscussionChannels => Set<DiscussionChannel>();
+    public DbSet<DiscussionMessage> DiscussionMessages => Set<DiscussionMessage>();
+    public DbSet<AIAgentInsight> AIAgentInsights => Set<AIAgentInsight>();
+    public DbSet<ConnectorConfig> ConnectorConfigs => Set<ConnectorConfig>();
+    public DbSet<ConnectorSyncLog> ConnectorSyncLogs => Set<ConnectorSyncLog>();
+    public DbSet<UserReputation> UserReputations => Set<UserReputation>();
+    public DbSet<UserBadge> UserBadges => Set<UserBadge>();
+    public DbSet<ProvenanceLog> ProvenanceLogs => Set<ProvenanceLog>();
+    public DbSet<SessionParticipant> SessionParticipants => Set<SessionParticipant>();
+    public DbSet<SessionPoll> SessionPolls => Set<SessionPoll>();
+    public DbSet<SessionPollOption> SessionPollOptions => Set<SessionPollOption>();
+
     public DbSet<ApplicationUserRole> UserRoles { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserPermission> UserPermissions { get; set; }
 
@@ -138,6 +154,55 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             ownedNavigationBuilder.OwnsMany(
             metadata => metadata.Updates,
             ownedOwnedNavigationBuilder => ownedOwnedNavigationBuilder.OwnsMany(update => update.Commits));
+        });
+
+        builder.Entity<Idea>(entity =>
+        {
+            entity.HasOne(i => i.ForkedFromIdea)
+                .WithMany()
+                .HasForeignKey(i => i.ForkedFromIdeaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(i => i.ParentIdea)
+                .WithMany()
+                .HasForeignKey(i => i.ParentIdeaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(i => i.MergedIntoIdea)
+                .WithMany()
+                .HasForeignKey(i => i.MergedIntoIdeaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(i => i.KnowledgeGaps).WithOne(kg => kg.Idea).HasForeignKey(kg => kg.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Hypotheses).WithOne(h => h.Idea).HasForeignKey(h => h.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Experiments).WithOne(e => e.Idea).HasForeignKey(e => e.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Decisions).WithOne(d => d.Idea).HasForeignKey(d => d.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Actions).WithOne(a => a.Idea).HasForeignKey(a => a.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Outcomes).WithOne(o => o.Idea).HasForeignKey(o => o.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.CanvasNodes).WithOne(c => c.Idea).HasForeignKey(c => c.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.Subscriptions).WithOne(s => s.Idea).HasForeignKey(s => s.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.DiscussionChannels).WithOne(dc => dc.Idea).HasForeignKey(dc => dc.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.AIAgentInsights).WithOne(ai => ai.Idea).HasForeignKey(ai => ai.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.ConnectorConfigs).WithOne(cc => cc.Idea).HasForeignKey(cc => cc.IdeaId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(i => i.ProvenanceLogs).WithOne(pl => pl.Idea).HasForeignKey(pl => pl.IdeaId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Session>(entity =>
+        {
+            entity.HasMany(s => s.Attendees).WithOne(a => a.Session).HasForeignKey(a => a.SessionId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(s => s.Polls).WithOne(p => p.Session).HasForeignKey(p => p.SessionId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(s => s.Decisions).WithOne(d => d.Session).HasForeignKey(d => d.SessionId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasMany(s => s.ExtractedActions).WithOne(a => a.Session).HasForeignKey(a => a.SessionId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<DiscussionChannel>(entity =>
+        {
+            entity.HasMany(dc => dc.Messages).WithOne(m => m.Channel).HasForeignKey(m => m.ChannelId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<UserReputation>(entity =>
+        {
+            entity.HasMany(ur => ur.Badges).WithOne(b => b.UserReputation).HasForeignKey(b => b.UserReputationId).OnDelete(DeleteBehavior.Cascade);
         });
 
         /*

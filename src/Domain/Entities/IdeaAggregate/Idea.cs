@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,6 +11,7 @@ using ArrayApp.Domain.Common.Interfaces;
 using ArrayApp.Domain.Entities.CategoryAggregate;
 using ArrayApp.Domain.Entities.CommentAggregate;
 using ArrayApp.Domain.Entities.TagAggregate;
+using ArrayApp.Domain.Enums;
 
 namespace ArrayApp.Domain.Entities.IdeaAggregate;
 public class Idea : BaseAuditableEntity, IAggregateRoot
@@ -22,21 +23,66 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     // The idea's title (topic or theme was also a name I considered!)
     public string? Title { get; set; }
 
+    // Short tagline / pitch
+    public string? Tagline { get; set; }
+
     // The idea's description
     public string? Description { get; set; }
 
     // The idea's content (might need to activate html or not)
     public string? Content { get; set; }
 
+    // Idea Product Structured Dimensions
+    public string? ProblemStatement { get; set; }
+    public string? Opportunity { get; set; }
+    public string? Hypothesis { get; set; }
+    public string? TargetAudience { get; set; }
+    public string? ValueProposition { get; set; }
+    public string? Constraints { get; set; }
+    public string? Unknowns { get; set; }
+    public string? Evidence { get; set; }
+    public string? DesiredOutcome { get; set; }
+    public string? Scope { get; set; }
+
+    // Maturation & Life-Cycle
+    public IdeaMaturityStage MaturityStage { get; set; } = IdeaMaturityStage.Raw;
+    public IdeaVisibility Visibility { get; set; } = IdeaVisibility.Public;
+
     // The idea's status (e.g. "pending" or "approved")
     public IdeaStatus Status { get; set; }
 
-    // The idea's rating (if it has one)
+    // The idea's rating and social signals
     public double Rating { get; set; }
+    public int Upvotes { get; set; }
+    public int Downvotes { get; set; }
+    public int FollowersCount { get; set; }
+    public int ViewsCount { get; set; }
+
+    // Idea Graph & Lineage
+    public int? ForkedFromIdeaId { get; set; }
+    public Idea? ForkedFromIdea { get; set; }
+    public int? ParentIdeaId { get; set; }
+    public Idea? ParentIdea { get; set; }
+    public int? MergedIntoIdeaId { get; set; }
+    public Idea? MergedIntoIdea { get; set; }
 
     // The idea's category (if it has one)
-    public Category Category { get; set; }
+    public Category? Category { get; set; }
     public int CategoryId { get; set; }
+
+    // Collections
+    public List<KnowledgeGap> KnowledgeGaps { get; set; } = new();
+    public List<IdeaHypothesis> Hypotheses { get; set; } = new();
+    public List<IdeaExperiment> Experiments { get; set; } = new();
+    public List<IdeaDecision> Decisions { get; set; } = new();
+    public List<IdeaAction> Actions { get; set; } = new();
+    public List<IdeaOutcome> Outcomes { get; set; } = new();
+    public List<IdeaCanvasNode> CanvasNodes { get; set; } = new();
+    public List<IdeaSubscription> Subscriptions { get; set; } = new();
+    public List<DiscussionChannel> DiscussionChannels { get; set; } = new();
+    public List<AIAgentInsight> AIAgentInsights { get; set; } = new();
+    public List<ConnectorConfig> ConnectorConfigs { get; set; } = new();
+    public List<ProvenanceLog> ProvenanceLogs { get; set; } = new();
 
     // The idea's tags (if it has any)
     private List<Tag> _tags { get; set; } = new List<Tag>();
@@ -48,11 +94,9 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
 
     // metadata
     public PostMetadata? Metadata { get; set; }
-    //the author
 
-    //public string AuthorId { get; set; }
     [ForeignKey(nameof(CreatorUserId))]
-    public ApplicationUser Author { get; set; }
+    public ApplicationUser? Author { get; set; }
 
     public void AddTag(Tag newTag)
     {
@@ -86,6 +130,11 @@ public class Idea : BaseAuditableEntity, IAggregateRoot
     public void UpdateContent(string content)
     {
         Content = Guard.Against.NullOrWhiteSpace(content, nameof(content));
+    }
+
+    public void AdvanceMaturityStage(IdeaMaturityStage newStage)
+    {
+        MaturityStage = newStage;
     }
     #endregion
 }

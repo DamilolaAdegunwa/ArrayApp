@@ -1,42 +1,93 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ArrayApp.Domain.Common;
 using ArrayApp.Domain.Common.Interfaces;
-using ArrayApp.Domain.Entities.AdvertAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
+using ArrayApp.Domain.Enums;
 
 namespace ArrayApp.Domain.Entities.SessionAggregate;
+
 public class Session : BaseAuditableEntity, IAggregateRoot
 {
-    // The session's name
-    public string Name { get; set; }
+    // The session's name/topic
+    public string Name { get; set; } = string.Empty;
 
-    // The session's description
-    public string Description { get; set; }
+    // The session's description / goals
+    public string Description { get; set; } = string.Empty;
 
-    // The date and time the session was created
-    public DateTime CreatedAt { get; set; }
+    // Session Type & Status
+    public SessionType SessionType { get; set; } = SessionType.Brainstorm;
+    public SessionStatus SessionStatus { get; set; } = SessionStatus.Scheduled;
 
-    // The date and time the session was last modified
-    public DateTime ModifiedAt { get; set; }
+    // Scheduled and actual timestamps
+    public DateTime ScheduledStartTime { get; set; } = DateTime.UtcNow;
+    public DateTime? ActualStartTime { get; set; }
+    public DateTime? ActualEndTime { get; set; }
+    public TimeSpan Duration { get; set; } = TimeSpan.FromHours(1);
 
-    // The user who created the session
-    //public ApplicationUser Creator { get; set; }
+    // Meeting link / Virtual room URL
+    public string? MeetingUrl { get; set; }
+    public string? AgendaNotes { get; set; }
+    public string? SharedNotes { get; set; }
+    public string? AiSummary { get; set; }
+    public string? Transcript { get; set; }
 
-    // The session's participants
-    public List<ApplicationUser> Participants { get; set; }
+    // Primary Idea attached to this session
+    public int? PrimaryIdeaId { get; set; }
+    public Idea? PrimaryIdea { get; set; }
 
-    // The session's status (e.g. "active" or "inactive")
-    public string Status { get; set; }
+    // Session ideas collection
+    public List<Idea> Ideas { get; set; } = new();
 
-    // The session's ideas (if it has any)
-    public List<Idea> Ideas { get; set; }
+    // Session participants
+    public List<SessionParticipant> Attendees { get; set; } = new();
 
-    // The session's type (e.g. "brainstorming" or "planning")
-    public string Type { get; set; }
+    // Collaborative elements
+    public List<IdeaCanvasNode> CanvasNodes { get; set; } = new();
+    public List<SessionPoll> Polls { get; set; } = new();
+    public List<IdeaDecision> Decisions { get; set; } = new();
+    public List<IdeaAction> ExtractedActions { get; set; } = new();
+    public List<AIAgentInsight> AiInsights { get; set; } = new();
 
-    // The session's duration (if it has a fixed duration)
-    public TimeSpan Duration { get; set; }
+    // Legacy fields for backward compatibility
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
+    public string Status { get; set; } = "Scheduled";
+    public string Type { get; set; } = "Brainstorm";
+    public List<ApplicationUser> Participants { get; set; } = new();
+}
+
+public class SessionParticipant : BaseAuditableEntity, IAggregateRoot
+{
+    public int SessionId { get; set; }
+    public Session? Session { get; set; }
+
+    public string UserId { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
+    public ParticipantRole Role { get; set; } = ParticipantRole.Audience;
+
+    public bool IsHost { get; set; }
+    public bool IsAiAgent { get; set; }
+    public string? AiAgentType { get; set; }
+
+    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+}
+
+public class SessionPoll : BaseAuditableEntity, IAggregateRoot
+{
+    public int SessionId { get; set; }
+    public Session? Session { get; set; }
+
+    public string Question { get; set; } = string.Empty;
+    public List<SessionPollOption> Options { get; set; } = new();
+    public bool IsClosed { get; set; }
+}
+
+public class SessionPollOption : BaseAuditableEntity, IAggregateRoot
+{
+    public int SessionPollId { get; set; }
+    public SessionPoll? SessionPoll { get; set; }
+
+    public string OptionText { get; set; } = string.Empty;
+    public int VotesCount { get; set; }
 }

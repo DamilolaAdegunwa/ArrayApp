@@ -146,6 +146,9 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+app.MapHub<ArrayApp.Infrastructure.Hubs.IdeaSessionHub>("/hubs/ideasession");
+app.MapHub<ArrayApp.Infrastructure.Hubs.IdeaChatHub>("/hubs/ideachat");
+
 app.MapFallbackToFile("index.html");
 
 app.Run();

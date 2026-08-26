@@ -1,4 +1,4 @@
-﻿using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Domain.Entities.AdvertAggregate;
 using ArrayApp.Domain.Entities.AppAggregate;
 using ArrayApp.Domain.Entities.CategoryAggregate;
@@ -35,6 +35,23 @@ public interface IApplicationDbContext
     DbSet<Notification> Notifications { get; }
     DbSet<Session> Sessions { get; }
     DbSet<Subscription> Subscriptions { get; }
-    DbSet<Tag> Tags { get; }
-    DbSet<Product> Products { get; }
+    DbSet<KnowledgeGap> KnowledgeGaps { get; }
+    DbSet<IdeaHypothesis> Hypotheses { get; }
+    DbSet<IdeaExperiment> Experiments { get; }
+    DbSet<IdeaDecision> Decisions { get; }
+    DbSet<IdeaAction> Actions { get; }
+    DbSet<IdeaOutcome> Outcomes { get; }
+    DbSet<IdeaCanvasNode> CanvasNodes { get; }
+    DbSet<IdeaSubscription> IdeaSubscriptions { get; }
+    DbSet<DiscussionChannel> DiscussionChannels { get; }
+    DbSet<DiscussionMessage> DiscussionMessages { get; }
+    DbSet<AIAgentInsight> AIAgentInsights { get; }
+    DbSet<ConnectorConfig> ConnectorConfigs { get; }
+    DbSet<ConnectorSyncLog> ConnectorSyncLogs { get; }
+    DbSet<UserReputation> UserReputations { get; }
+    DbSet<UserBadge> UserBadges { get; }
+    DbSet<ProvenanceLog> ProvenanceLogs { get; }
+    DbSet<SessionParticipant> SessionParticipants { get; }
+    DbSet<SessionPoll> SessionPolls { get; }
+    DbSet<SessionPollOption> SessionPollOptions { get; }
 }

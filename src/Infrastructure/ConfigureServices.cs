@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Infrastructure.Files;
 using ArrayApp.Infrastructure.Identity;
@@ -66,6 +66,13 @@ public static class ConfigureServices
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+
+        // Idea Cultivation Platform Services
+        services.AddScoped<IAIAgentService, AIAgentService>();
+        services.AddScoped<IConnectorService, ConnectorService>();
+        services.AddScoped<IReputationService, ReputationService>();
+        services.AddScoped<IIdeaProductService, IdeaProductService>();
+        services.AddSignalR();
 
         services.AddAuthentication()
             .AddIdentityServerJwt();
