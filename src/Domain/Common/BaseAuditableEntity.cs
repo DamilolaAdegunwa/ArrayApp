@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArrayApp.Domain.Common;
@@ -8,10 +8,6 @@ namespace ArrayApp.Domain.Common;
 /// </summary>
 public abstract class BaseAuditableEntity : BaseEntity
 {
-    [Key]
-    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-    public virtual int Id { get; set; }
-
     public virtual DateTimeOffset CreationTime { get; set; } = DateTimeOffset.Now;
 
     public virtual int CreatorUserId { get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,6 @@ using ArrayApp.Domain.Entities.AdvertAggregate;
 namespace ArrayApp.Domain.Entities.SubscriptionAggregate;
 public class Subscription : BaseAuditableEntity, IAggregateRoot
 {
-    public int Id { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime ExpirationDate { get; set; }
     public SubscriptionStatus Status { get; set; }

@@ -7,7 +7,6 @@ namespace ArrayApp.Domain.Entities.IdeaAggregate;
 
 public class InnovationCampaign : BaseAuditableEntity
 {
-    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string ChallengeStatement { get; set; } = string.Empty;
     public string GoalDescription { get; set; } = string.Empty;

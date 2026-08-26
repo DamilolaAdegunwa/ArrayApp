@@ -1,29 +1,21 @@
-﻿using System.Net;
+using System.Net;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using ArrayApp.Infrastructure.Services;
-//using Duende.IdentityServer.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using IdentityModel;
-using Azure;
 using NSwag.Annotations;
 using Serilog;
-using System.Security.Claims;
-using Duende.IdentityServer;
-//using Swashbuckle.AspNetCore.Annotations;
-using ArrayApp.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Linq;
+
 namespace ArrayApp.WebAPI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = false)]
