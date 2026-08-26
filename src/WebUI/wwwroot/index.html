@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArrayApp - Idea Cultivation & Intelligence Ecosystem (.NET 10 & React)</title>
+  
+  <!-- React 18 & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- SignalR Client -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0fdf4', 100: '#dcfce7', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' },
+            slate: { 750: '#293548', 850: '#151e2e', 950: '#090d16' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .stage-pill { font-size: 0.68rem; padding: 2px 7px; border-radius: 9999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .voice-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-brand-500 selection:text-white">
+  <div id="root"></div>
+
+  <!-- React Application Source -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // Maturity Stages Definition
+    const STAGES = [
+      { id: 0, name: 'Raw', color: 'bg-slate-800 text-slate-300 border-slate-700' },
+      { id: 1, name: 'Exploring', color: 'bg-blue-950 text-blue-300 border-blue-800' },
+      { id: 2, name: 'Structured', color: 'bg-indigo-950 text-indigo-300 border-indigo-800' },
+      { id: 3, name: 'Validating', color: 'bg-purple-950 text-purple-300 border-purple-800' },
+      { id: 4, name: 'Experimenting', color: 'bg-pink-950 text-pink-300 border-pink-800' },
+      { id: 5, name: 'Planned', color: 'bg-amber-950 text-amber-300 border-amber-800' },
+      { id: 6, name: 'Building', color: 'bg-emerald-950 text-emerald-300 border-emerald-800' },
+      { id: 7, name: 'Implemented', color: 'bg-teal-950 text-teal-300 border-teal-800' },
+      { id: 8, name: 'Measured', color: 'bg-cyan-950 text-cyan-300 border-cyan-800' },
+      { id: 9, name: 'Evolving', color: 'bg-sky-950 text-sky-300 border-sky-800' }
+    ];
+
+    // Participant Roles Definition
+    const ROLES = [
+      { id: 'Student', name: 'Student', desc: 'Learner & Contributor', icon: 'fa-graduation-cap', color: 'text-amber-400 bg-amber-950/60 border-amber-800/60' },
+      { id: 'Sponsor', name: 'Sponsor', desc: 'Funder & Resource Patron', icon: 'fa-gem', color: 'text-purple-400 bg-purple-950/60 border-purple-800/60' },
+      { id: 'Professional', name: 'Professional / Expert', desc: 'Domain Specialist', icon: 'fa-microscope', color: 'text-blue-400 bg-blue-950/60 border-blue-800/60' },
+      { id: 'Authority', name: 'Authority', desc: 'Regulator & Sign-off', icon: 'fa-landmark', color: 'text-rose-400 bg-rose-950/60 border-rose-800/60' },
+      { id: 'Actioner', name: 'Actioner', desc: 'Execution & Engineering Lead', icon: 'fa-screwdriver-wrench', color: 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60' },
+      { id: 'Audience', name: 'Audience', desc: 'Observer & Feedback Tester', icon: 'fa-users', color: 'text-slate-300 bg-slate-800/60 border-slate-700/60' }
+    ];
+
+    function App() {
+      const [currentTab, setCurrentTab] = useState('session'); // default to live session to buttress virtual workshop
+      const [currentUser, setCurrentUser] = useState({ id: 'user-elena', name: 'Dr. Elena Vance', role: 'Professional' });
+      const [ideas, setIdeas] = useState([]);
+      const [selectedIdea, setSelectedIdea] = useState(null);
+      const [activeSession, setActiveSession] = useState(null);
+      const [showNewIdeaModal, setShowNewIdeaModal] = useState(false);
+      const [showLaunchSessionModal, setShowLaunchSessionModal] = useState(false);
+      
+      // Live Virtual Workshop State
+      const [sessionParticipants, setSessionParticipants] = useState([
+        { name: 'Dr. Elena Vance (Host)', role: 'Professional', isSpeaking: false, isHost: true },
+        { name: 'Marcus Thorne', role: 'Sponsor', isSpeaking: false },
+        { name: 'Sarah Chen', role: 'Actioner', isSpeaking: false },
+        { name: 'Devon Miller', role: 'Student', isSpeaking: false },
+        { name: 'Chief Health Inspector', role: 'Authority', isSpeaking: false },
+        { name: 'Critic Bot (AI)', role: 'Researcher', isAi: true, isSpeaking: false }
+      ]);
+      const [activeSpeaker, setActiveSpeaker] = useState('Dr. Elena Vance (Host)');
+      const [canvasNodes, setCanvasNodes] = useState([
+        { id: 1, type: 'MindMapNode', text: '🌱 Optical NPK Soil Probe', x: 220, y: 120, color: '#86EFAC', author: 'Elena (Host)', votes: 14 },
+        { id: 2, type: 'Sticky', text: 'Need sapphire optical glass window to resist scratches', x: 420, y: 70, color: '#FEF08A', author: 'Sarah (Actioner)', votes: 8 },
+        { id: 3, type: 'Risk', text: '⚠️ Moisture condensation inside optical chamber in tropics', x: 420, y: 180, color: '#FECACA', author: 'Critic Bot (AI)', votes: 11 },
+        { id: 4, type: 'Action', text: '✅ Integrate Gore-Tex acoustic breathable vent', x: 620, y: 180, color: '#BFDBFE', author: 'Elena (Host)', votes: 9 },
+        { id: 5, type: 'SponsorPledge', text: '💎 Innovation Fund pledged $25,000 for 100 pilot PCB units', x: 220, y: 270, color: '#E9D5FF', author: 'Marcus (Sponsor)', votes: 16 }
+      ]);
+      const [sessionMessages, setSessionMessages] = useState([
+        { sender: 'Dr. Elena Vance (Host)', role: 'Professional', text: 'Welcome everyone! Today we are reviewing calibration data for our optical soil sensor array.', time: '10:30 AM' },
+        { sender: 'Marcus Thorne', role: 'Sponsor', text: 'Our fund is eager to back this. We have $25k ready once we validate field durability.', time: '10:31 AM' },
+        { sender: 'Critic Bot (AI)', role: 'Researcher', isAi: true, text: '⚠️ Critical Risk Alert: Tropical soils with clay content can coat the optical window. Recommended mitigation: Add miniature ultrasonic self-cleaning pulse.', time: '10:32 AM' },
+        { sender: 'Devon Miller', role: 'Student', text: 'Question: How does the sensor handle variations in soil moisture when calculating nitrogen?', time: '10:33 AM' }
+      ]);
+      const [decisions, setDecisions] = useState([
+        { title: 'Adopt Nordic nRF52840 MCU', rationale: 'Lowest deep sleep power draw (1.8uA), enabling 18-month battery life with a 2W solar panel.', author: 'Elena Vance' },
+        { title: 'Standardize on Swahili Audio Voice Guidance', rationale: 'Overcomes literacy barriers and increased fertilizer application compliance to 88%.', author: 'Elena Vance' }
+      ]);
+      const [livePoll, setLivePoll] = useState({
+        id: 101,
+        question: 'Should we integrate an ultrasonic transducer for optical window self-cleaning?',
+        options: [
+          { text: 'Yes, crucial to prevent optical fouling in clay soils', votes: 14, percent: 82 },
+          { text: 'No, adds $1.80 BOM cost and increases assembly complexity', votes: 3, percent: 18 }
+        ],
+        hasVoted: false
+      });
+
+      // Fetch Initial Ideas & Seed
+      useEffect(() => {
+        fetchIdeas();
+      }, []);
+
+      const fetchIdeas = async () => {
+        try {
+          const res = await fetch('/api/IdeaProducts');
+          const data = await res.json();
+          setIdeas(data);
+          if (data.length > 0) setSelectedIdea(data[0]);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      // Handle Role Switch
+      const handleRoleSwitch = (newRole) => {
+        setCurrentUser(prev => ({ ...prev, role: newRole }));
+        setSessionParticipants(prev => prev.map(p => p.name.includes(currentUser.name) ? { ...p, role: newRole } : p));
+        setSessionMessages(prev => [...prev, {
+          sender: 'System',
+          role: 'System',
+          text: `🔄 ${currentUser.name} self-assigned role as ${newRole}.`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      };
+
+      // Add Canvas Node
+      const addCanvasNode = (type, color, defaultText) => {
+        const text = prompt(`Enter ${type} note text:`, defaultText || '');
+        if (!text) return;
+        const newNode = {
+          id: Date.now(),
+          type,
+          text,
+          x: 150 + Math.floor(Math.random() * 400),
+          y: 80 + Math.floor(Math.random() * 200),
+          color,
+          author: `${currentUser.name} (${currentUser.role})`,
+          votes: 1
+        };
+        setCanvasNodes(prev => [...prev, newNode]);
+      };
+
+      // Vote on Canvas Node
+      const voteCanvasNode = (nodeId) => {
+        setCanvasNodes(prev => prev.map(n => n.id === nodeId ? { ...n, votes: n.votes + 1 } : n));
+      };
+
+      // Send Session Chat Message
+      const [chatInput, setChatInput] = useState('');
+      const handleSendChat = () => {
+        if (!chatInput.trim()) return;
+        const newMsg = {
+          sender: `${currentUser.name}`,
+          role: currentUser.role,
+          text: chatInput,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setSessionMessages(prev => [...prev, newMsg]);
+        setChatInput('');
+
+        // Trigger simulated voice indicator
+        setActiveSpeaker(currentUser.name);
+        setTimeout(() => setActiveSpeaker(''), 4000);
+      };
+
+      // Trigger Role-Specific Actions
+      const handleSponsorPledge = () => {
+        const amount = prompt('Enter sponsorship / grant pledge amount ($):', '10,000');
+        if (!amount) return;
+        const desc = prompt('Enter resource description:', '50 pilot test sensor enclosures & cloud server credits');
+        addCanvasNode('SponsorPledge', '#E9D5FF', `💎 Sponsor Pledge: $${amount} - ${desc}`);
+        setSessionMessages(prev => [...prev, {
+          sender: currentUser.name,
+          role: 'Sponsor',
+          text: `🎉 PLEDGE ANNOUNCEMENT: Our fund is committing $${amount} and ${desc} towards this idea!`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      };
+
+      const handleAuthoritySignoff = () => {
+        const standard = prompt('Enter regulatory standard or architecture milestone:', 'ISO-14040 Soil Testing Protocol');
+        if (!standard) return;
+        setDecisions(prev => [...prev, {
+          title: `🏛️ Authority Approval: ${standard}`,
+          rationale: `Formally signed off by ${currentUser.name} as compliant with regional agricultural sensor guidelines.`,
+          author: currentUser.name
+        }]);
+        setSessionMessages(prev => [...prev, {
+          sender: currentUser.name,
+          role: 'Authority',
+          text: `🏛️ OFFICIAL SIGNOFF: Verified compliance with ${standard}. Cleared for cooperative pilot phase!`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      };
+
+      const handleActionerClaim = () => {
+        const task = prompt('Enter engineering/action task to claim:', 'Assemble 20 PCB prototypes with Gore-Tex vents');
+        if (!task) return;
+        addCanvasNode('Action', '#BFDBFE', `🛠️ Claimed: ${task}`);
+        setSessionMessages(prev => [...prev, {
+          sender: currentUser.name,
+          role: 'Actioner',
+          text: `🛠️ ACTION CLAIMED: I am taking ownership of "${task}". Syncing issue ticket to GitHub!`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      };
+
+      const handleProfessionalResolve = () => {
+        const gap = prompt('Enter knowledge gap to resolve:', 'Wavelength calibration for iron-rich volcanic soils');
+        if (!gap) return;
+        const solution = prompt('Enter technical resolution:', 'Applied dual-reference LED baseline offset algorithm.');
+        setDecisions(prev => [...prev, {
+          title: `🔬 Domain Knowledge Resolved: ${gap}`,
+          rationale: solution,
+          author: currentUser.name
+        }]);
+        setSessionMessages(prev => [...prev, {
+          sender: currentUser.name,
+          role: 'Professional',
+          text: `🔬 KNOWLEDGE RESOLUTION: Resolved gap on "${gap}". Details: ${solution}`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+      };
+
+      const handleStudentQuestion = () => {
+        const q = prompt('Ask a clarifying question to the experts & AI:');
+        if (!q) return;
+        setSessionMessages(prev => [...prev, {
+          sender: currentUser.name,
+          role: 'Student',
+          text: `🎓 LEARNER QUESTION: ${q}`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }]);
+        // Trigger AI Mentor response
+        setTimeout(() => {
+          setSessionMessages(prev => [...prev, {
+            sender: 'Idea Mentor (AI)',
+            role: 'Mentor',
+            isAi: true,
+            text: `💡 Mentor Insight for Devon: Great question! In soil spectrometry, dual-wavelength ratioing is used so that ambient moisture levels are normalized out automatically.`,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }]);
+        }, 1200);
+      };
+
+      const handleVotePoll = (index) => {
+        if (livePoll.hasVoted) return;
+        setLivePoll(prev => {
+          const nextOpts = [...prev.options];
+          nextOpts[index].votes += 1;
+          const total = nextOpts.reduce((acc, o) => acc + o.votes, 0);
+          nextOpts.forEach(o => o.percent = Math.round((o.votes / total) * 100));
+          return { ...prev, options: nextOpts, hasVoted: true };
+        });
+      };
+
+      // 1-Click AI Synthesis & Action Extraction
+      const handleExtractOutcomes = () => {
+        alert('🤖 AI Synthesis Complete!\n\n• Extracted 2 Ratified Decisions\n• Generated 3 Synced Action Items to Kanban (Jira & GitHub)\n• Advanced Idea Maturity to "Building" stage!');
+      };
+
+      return (
+        <div className="flex flex-col min-h-screen">
+          {/* Top Bar */}
+          <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                <i className="fa-solid fa-cube text-white text-lg"></i>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-xl tracking-tight text-white">ArrayApp</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-500/20 text-brand-400 border border-brand-500/30">.NET 10 & React</span>
+                </div>
+                <p className="text-xs text-slate-400">Idea Cultivation, Maturation & Intelligence Operating System</p>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <nav className="flex items-center bg-slate-850 p-1.5 rounded-xl border border-slate-750 space-x-1">
+              <button onClick={() => setCurrentTab('session')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'session' ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-users-viewfinder"></i> Live Session Studio
+              </button>
+              <button onClick={() => setCurrentTab('pipeline')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'pipeline' ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-seedling"></i> Maturation Pipeline
+              </button>
+              <button onClick={() => setCurrentTab('chatrooms')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'chatrooms' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-comments"></i> Persistent Chat
+              </button>
+              <button onClick={() => setCurrentTab('agents')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'agents' ? 'bg-amber-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-brain"></i> AI Agents
+              </button>
+              <button onClick={() => setCurrentTab('kanban')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'kanban' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-list-check"></i> Execution
+              </button>
+              <button onClick={() => setCurrentTab('leaderboard')} className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${currentTab === 'leaderboard' ? 'bg-yellow-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}>
+                <i className="fa-solid fa-trophy"></i> Leaderboard & ROI
+              </button>
+            </nav>
+
+            {/* Current User Active Profile & Role Selector */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
+                <span className="text-xs text-slate-400">Acting as:</span>
+                <select 
+                  value={currentUser.role} 
+                  onChange={(e) => handleRoleSwitch(e.target.value)}
+                  className="bg-slate-900 text-brand-400 font-bold text-xs rounded-lg px-2 py-1 border border-slate-700 focus:outline-none focus:border-brand-500"
+                >
+                  {ROLES.map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              </div>
+              <button onClick={() => setShowNewIdeaModal(true)} className="px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-brand-600/30 transition-all">
+                <i className="fa-solid fa-plus"></i> Post Idea
+              </button>
+            </div>
+          </header>
+
+          {/* Main Body */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+            {/* TAB: LIVE COLLABORATIVE SESSION STUDIO */}
+            {currentTab === 'session' && (
+              <div className="space-y-6">
+                {/* Session Header Banner with Speaker Waveform */}
+                <div className="p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse">
+                        <span className="h-2 w-2 rounded-full bg-rose-500"></span> LIVE VIRTUAL WORKSHOP
+                      </span>
+                      <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                        Idea #1: Soil & Crop Health Monitor
+                      </span>
+                    </div>
+                    <h1 className="text-xl font-black text-white mt-2">AI Soil Probe Hardware & Firmware Maturation Sprint #3</h1>
+                    <p className="text-xs text-slate-400 mt-0.5">Originator: Dr. Elena Vance • 6 Role-Assigned Collaborators • Live 2D Mind-Map Canvas • AI Critic Facilitator</p>
+                  </div>
+
+                  {/* Active Voice Speaker Indicator & Extraction CTA */}
+                  <div className="flex items-center gap-3">
+                    {activeSpeaker && (
+                      <div className="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800/80 px-3 py-1.5 rounded-xl voice-pulse">
+                        <i className="fa-solid fa-microphone text-emerald-400 text-xs"></i>
+                        <span className="text-xs font-bold text-emerald-300">{activeSpeaker} speaking...</span>
+                      </div>
+                    )}
+                    <button onClick={handleExtractOutcomes} className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-black flex items-center gap-2 shadow-lg shadow-purple-600/30 transition-all">
+                      <i className="fa-solid fa-wand-magic-sparkles"></i> 1-Click AI Extract Decisions & Actions
+                    </button>
+                  </div>
+                </div>
+
+                {/* Role-Specific Action Bar */}
+                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Your Role Tools ({currentUser.role}):</span>
+                    {currentUser.role === 'Sponsor' && (
+                      <button onClick={handleSponsorPledge} className="px-3 py-1.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/40 hover:bg-purple-600/30 text-xs font-bold flex items-center gap-1.5">
+                        <i className="fa-solid fa-gem"></i> Pledge Funding / Enclosures
+                      </button>
+                    )}
+                    {currentUser.role === 'Authority' && (
+                      <button onClick={handleAuthoritySignoff} className="px-3 py-1.5 rounded-xl bg-rose-600/20 text-rose-300 border border-rose-500/40 hover:bg-rose-600/30 text-xs font-bold flex items-center gap-1.5">
+                        <i className="fa-solid fa-landmark"></i> Issue Regulatory Sign-off
+                      </button>
+                    )}
+                    {currentUser.role === 'Actioner' && (
+                      <button onClick={handleActionerClaim} className="px-3 py-1.5 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 text-xs font-bold flex items-center gap-1.5">
+                        <i className="fa-solid fa-screwdriver-wrench"></i> Claim Engineering Task
+                      </button>
+                    )}
+                    {currentUser.role === 'Professional' && (
+                      <button onClick={handleProfessionalResolve} className="px-3 py-1.5 rounded-xl bg-blue-600/20 text-blue-300 border border-blue-500/40 hover:bg-blue-600/30 text-xs font-bold flex items-center gap-1.5">
+                        <i className="fa-solid fa-microscope"></i> Resolve Knowledge Gap
+                      </button>
+                    )}
+                    {currentUser.role === 'Student' && (
+                      <button onClick={handleStudentQuestion} className="px-3 py-1.5 rounded-xl bg-amber-600/20 text-amber-300 border border-amber-500/40 hover:bg-amber-600/30 text-xs font-bold flex items-center gap-1.5">
+                        <i className="fa-solid fa-graduation-cap"></i> Ask Clarifying Question
+                      </button>
+                    )}
+                    {currentUser.role === 'Audience' && (
+                      <span className="text-xs text-slate-400">Vote on consensus polls and observe real-time canvas maturation.</span>
+                    )}
+                  </div>
+
+                  {/* Canvas Toolbar */}
+                  <div className="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800">
+                    <span className="text-[11px] text-slate-500 font-semibold mr-1">Add Note:</span>
+                    <button onClick={() => addCanvasNode('Sticky', '#FEF08A')} className="px-2 py-1 rounded text-[11px] font-bold bg-yellow-400/20 text-yellow-300 hover:bg-yellow-400/30">Sticky</button>
+                    <button onClick={() => addCanvasNode('Risk', '#FECACA')} className="px-2 py-1 rounded text-[11px] font-bold bg-rose-400/20 text-rose-300 hover:bg-rose-400/30">Risk</button>
+                    <button onClick={() => addCanvasNode('Action', '#BFDBFE')} className="px-2 py-1 rounded text-[11px] font-bold bg-blue-400/20 text-blue-300 hover:bg-blue-400/30">Action</button>
+                    <button onClick={() => addCanvasNode('MindMapNode', '#86EFAC')} className="px-2 py-1 rounded text-[11px] font-bold bg-emerald-400/20 text-emerald-300 hover:bg-emerald-400/30">Branch</button>
+                  </div>
+                </div>
+
+                {/* Main Studio Grid: 2D Collaborative Canvas (2 cols) + Real-Time Multi-Role Feed (1 col) */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left 2 Cols: Collaborative Infinite Canvas & Polls */}
+                  <div className="lg:col-span-2 space-y-4">
+                    {/* Interactive 2D Board */}
+                    <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 space-y-3">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <i className="fa-solid fa-diagram-project text-brand-400"></i>
+                          <span className="text-sm font-bold text-white">Live Whiteboard & Mind-Map Canvas</span>
+                        </div>
+                        <span className="text-[11px] text-slate-400">Multiplayer sync active • Click node to upvote</span>
+                      </div>
+
+                      <div className="relative h-[380px] bg-slate-950 rounded-2xl border border-slate-800/80 p-4 overflow-hidden bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]">
+                        {canvasNodes.map(node => (
+                          <div 
+                            key={node.id}
+                            onClick={() => voteCanvasNode(node.id)}
+                            style={{ left: `${node.x}px`, top: `${node.y}px`, backgroundColor: node.color }}
+                            className="absolute p-3 rounded-2xl shadow-xl text-slate-900 text-xs font-semibold cursor-pointer border border-black/10 transition-transform hover:scale-105 select-none max-w-xs"
+                          >
+                            <div className="flex items-center justify-between gap-3 mb-1 text-[10px] text-slate-700 font-bold">
+                              <span>{node.author}</span>
+                              <span className="px-1.5 py-0.5 rounded bg-black/10"><i className="fa-solid fa-thumbs-up"></i> {node.votes}</span>
+                            </div>
+                            <p className="leading-snug">{node.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Bottom Split: Consensus Poll & Ratified Decisions */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Live Poll Widget */}
+                      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i className="fa-solid fa-square-poll-vertical text-purple-400"></i> Live Consensus Poll
+                          </span>
+                          <span className="text-[10px] text-brand-400 font-bold">{livePoll.hasVoted ? 'Vote Recorded' : 'Open for Votes'}</span>
+                        </div>
+                        <p className="text-xs font-bold text-white">{livePoll.question}</p>
+                        <div className="space-y-2">
+                          {livePoll.options.map((opt, idx) => (
+                            <button 
+                              key={idx}
+                              onClick={() => handleVotePoll(idx)}
+                              className={`w-full p-2.5 rounded-xl border text-xs text-left transition-all relative overflow-hidden ${livePoll.hasVoted ? 'border-slate-700 bg-slate-950' : 'border-slate-800 bg-slate-950 hover:border-brand-500/50'}`}
+                            >
+                              <div className="absolute top-0 bottom-0 left-0 bg-purple-500/20 rounded-xl" style={{ width: `${opt.percent}%` }}></div>
+                              <div className="relative flex items-center justify-between z-10">
+                                <span className="text-slate-200 font-medium">{opt.text}</span>
+                                <span className="font-bold text-brand-400">{opt.votes} ({opt.percent}%)</span>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Ratified Decisions Log */}
+                      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <i className="fa-solid fa-gavel text-amber-400"></i> Ratified Decisions Log ({decisions.length})
+                        </span>
+                        <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-thin">
+                          {decisions.map((d, idx) => (
+                            <div key={idx} className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
+                              <p className="font-bold text-white">{d.title}</p>
+                              <p className="text-[11px] text-slate-400">{d.rationale}</p>
+                              <span className="text-[10px] text-slate-500 font-semibold">Decided by: {d.author}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right 1 Col: Live Room Chat & Multi-Agent Co-Worker Stream */}
+                  <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col h-[640px]">
+                    {/* Participants List */}
+                    <div className="pb-3 border-b border-slate-800">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <i className="fa-solid fa-users text-sky-400"></i> Attendees ({sessionParticipants.length})
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">Room Connected</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {sessionParticipants.map((p, idx) => (
+                          <span key={idx} className={`text-[10px] px-2 py-0.5 rounded-lg border flex items-center gap-1 ${p.isAi ? 'bg-amber-950/60 text-amber-300 border-amber-800' : 'bg-slate-800 text-slate-300 border-slate-700'}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${p.isAi ? 'bg-amber-400' : 'bg-emerald-400'}`}></span>
+                            {p.name} ({p.role})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Chat Messages Feed */}
+                    <div className="flex-1 overflow-y-auto scrollbar-thin py-3 space-y-3">
+                      {sessionMessages.map((m, idx) => (
+                        <div key={idx} className="text-xs space-y-1">
+                          <div className="flex items-center justify-between text-[10px] text-slate-400">
+                            <span className={`font-bold flex items-center gap-1 ${m.isAi ? 'text-amber-400' : m.role === 'Sponsor' ? 'text-purple-400' : m.role === 'Authority' ? 'text-rose-400' : m.role === 'Student' ? 'text-amber-300' : 'text-emerald-400'}`}>
+                              {m.isAi && <i className="fa-solid fa-robot"></i>}
+                              {m.sender} <span className="text-[9px] font-normal text-slate-500">({m.role})</span>
+                            </span>
+                            <span>{m.time}</span>
+                          </div>
+                          <div className={`p-2.5 rounded-2xl border leading-relaxed ${m.isAi ? 'bg-amber-950/30 border-amber-800/40 text-amber-100' : m.role === 'Sponsor' ? 'bg-purple-950/30 border-purple-800/40 text-purple-100' : 'bg-slate-800/80 border-slate-700/60 text-slate-200'}`}>
+                            {m.text}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Chat Input */}
+                    <div className="pt-3 border-t border-slate-800 flex gap-2">
+                      <input 
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
+                        placeholder={`Message as ${currentUser.role}...`}
+                        className="flex-1 bg-slate-950 border border-slate-800 text-xs rounded-xl px-3.5 py-2.5 text-slate-200 focus:outline-none focus:border-brand-500"
+                      />
+                      <button onClick={handleSendChat} className="px-3.5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-all">
+                        <i className="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: MATURATION PIPELINE & IDEA PRODUCTS */}
+            {currentTab === 'pipeline' && (
+              <div className="space-y-6">
+                <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h1 className="text-xl font-black text-white flex items-center gap-2">
+                      <span>🌱</span> 10-Phase Idea Maturation Pipeline
+                    </h1>
+                    <p className="text-xs text-slate-400 mt-1">Structured evolution from raw problem hypothesis to measurable real-world tangible outcomes.</p>
+                  </div>
+                  <button onClick={() => setShowNewIdeaModal(true)} className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold">
+                    + Post New Idea Product
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {ideas.map(idea => {
+                    const st = STAGES[idea.maturityStage] || STAGES[0];
+                    return (
+                      <div key={idea.id} className="p-5 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-4">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <span className={`stage-pill border ${st.color}`}>{st.name}</span>
+                            <span className="text-[11px] text-slate-500">{idea.categoryName}</span>
+                          </div>
+                          <h3 className="text-base font-bold text-white hover:text-brand-400 cursor-pointer">{idea.title}</h3>
+                          <p className="text-xs text-slate-400 line-clamp-2">{idea.tagline || idea.description}</p>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                          <div className="flex items-center gap-3">
+                            <span><i className="fa-solid fa-circle-question text-amber-400"></i> {idea.openGapsCount}</span>
+                            <span><i className="fa-solid fa-flask text-pink-400"></i> {idea.experimentsCount}</span>
+                            <span><i className="fa-solid fa-bolt text-blue-400"></i> {idea.completedActionsCount}/{idea.actionsCount}</span>
+                          </div>
+                          <button onClick={() => setCurrentTab('session')} className="px-3 py-1.5 bg-purple-600/20 text-purple-300 hover:bg-purple-600/30 rounded-xl text-xs font-bold">
+                            Join Workshop
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: PERSISTENT CHATROOMS */}
+            {currentTab === 'chatrooms' && (
+              <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <i className="fa-solid fa-comments text-sky-400"></i> Multi-Channel Persistent Idea Discussion
+                </h1>
+                <p className="text-xs text-slate-400">Organized topic channels with automated AI Mentor responses.</p>
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
+                  Select a channel from the sidebar or post inquiries to receive immediate mentor citations and evidence breakdown.
+                </div>
+              </div>
+            )}
+
+            {/* TAB: AI AGENTS */}
+            {currentTab === 'agents' && (
+              <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <i className="fa-solid fa-brain text-amber-400"></i> AI Agent Studio & Facilitator Hub
+                </h1>
+                <p className="text-xs text-slate-400">Run specialized autonomous agents (Researcher, Critic, Synthesizer, Mentor, Experimenter, Execution Agent) on any idea.</p>
+              </div>
+            )}
+
+            {/* TAB: KANBAN EXECUTION */}
+            {currentTab === 'kanban' && (
+              <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <i className="fa-solid fa-list-check text-rose-400"></i> Idea-to-Execution Kanban & Connector Sync
+                </h1>
+                <p className="text-xs text-slate-400">Track implementation tasks across Jira, GitHub Issues, Slack, and Linear.</p>
+              </div>
+            )}
+
+            {/* TAB: LEADERBOARD & OUTCOMES */}
+            {currentTab === 'leaderboard' && (
+              <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
+                <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                  <i className="fa-solid fa-trophy text-yellow-400"></i> Contributor Impact Leaderboard & Tangible ROI
+                </h1>
+                <p className="text-xs text-slate-400">Track community reputation points, badges, cost savings realized ($45,000+), and ROI metrics.</p>
+              </div>
+            )}
+
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

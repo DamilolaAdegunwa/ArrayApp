@@ -1,5 +1,6 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 using AutoMapper;
+using AutoMapper.Internal;
 using ArrayApp.Application.Common.Mappings;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Application.TodoLists.Queries.GetTodos;
@@ -16,7 +17,10 @@ public class MappingTests
     public MappingTests()
     {
         _configuration = new MapperConfiguration(config => 
-            config.AddProfile<MappingProfile>());
+        {
+            config.Internal().MethodMappingEnabled = false;
+            config.AddProfile<MappingProfile>();
+        });
 
         _mapper = _configuration.CreateMapper();
     }

@@ -1,4 +1,4 @@
-﻿using ArrayApp.Application.Common.Behaviours;
+using ArrayApp.Application.Common.Behaviours;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.TodoItems.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
@@ -24,7 +24,7 @@ public class RequestLoggerTests
     [Test]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
-        _currentUserService.Setup(x => x.UserId).Returns(0);
+        _currentUserService.Setup(x => x.UserId).Returns(1);
 
         var requestLogger = new LoggingBehaviour<CreateTodoItemCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
