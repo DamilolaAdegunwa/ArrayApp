@@ -183,3 +183,64 @@ public class CampaignsController : ControllerBase
         });
     }
 }
+
+public class CampaignDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string ChallengeStatement { get; set; } = string.Empty;
+    public string GoalDescription { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public string SponsorOrganization { get; set; } = string.Empty;
+    public decimal RewardPoolAmount { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public bool IsActive { get; set; }
+    public int SubmittedIdeasCount { get; set; }
+    public string BannerImageUrl { get; set; } = string.Empty;
+}
+
+public class CampaignDetailsDto : CampaignDto
+{
+    public string CustomFormSchemaJson { get; set; } = string.Empty;
+    public List<IdeaSummaryDto> SubmittedIdeas { get; set; } = new();
+}
+
+public class IdeaSummaryDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Tagline { get; set; } = string.Empty;
+    public string MaturityStage { get; set; } = string.Empty;
+    public double Rating { get; set; }
+    public int Upvotes { get; set; }
+}
+
+public class CreateCampaignDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string ChallengeStatement { get; set; } = string.Empty;
+    public string GoalDescription { get; set; } = string.Empty;
+    public string? CategoryName { get; set; }
+    public string? SponsorOrganization { get; set; }
+    public decimal RewardPoolAmount { get; set; } = 10000;
+    public DateTime? EndDate { get; set; }
+    public string? CustomFormSchemaJson { get; set; }
+    public string? BannerImageUrl { get; set; }
+}
+
+public class SubmitCampaignIdeaDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string Tagline { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string? ProblemStatement { get; set; }
+    public string? Opportunity { get; set; }
+    public string? Hypothesis { get; set; }
+    public string? TargetAudience { get; set; }
+    public string? ValueProposition { get; set; }
+    public string? Constraints { get; set; }
+    public string? Unknowns { get; set; }
+    public string? Evidence { get; set; }
+    public string? DesiredOutcome { get; set; }
+}

@@ -1,4 +1,4 @@
-﻿using ArrayApp.Domain.Entities;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using MediatR;
@@ -28,10 +28,14 @@ public partial class Testing
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
         _configuration = _factory.Services.GetRequiredService<IConfiguration>();
 
-        _checkpoint = new Checkpoint
+        var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
+        if (isWindows && !_configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
-        };
+            _checkpoint = new Checkpoint
+            {
+                TablesToIgnore = new[] { "__EFMigrationsHistory" }
+            };
+        }
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
@@ -94,7 +98,18 @@ public partial class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        if (_checkpoint != null)
+        {
+            await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        }
+        else
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            context.TodoItems.RemoveRange(context.TodoItems);
+            context.TodoLists.RemoveRange(context.TodoLists);
+            await context.SaveChangesAsync();
+        }
 
         _currentUserId = 0;
     }

@@ -1,4 +1,4 @@
-﻿using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -35,8 +35,18 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services
                 .Remove<DbContextOptions<ApplicationDbContext>>()
                 .AddDbContext<ApplicationDbContext>((sp, options) =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-                        builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                {
+                    var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
+                    if (isWindows && !builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
+                    {
+                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+                    }
+                    else
+                    {
+                        options.UseInMemoryDatabase("ArrayAppIntegrationTestDb");
+                    }
+                });
         });
     }
 }
