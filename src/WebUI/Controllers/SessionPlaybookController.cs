@@ -3,36 +3,34 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Application.Ideas.Commands;
+using ArrayApp.Application.Ideas.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArrayApp.WebUI.Controllers;
 
-// =========================================================================================================
-// [NEW CORE ARCHITECTURAL ADDITION]: SessionPlaybookController
-// REST API exposing workshop playbooks (SCAMPER, Six Hats, Crazy 8s, Investor Pitch) and facilitation agendas
-// =========================================================================================================
 [ApiController]
 [Route("api/[controller]")]
 public class SessionPlaybookController : ControllerBase
 {
-    private readonly ISessionPlaybookService _playbookService;
+    private readonly ISender _mediator;
 
-    public SessionPlaybookController(ISessionPlaybookService playbookService)
+    public SessionPlaybookController(ISender mediator)
     {
-        _playbookService = playbookService;
+        _mediator = mediator;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<WorkshopPlaybookDto>>> GetAllPlaybooks()
+    [HttpGet("templates")]
+    public async Task<ActionResult<List<WorkshopPlaybookDto>>> GetTemplates([FromQuery] string? formatId)
     {
-        var playbooks = await _playbookService.GetAllPlaybooksAsync();
+        var playbooks = await _mediator.Send(new GetPlaybookTemplatesQuery(formatId));
         return Ok(playbooks);
     }
 
-    [HttpGet("{formatType}")]
-    public async Task<ActionResult<WorkshopPlaybookDto>> GetPlaybookTemplate(string formatType)
+    [HttpPost("advance")]
+    public async Task<ActionResult<PlaybookPhaseProgressDto>> AdvancePhase([FromBody] AdvancePlaybookPhaseCommand command)
     {
-        var playbook = await _playbookService.GetPlaybookTemplateAsync(formatType);
-        return Ok(playbook);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 }

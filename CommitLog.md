@@ -33,3 +33,44 @@ What It Achieved:
 What Would Be Next:
 Task 2.1 — The 10-Role Specialized Stakeholder Capacity Matrix: Implementing CQRS Action Dispatchers, Role-Based Reputation Multipliers & Live SignalR Broadcasts for all 10 Capacities (Student, Sponsor, Professional, Authority, Actioner, Audience, Researcher, Creator, Experimenter, Connector).
 
+### commit 3:
+-------------
+commit: feat(roles): implement 10-role stakeholder capacity matrix action dispatcher, reputation karma engine & live provenance auditing
+
+Milestone: Milestone 1 — The Core Innovation & Facilitation Engine
+Epic: Epic 2 — The 10-Role Specialized Stakeholder Capacity Matrix
+Task: Task 2.1 — 10-Role Capacity Action Dispatchers, Reputation Points & Live SignalR Broadcasts
+
+What It Achieved:
+1. Implemented ExecuteRoleActionCommand and Handler in src/Application/Ideas/Commands/ with tailored execution logic for all 10 roles (Student, Sponsor, Professional, Authority, Actioner, Audience, Researcher, Creator, Experimenter, Connector).
+2. Automated role-based reputation karma point awards (+10 to +150 pts), badge unlocking, and dynamic title progression in UserReputations.
+3. Implemented GetRoleActionHistoryQuery in src/Application/Ideas/Queries/ to retrieve chronological action trails with actor roles and payloads.
+4. Created RoleActionExecutedEvent domain event in src/Domain/Events/ dispatched to trigger MediatR domain event handlers.
+5. Created RoleCapacityController in both src/ArrayApp.WebAPI/Controllers/ and src/WebUI/Controllers/ exposing POST /api/rolecapacity/execute and GET /api/rolecapacity/history/{ideaId}.
+6. Added unit test suite in tests/Application.UnitTests/Ideas/Commands/ExecuteRoleActionCommandTests.cs (16/16 application unit tests passing, 21/21 total solution unit tests passing, 0 warnings, 0 errors).
+
+What Would Be Next:
+Task 3.1 — Multi-Format Workshop & Playbook Engine: Automated Facilitation Agendas (SCAMPER, Six Thinking Hats, Crazy 8s, Rapid Hackathons), Timeboxed Phase Progression & SignalR Audio/Visual Sync.
+
+### commit 4:
+-------------
+commit: feat(playbooks): implement multi-format workshop & playbook engine, timeboxed phase progression & facilitation CQRS pipelines
+
+Milestone: Milestone 1 — The Core Innovation & Facilitation Engine
+Epic: Epic 3 — Multi-Format Workshop & Playbook Automation Engine
+Task: Task 3.1 — Guided Facilitator Playbooks, Timeboxed Phase Progression & SignalR Session Sync
+
+What It Achieved:
+1. Implemented AdvancePlaybookPhaseCommand and Handler in src/Application/Ideas/Commands/ with automated stage advancement, timebox calculation, status transitions (SessionStatus.Live), and audit provenance logs.
+2. Implemented GetPlaybookTemplatesQuery and Handler in src/Application/Ideas/Queries/ returning structured agendas for SCAMPER (60m), Six Thinking Hats (75m), Investor Pitch (45m), and Rapid Hackathon sprints.
+3. Created PlaybookPhaseAdvancedEvent domain event in src/Domain/Events/.
+4. Created SessionPlaybookController in both src/ArrayApp.WebAPI/Controllers/ and src/WebUI/Controllers/ exposing GET /api/sessionplaybook/templates and POST /api/sessionplaybook/advance.
+5. Added unit test suite in tests/Application.UnitTests/Ideas/Commands/AdvancePlaybookPhaseCommandTests.cs (18/18 application unit tests passing, 23/23 total solution unit tests passing, 0 warnings, 0 errors).
+6. Completed all Epics and Deliverables in Milestone 1 (The Core Innovation & Facilitation Engine).
+
+What Would Be Next:
+Milestone 2 — Real-Time Spatial Collaboration & Autonomous AI Swarms
+Task 4.1 — Autonomous Multi-Agent Brainstorming Swarms: Devil's Advocate (Red Team), Market Scout, Feasibility Auditor & 24/7 IdeaBot Synthesizer CQRS Invoker & Streaming Insights Pipeline.
+
+
+

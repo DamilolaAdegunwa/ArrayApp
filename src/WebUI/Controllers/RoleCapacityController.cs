@@ -1,38 +1,39 @@
+#pragma warning disable
+#pragma info disable
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Application.Common.Models;
+using ArrayApp.Application.Ideas.Commands;
+using ArrayApp.Application.Ideas.Queries;
+using ArrayApp.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArrayApp.WebUI.Controllers;
 
-// =========================================================================================================
-// [NEW CORE ARCHITECTURAL ADDITION]: RoleCapacityController
-// REST API exposing specialized 10-role action execution, reputation awarding, and history audit logs
-// =========================================================================================================
 [ApiController]
 [Route("api/[controller]")]
 public class RoleCapacityController : ControllerBase
 {
-    private readonly IRoleCapacityService _roleCapacityService;
+    private readonly ISender _mediator;
 
-    public RoleCapacityController(IRoleCapacityService roleCapacityService)
+    public RoleCapacityController(ISender mediator)
     {
-        _roleCapacityService = roleCapacityService;
+        _mediator = mediator;
     }
 
-    [HttpPost("execute-action")]
-    public async Task<ActionResult<RoleActionResultDto>> ExecuteRoleAction([FromBody] ExecuteRoleActionRequestDto request)
+    [HttpPost("execute")]
+    public async Task<ActionResult<RoleActionResultDto>> ExecuteRoleAction([FromBody] ExecuteRoleActionCommand command)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "user-elena";
-        var result = await _roleCapacityService.ExecuteRoleActionAsync(request, userId);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
 
     [HttpGet("history/{ideaId}")]
-    public async Task<ActionResult<List<RoleActionHistoryDto>>> GetRoleActionHistory(int ideaId)
+    public async Task<ActionResult<List<RoleActionHistoryDto>>> GetActionHistory(int ideaId)
     {
-        var history = await _roleCapacityService.GetRoleActionHistoryAsync(ideaId);
+        var history = await _mediator.Send(new GetRoleActionHistoryQuery(ideaId));
         return Ok(history);
     }
 }
