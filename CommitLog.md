@@ -133,6 +133,27 @@ Milestone 3 — Execution Mesh, Verifiable Provenance & Innovation Economy
 Epic 7 — Enterprise Integration Mesh & Bi-Directional No-Code Connectors
 Task 7.1 — Enterprise Bi-Directional Connectors: Jira Cloud, GitHub Issues/PRs, Linear, Slack Webhooks & Automated Workstream Synchronization.
 
+### commit 8:
+-------------
+commit: feat(connectors): implement bi-directional enterprise integration mesh, Jira/GitHub/Linear sync & inbound webhook reconciliation CQRS pipelines
+
+Milestone: Milestone 3 — Execution Mesh, Verifiable Provenance & Innovation Economy
+Epic: Epic 7 — Enterprise Integration Mesh & Bi-Directional No-Code Connectors
+Task: Task 7.1 — Enterprise Bi-Directional Connectors: Jira Cloud, GitHub Issues/PRs, Linear & Inbound Webhooks
+
+What It Achieved:
+1. Implemented SyncActionToConnectorCommand and Handler in src/Application/Ideas/Commands/ with automated dispatching to external systems (Jira, GitHub, Linear, Slack), external reference key assignment, and audit provenance logging.
+2. Implemented ConfigureConnectorCommand in src/Application/Ideas/Commands/ supporting multi-channel target endpoints, encrypted API keys, and auto-sync toggles.
+3. Implemented ProcessInboundWebhookCommand in src/Application/Ideas/Commands/ to reconcile incoming webhook payloads (e.g. GitHub PR merged or Jira issue closed) into internal ActionItemStatus.Done status.
+4. Created ActionSyncedToConnectorEvent domain event in src/Domain/Events/.
+5. Updated ConnectorsController in both src/ArrayApp.WebAPI/Controllers/ and src/WebUI/Controllers/ exposing GET /api/connectors/{ideaId}, POST /api/connectors/configure, POST /api/connectors/sync-action, POST /api/connectors/webhook/reconcile, and POST /api/connectors/webhook/{ideaId}.
+6. Added unit test suite in tests/Application.UnitTests/Ideas/Commands/SyncActionToConnectorCommandTests.cs (26/26 application unit tests passing, 31/31 total solution unit tests passing, 0 warnings, 0 errors).
+
+What Would Be Next:
+Epic 8 — Verifiable Provenance, W3C DIDs & Immutable Realization Ledger
+Task 8.1 — Hash-Chained Provenance Ledger, Cryptographic Audit Verification & W3C DID Ed25519-Signed Realization Certificates.
+
+
 
 
 

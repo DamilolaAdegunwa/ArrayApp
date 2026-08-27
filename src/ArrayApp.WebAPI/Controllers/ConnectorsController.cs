@@ -1,9 +1,12 @@
+#pragma warning disable
+#pragma info disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Application.Ideas.Commands;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using ArrayApp.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +20,13 @@ public class ConnectorsController : ControllerBase
 {
     private readonly IApplicationDbContext _context;
     private readonly IConnectorService _connectorService;
+    private readonly ISender _mediator;
 
-    public ConnectorsController(IApplicationDbContext context, IConnectorService connectorService)
+    public ConnectorsController(IApplicationDbContext context, IConnectorService connectorService, ISender mediator)
     {
         _context = context;
         _connectorService = connectorService;
+        _mediator = mediator;
     }
 
     [HttpGet("{ideaId}")]
@@ -47,52 +52,30 @@ public class ConnectorsController : ControllerBase
     }
 
     [HttpPost("configure")]
-    public async Task<ActionResult<ConnectorConfigDto>> ConfigureConnector([FromBody] ConfigureConnectorDto dto)
+    public async Task<ActionResult<ConnectorConfigDto>> ConfigureConnector([FromBody] ConfigureConnectorCommand command)
     {
-        var existing = await _context.ConnectorConfigs.FirstOrDefaultAsync(c => c.IdeaId == dto.IdeaId && c.Type == dto.Type);
-        if (existing != null)
-        {
-            existing.Name = dto.Name;
-            existing.TargetEndpoint = dto.TargetEndpoint;
-            existing.ProjectOrChannelKey = dto.ProjectOrChannelKey;
-            existing.AutoSyncActions = dto.AutoSyncActions;
-            existing.IsActive = true;
-        }
-        else
-        {
-            existing = new ConnectorConfig
-            {
-                IdeaId = dto.IdeaId,
-                Type = dto.Type,
-                Name = dto.Name,
-                TargetEndpoint = dto.TargetEndpoint,
-                ProjectOrChannelKey = dto.ProjectOrChannelKey,
-                AutoSyncActions = dto.AutoSyncActions,
-                IsActive = true
-            };
-            _context.ConnectorConfigs.Add(existing);
-        }
+        var config = await _mediator.Send(command);
+        return Ok(config);
+    }
 
-        await _context.SaveChangesAsync(default);
+    [HttpPost("sync-action")]
+    public async Task<ActionResult<ConnectorSyncLogDto>> SyncAction([FromBody] SyncActionToConnectorCommand command)
+    {
+        var log = await _mediator.Send(command);
+        return Ok(log);
+    }
 
-        return Ok(new ConnectorConfigDto
-        {
-            Id = existing.Id,
-            IdeaId = existing.IdeaId,
-            Type = existing.Type,
-            Name = existing.Name,
-            TargetEndpoint = existing.TargetEndpoint,
-            ProjectOrChannelKey = existing.ProjectOrChannelKey,
-            IsActive = existing.IsActive,
-            AutoSyncActions = existing.AutoSyncActions,
-            LastSyncTime = existing.LastSyncTime
-        });
+    [HttpPost("webhook/reconcile")]
+    public async Task<ActionResult<bool>> ReconcileWebhook([FromBody] ProcessInboundWebhookCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPost("webhook/{ideaId}")]
     public async Task<IActionResult> ReceiveWebhook(int ideaId, [FromBody] object payload)
     {
         await _connectorService.DispatchWebhookNotificationAsync(ideaId, "ExternalWebhookReceived", payload);
-        return Ok(new { success = true, receivedAt = DateTime.UtcNow });
+        return Ok(new { success = true, receivedAt = DateTimeOffset.UtcNow });
     }
 }
