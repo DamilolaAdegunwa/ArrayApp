@@ -1,4 +1,5 @@
 #pragma warning disable
+#pragma info disable
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Interfaces;

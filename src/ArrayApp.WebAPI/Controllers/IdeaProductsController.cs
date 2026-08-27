@@ -1,3 +1,5 @@
+#pragma warning disable
+#pragma info disable
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
