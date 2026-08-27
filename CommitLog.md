@@ -72,5 +72,26 @@ What Would Be Next:
 Milestone 2 — Real-Time Spatial Collaboration & Autonomous AI Swarms
 Task 4.1 — Autonomous Multi-Agent Brainstorming Swarms: Devil's Advocate (Red Team), Market Scout, Feasibility Auditor & 24/7 IdeaBot Synthesizer CQRS Invoker & Streaming Insights Pipeline.
 
+### commit 5:
+-------------
+commit: feat(ai-swarm): implement autonomous multi-agent brainstorming swarms, red team audit, pinned insights & AI triage CQRS pipelines
+
+Milestone: Milestone 2 — Real-Time Spatial Collaboration & Autonomous AI Swarms
+Epic: Epic 4 — Autonomous AI Agent Swarm & Real-Time Co-Pilots
+Task: Task 4.1 — Autonomous Multi-Agent Brainstorming Swarms: Critic/Red Team, Market Scout, Feasibility Auditor & Pinned Insights Engine
+
+What It Achieved:
+1. Implemented InvokeAIAgentCommand and Handler in src/Application/Ideas/Commands/ with automated execution across all agent archetypes (Critic, Synthesizer, Researcher, Mentor, Experimenter, ExecutionAgent) and provenance logging.
+2. Implemented GetAIAgentInsightsQuery in src/Application/Ideas/Queries/ to retrieve chronological and pinned insight feeds for ideas and live sessions.
+3. Implemented PinAIAgentInsightCommand to allow facilitators to pin critical AI insights to idea specifications.
+4. Created AIAgentInsightGeneratedEvent domain event in src/Domain/Events/.
+5. Created AIAgentsController in both src/ArrayApp.WebAPI/Controllers/ and src/WebUI/Controllers/ exposing POST /api/aiagents/invoke, GET /api/aiagents/insights/{ideaId}, PUT /api/aiagents/insights/{insightId}/pin, POST /api/aiagents/triage/{ideaId}, and POST /api/aiagents/swot/{ideaId}.
+6. Added unit test suite in tests/Application.UnitTests/Ideas/Commands/InvokeAIAgentCommandTests.cs (20/20 application unit tests passing, 25/25 total solution unit tests passing, 0 warnings, 0 errors).
+
+What Would Be Next:
+Epic 5 — Spatial 2D Infinite Canvas & Generative Whiteboard
+Task 5.1 — Spatial 2D Infinite Multiplayer Canvas: Real-Time Vector Nodes, Sticky Clustering, Mermaid/PlantUML Auto-Diagramming & SignalR Canvas Synchronization.
+
+
 
 
