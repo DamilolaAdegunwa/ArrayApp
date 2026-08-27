@@ -18,7 +18,7 @@ public class ConnectorConfig : BaseAuditableEntity, IAggregateRoot
     public string? ProjectOrChannelKey { get; set; }
     public bool IsActive { get; set; } = true;
     public bool AutoSyncActions { get; set; } = true;
-    public DateTime? LastSyncTime { get; set; }
+    public DateTimeOffset? LastSyncTime { get; set; }
     public List<ConnectorSyncLog> SyncLogs { get; set; } = new();
 }
 
@@ -31,5 +31,5 @@ public class ConnectorSyncLog : BaseAuditableEntity, IAggregateRoot
     public string Payload { get; set; } = string.Empty;
     public bool IsSuccess { get; set; } = true;
     public string? ResponseMessage { get; set; }
-    public DateTime SyncedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset SyncedAt { get; set; } = DateTimeOffset.UtcNow;
 }

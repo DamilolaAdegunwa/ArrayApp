@@ -1,4 +1,4 @@
-﻿#pragma warning disable
+#pragma warning disable
 #pragma info disable
 using System.Net;
 using System.Security.Claims;
@@ -15,7 +15,6 @@ using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using Serilog;
 namespace ArrayApp.WebUI.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = false)]
@@ -51,7 +50,7 @@ public class TokenController : BaseController
     //    ]
     public async Task<IServiceResponse<TokenDTO>> Index([FromBody] LoginModel model)
     {//worked locally and online
-        Log.Information("trying to login user");
+        Logger.LogInformation("trying to login user");
         return await HandleApiOperationAsync(async () => {
 
             var response = new ServiceResponse<TokenDTO>();

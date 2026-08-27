@@ -1,8 +1,8 @@
-﻿namespace ArrayApp.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+namespace ArrayApp.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 
 public class WeatherForecast
 {
-    public DateTime Date { get; set; }
+    public DateTimeOffset Date { get; set; }
 
     public int TemperatureC { get; set; }
 

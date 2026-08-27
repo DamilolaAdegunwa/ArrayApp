@@ -23,5 +23,5 @@ public class AIAgentInsight : BaseAuditableEntity, IAggregateRoot
 
     public double ConfidenceScore { get; set; } = 0.95;
     public bool IsPinned { get; set; }
-    public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset GeneratedAt { get; set; } = DateTimeOffset.UtcNow;
 }

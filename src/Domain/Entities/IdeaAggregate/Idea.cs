@@ -232,25 +232,25 @@ public class Browser : BaseAuditableEntity, IAggregateRoot
 
 public class PostUpdate //: BaseAuditableEntity, IAggregateRoot
 {
-    public PostUpdate(IPAddress postedFrom, DateTime updatedOn)
+    public PostUpdate(IPAddress postedFrom, DateTimeOffset updatedOn)
     {
         PostedFrom = postedFrom;
         UpdatedOn = updatedOn;
     }
     public IPAddress PostedFrom { get; private set; }
     public string? UpdatedBy { get; init; }
-    public DateTime UpdatedOn { get; private set; }
+    public DateTimeOffset UpdatedOn { get; private set; }
     public List<Commit> Commits { get; } = new();
 }
 
 public class Commit //: BaseAuditableEntity, IAggregateRoot
 {
-    public Commit(DateTime committedOn, string comment)
+    public Commit(DateTimeOffset committedOn, string comment)
     {
         CommittedOn = committedOn;
         Comment = comment;
     }
-    public DateTime CommittedOn { get; private set; }
+    public DateTimeOffset CommittedOn { get; private set; }
     public string Comment { get; set; }
 }
 public class ContactDetails : BaseAuditableEntity, IAggregateRoot

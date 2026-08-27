@@ -13,5 +13,5 @@ public class ProvenanceLog : BaseAuditableEntity, IAggregateRoot
     public string? ActorRole { get; set; }
     public string ActionPerformed { get; set; } = string.Empty; // "IdeaCreated", "MaturityAdvanced", "DecisionMade", "ActionExtracted", "AgentAnalysis"
     public string Details { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }

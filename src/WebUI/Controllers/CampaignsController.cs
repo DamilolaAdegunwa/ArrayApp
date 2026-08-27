@@ -99,8 +99,8 @@ public class CampaignsController : ControllerBase
             CategoryName = dto.CategoryName ?? "General",
             SponsorOrganization = dto.SponsorOrganization ?? "Open Community Challenge",
             RewardPoolAmount = dto.RewardPoolAmount,
-            StartDate = DateTime.UtcNow,
-            EndDate = dto.EndDate ?? DateTime.UtcNow.AddDays(30),
+            StartDate = DateTimeOffset.UtcNow,
+            EndDate = dto.EndDate ?? DateTimeOffset.UtcNow.AddDays(30),
             IsActive = true,
             CustomFormSchemaJson = dto.CustomFormSchemaJson ?? "{}",
             BannerImageUrl = dto.BannerImageUrl ?? ""
@@ -195,8 +195,8 @@ public class CampaignDto
     public string CategoryName { get; set; } = string.Empty;
     public string SponsorOrganization { get; set; } = string.Empty;
     public decimal RewardPoolAmount { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public DateTimeOffset StartDate { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset EndDate { get; set; } = DateTimeOffset.UtcNow.AddDays(30);
     public bool IsActive { get; set; }
     public int SubmittedIdeasCount { get; set; }
     public string BannerImageUrl { get; set; } = string.Empty;
@@ -226,7 +226,7 @@ public class CreateCampaignDto
     public string? CategoryName { get; set; }
     public string? SponsorOrganization { get; set; }
     public decimal RewardPoolAmount { get; set; } = 10000;
-    public DateTime? EndDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
     public string? CustomFormSchemaJson { get; set; }
     public string? BannerImageUrl { get; set; }
 }

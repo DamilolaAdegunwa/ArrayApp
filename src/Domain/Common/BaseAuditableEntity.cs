@@ -10,7 +10,7 @@ namespace ArrayApp.Domain.Common;
 /// </summary>
 public abstract class BaseAuditableEntity : BaseEntity
 {
-    public virtual DateTimeOffset CreationTime { get; set; } = DateTimeOffset.Now;
+    public virtual DateTimeOffset CreationTime { get; set; } = DateTimeOffset.UtcNow;
 
     public virtual int CreatorUserId { get; set; }
 

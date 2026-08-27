@@ -46,8 +46,8 @@ public class IdeaProductDto
     public int? ParentIdeaId { get; set; }
     public int? MergedIntoIdeaId { get; set; }
 
-    public DateTime Created { get; set; }
-    public DateTime? LastModified { get; set; }
+    public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? LastModified { get; set; }
 
     // Multidimensional Innovation Scoring (ICE/RICE)
     public double IceScore => Math.Round((ImpactScore * ConfidenceScore * EaseScore) / 10.0, 1);

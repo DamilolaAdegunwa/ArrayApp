@@ -9,8 +9,8 @@ using ArrayApp.Domain.Entities.AdvertAggregate;
 namespace ArrayApp.Domain.Entities.SubscriptionAggregate;
 public class Subscription : BaseAuditableEntity, IAggregateRoot
 {
-    public DateTime StartDate { get; set; }
-    public DateTime ExpirationDate { get; set; }
+    public DateTimeOffset StartDate { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset ExpirationDate { get; set; } = DateTimeOffset.UtcNow.AddMonths(1);
     public SubscriptionStatus Status { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public ApplicationUser User { get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,10 +16,10 @@ public class AdvertDto
     public string Description { get; set; }
 
     // The date and time the advert was created
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The date and time the advert was last modified
-    public DateTime ModifiedAt { get; set; }
+    public DateTimeOffset ModifiedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The user who created the advert
     //public ApplicationUser Creator { get; set; }

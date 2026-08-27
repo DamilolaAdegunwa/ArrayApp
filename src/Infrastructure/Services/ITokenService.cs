@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -32,16 +32,16 @@ public class TokenService : ITokenSvc
 
     public TokenDTO GenerateAccessTokenFromClaims(params Claim[] claims)
     {
-        var issued = DateTimeOffset.Now;
-        var expires = DateTimeOffset.Now.AddSeconds(_jwtConfig.TokenDurationInSeconds);
+        var issued = DateTimeOffset.UtcNow;
+        var expires = DateTimeOffset.UtcNow.AddSeconds(_jwtConfig.TokenDurationInSeconds);
 
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtConfig.SecurityKey));
 
         var jwtToken = new JwtSecurityToken(issuer: _jwtConfig.Issuer,
             audience: _jwtConfig.Audience,
             claims: claims,
-            notBefore: issued.LocalDateTime,
-            expires: expires.LocalDateTime,
+            notBefore: issued.UtcDateTime,
+            expires: expires.UtcDateTime,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
         );
 
@@ -55,20 +55,21 @@ public class TokenService : ITokenSvc
 
     public TokenDTO GenerateAccessTokenFromClaimsV2(params Claim[] claims)
     {
-        var expires = DateTimeOffset.Now.AddSeconds(_jwtConfig.TokenDurationInSeconds);
+        var expires = DateTimeOffset.UtcNow.AddSeconds(_jwtConfig.TokenDurationInSeconds);
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenKey = Encoding.ASCII.GetBytes(_jwtConfig.SecurityKey);
         var tokenDescriptor = new SecurityTokenDescriptor 
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddSeconds(_jwtConfig.TokenDurationInSeconds),
+            Expires = expires.UtcDateTime,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
         };
+
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        var tokenStr = tokenHandler.WriteToken(token);
+
         return new TokenDTO
         {
-            Token = tokenStr,
+            Token = tokenHandler.WriteToken(token),
             RefreshToken = GenerateRefreshToken(),
             Expires = expires
         };

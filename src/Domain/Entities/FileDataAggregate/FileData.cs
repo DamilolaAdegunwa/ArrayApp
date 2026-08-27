@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +18,10 @@ public class FileData : BaseAuditableEntity, IAggregateRoot
     public string MimeType { get; set; }
 
     // The date and time the file was created
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The date and time the file was last modified
-    public DateTime ModifiedAt { get; set; }
+    public DateTimeOffset ModifiedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The file's path on the local file system
     public string Path { get; set; }

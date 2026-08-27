@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -14,7 +14,7 @@ public class Comment : BaseAuditableEntity, IAggregateRoot
     public string Text { get; set; }
 
     // The date and time the comment was created
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The user who created the comment
     //public ApplicationUser Creator { get; set; }

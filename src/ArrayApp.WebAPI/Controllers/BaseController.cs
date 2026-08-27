@@ -1,33 +1,28 @@
-﻿using System.Net;
+using System.Net;
 using System.Runtime.CompilerServices;
 using ArrayApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
+
 namespace ArrayApp.WebAPI.Controllers;
-//public class BaseController : Controller
-//{
-//    public IActionResult Index()
-//    {
-//        return View();
-//    }
-//}
+
 [Route("api/[controller]")]
 [ApiController]
-public class BaseController : ApiControllerBase//: ControllerBase
+public class BaseController : ApiControllerBase
 {
-    //private readonly ILogger _logger = 
-    public BaseController(/*ILogger logger*/)
+    private ILogger? _logger;
+    protected ILogger Logger => _logger ??= HttpContext?.RequestServices.GetService<ILogger<BaseController>>() ?? new LoggerFactory().CreateLogger<BaseController>();
+
+    public BaseController(ILogger? logger = null)
     {
-        //_logger = logger;
+        _logger = logger;
     }
 
     protected async Task<ServiceResponse<T>> HandleApiOperationAsync<T>(
-   Func<Task<ServiceResponse<T>>> action, [CallerLineNumber] int lineNo = 0, [CallerMemberName] string method = "")
+        Func<Task<ServiceResponse<T>>> action, [CallerLineNumber] int lineNo = 0, [CallerMemberName] string method = "")
     {
-        //var _logger = LogManager.GetLogger(typeof(BaseController));
-
-        Log.Information($"ENTERS ({method}) method");
+        Logger.LogInformation("ENTERS ({Method}) method", method);
 
         var serviceResponse = new ServiceResponse<T>
         {
@@ -46,7 +41,6 @@ public class BaseController : ApiControllerBase//: ControllerBase
             serviceResponse.Object = actionResponse.Object;
             serviceResponse.ShortDescription = actionResponse.ShortDescription ?? serviceResponse.ShortDescription;
             serviceResponse.Code = actionResponse.Code ?? serviceResponse.Code;
-
         }
         catch (Exception ex)
         {
@@ -62,10 +56,10 @@ public class BaseController : ApiControllerBase//: ControllerBase
                     m => m.Value.Errors.Select(e => e.Exception?.Message ?? e.ErrorMessage)
                 );
             }
-            Log.Error(ex.Message, ex);
+            Logger.LogError(ex, "{ErrorMessage}", ex.Message);
         }
 
-        Log.Information($"EXITS ({method}) method");
+        Logger.LogInformation("EXITS ({Method}) method", method);
 
         return serviceResponse;
     }

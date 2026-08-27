@@ -31,5 +31,5 @@ public class UserBadge : BaseAuditableEntity, IAggregateRoot
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
-    public DateTime AwardedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset AwardedAt { get; set; } = DateTimeOffset.UtcNow;
 }

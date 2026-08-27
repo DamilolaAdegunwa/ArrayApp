@@ -22,6 +22,6 @@ public class IdeaDecision : BaseAuditableEntity, IAggregateRoot
     public string? DecidedByUserId { get; set; }
     public ApplicationUser? DecidedByUser { get; set; }
 
-    public DateTime DecidedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset DecidedAt { get; set; } = DateTimeOffset.UtcNow;
     public List<IdeaAction> ResultingActions { get; set; } = new();
 }

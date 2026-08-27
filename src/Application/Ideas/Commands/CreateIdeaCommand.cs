@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +9,10 @@ using ArrayApp.Domain.Entities.CategoryAggregate;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using AutoMapper;
 using MediatR;
-using Serilog;
+using Microsoft.Extensions.Logging;
+
 namespace ArrayApp.Application.Ideas.Commands;
-public record CreateIdeaCommand : IRequest<int> //: IRequest<(bool status, string message, int response)>
+public record CreateIdeaCommand : IRequest<int>
 {
     public string Title { get; set; }
     public string Description { get; set; }
@@ -21,16 +22,15 @@ public record CreateIdeaCommand : IRequest<int> //: IRequest<(bool status, strin
     public int CategoryId { get; set; }
 }
 
-public class CreateIdeaCommandHandler : IRequestHandler<CreateIdeaCommand,int> //: IRequestHandler<CreateIdeaCommand, (bool status, string message, int response)>
+public class CreateIdeaCommandHandler : IRequestHandler<CreateIdeaCommand, int>
 {
     private readonly IApplicationDbContext _context;
-    //private readonly IMapper _mapper;
-    public CreateIdeaCommandHandler(IApplicationDbContext context
-        //,IMapper mapper
-        )
+    private readonly ILogger<CreateIdeaCommandHandler> _logger;
+
+    public CreateIdeaCommandHandler(IApplicationDbContext context, ILogger<CreateIdeaCommandHandler> logger)
     {
         _context = context;
-       // _mapper = mapper;
+        _logger = logger;
     }
 
     //public async Task<(bool status, string message, int response)> Handle(CreateIdeaCommand request, CancellationToken cancellationToken)
@@ -65,8 +65,7 @@ public class CreateIdeaCommandHandler : IRequestHandler<CreateIdeaCommand,int> /
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message);
-            //return (false, ex.Message, 0);
+            _logger.LogError(ex, "{Message}", ex.Message);
             return 0;
         }
         

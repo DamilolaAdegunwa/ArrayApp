@@ -1,4 +1,4 @@
-﻿#pragma warning disable
+#pragma warning disable
 #pragma info disable
 namespace ArrayApp.Domain.Entities;
 
@@ -12,7 +12,7 @@ public class TodoItem : BaseAuditableEntity
 
     public PriorityLevel Priority { get; set; }
 
-    public DateTime? Reminder { get; set; }
+    public DateTimeOffset? Reminder { get; set; }
 
     private bool _done;
     //call the completed event once the done is set to true from false!

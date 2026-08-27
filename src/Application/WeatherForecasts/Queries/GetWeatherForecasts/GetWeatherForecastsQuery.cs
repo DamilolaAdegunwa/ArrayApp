@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 namespace ArrayApp.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 
@@ -17,7 +17,7 @@ public class GetWeatherForecastsQueryHandler : RequestHandler<GetWeatherForecast
 
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
-            Date = DateTime.Now.AddDays(index),
+            Date = DateTimeOffset.UtcNow.AddDays(index),
             TemperatureC = rng.Next(-20, 55),
             Summary = Summaries[rng.Next(Summaries.Length)]
         });

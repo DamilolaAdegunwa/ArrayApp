@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.Annotations;
-using Serilog;
 
 namespace ArrayApp.WebAPI.Controllers;
 
@@ -64,7 +63,7 @@ public class TokenController : BaseController
     {//worked locally and online
         try
         {
-            Log.Information("trying to login user");
+            Logger.LogInformation("trying to login user");
             return await HandleApiOperationAsync(async () => {
 
                 var response = new ServiceResponse<TokenDTO>();
@@ -124,7 +123,7 @@ public class TokenController : BaseController
         }
         catch (Exception ex)
         {
-            Log.Error($"{ex.Message} :: {ex.StackTrace} :: {ex?.InnerException?.Message} :: {ex?.InnerException?.StackTrace}");
+            Logger.LogError(ex, "{Message} :: {StackTrace}", ex.Message, ex.StackTrace);
             throw;
         }
     }
@@ -135,7 +134,7 @@ public class TokenController : BaseController
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey ?? throw new Exception("jwtKey cannot be null!")));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var seconds = Convert.ToInt32(_configuration["Authentication:Schemes:Bearer:TokenDurationInSeconds"]);
-        var expires = DateTimeOffset.Now.AddSeconds(seconds);
+        var expires = DateTimeOffset.UtcNow.AddSeconds(seconds);
         var claims = new[]
         {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
@@ -152,7 +151,7 @@ public class TokenController : BaseController
             issuer: _configuration["Authentication:Schemes:Bearer:ValidIssuer"],
             audience: _configuration["Authentication:Schemes:Bearer:ValidAudiences:0"],
             claims: claims,
-            expires: expires.LocalDateTime,
+            expires: expires.UtcDateTime,
             signingCredentials: credentials
         );
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);

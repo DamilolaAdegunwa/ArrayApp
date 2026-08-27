@@ -13,8 +13,8 @@ public class InnovationCampaign : BaseAuditableEntity
     public string CategoryName { get; set; } = string.Empty;
     public string SponsorOrganization { get; set; } = string.Empty;
     public decimal RewardPoolAmount { get; set; }
-    public DateTime StartDate { get; set; } = DateTime.UtcNow;
-    public DateTime EndDate { get; set; } = DateTime.UtcNow.AddDays(30);
+    public DateTimeOffset StartDate { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset EndDate { get; set; } = DateTimeOffset.UtcNow.AddDays(30);
     public bool IsActive { get; set; } = true;
     public string CustomFormSchemaJson { get; set; } = string.Empty;
     public string BannerImageUrl { get; set; } = string.Empty;

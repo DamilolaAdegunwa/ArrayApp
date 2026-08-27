@@ -124,7 +124,7 @@ public class SecurityAuditLogEntryDto
     public string ActorRole { get; set; } = string.Empty;
     public string ActionPerformed { get; set; } = string.Empty;
     public string Details { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }
 
 public class FacilitatorPlaybookDto

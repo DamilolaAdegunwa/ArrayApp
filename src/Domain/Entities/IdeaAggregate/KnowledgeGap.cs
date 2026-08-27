@@ -21,5 +21,5 @@ public class KnowledgeGap : BaseAuditableEntity, IAggregateRoot
 
     public string? ResolutionDetails { get; set; }
     public string? SupportingEvidenceUrl { get; set; }
-    public DateTime? ResolvedAt { get; set; }
+    public DateTimeOffset? ResolvedAt { get; set; }
 }

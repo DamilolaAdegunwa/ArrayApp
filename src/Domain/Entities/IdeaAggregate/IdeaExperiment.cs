@@ -34,6 +34,6 @@ public class IdeaExperiment : BaseAuditableEntity, IAggregateRoot
     public string? Learnings { get; set; }
 
     public ExperimentStatus Status { get; set; } = ExperimentStatus.Proposed;
-    public DateTime? StartedAt { get; set; }
-    public DateTime? CompletedAt { get; set; }
+    public DateTimeOffset? StartedAt { get; set; }
+    public DateTimeOffset? CompletedAt { get; set; }
 }

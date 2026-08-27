@@ -1,4 +1,4 @@
-﻿//using System;
+//using System;
 //using System.Collections.Generic;
 //using System.Data.Common;
 //using System.Data;
@@ -9,9 +9,6 @@
 //using ArrayApp.Infrastructure.Repositories.Interfaces;
 //using Microsoft.AspNetCore.Connections;
 //using Microsoft.EntityFrameworkCore;
-//using Microsoft.Extensions.Options;
-//using Newtonsoft.Json;
-//using Serilog;
 //using ArrayApp.Infrastructure.Persistence;
 //using Ardalis.Specification;
 //using Ardalis.Specification.EntityFrameworkCore;

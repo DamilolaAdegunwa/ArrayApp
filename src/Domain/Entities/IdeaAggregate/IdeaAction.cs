@@ -27,8 +27,8 @@ public class IdeaAction : BaseAuditableEntity, IAggregateRoot
     public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
     public ActionItemStatus Status { get; set; } = ActionItemStatus.Todo;
 
-    public DateTime? DueDate { get; set; }
-    public DateTime? CompletedAt { get; set; }
+    public DateTimeOffset? DueDate { get; set; }
+    public DateTimeOffset? CompletedAt { get; set; }
 
     public string? Dependencies { get; set; }
 

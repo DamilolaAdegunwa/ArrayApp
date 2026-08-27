@@ -7,7 +7,7 @@ using ArrayApp.Domain.Entities.IdeaAggregate;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArrayApp.WebAPI.Controllers;
+namespace ArrayApp.WebUI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -124,7 +124,7 @@ public class SecurityAuditLogEntryDto
     public string ActorRole { get; set; } = string.Empty;
     public string ActionPerformed { get; set; } = string.Empty;
     public string Details { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }
 
 public class FacilitatorPlaybookDto

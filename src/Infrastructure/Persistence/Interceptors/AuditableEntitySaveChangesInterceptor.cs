@@ -1,4 +1,4 @@
-﻿#pragma warning disable
+#pragma warning disable
 #pragma info disable
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Domain.Common;
@@ -44,13 +44,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatorUserId = _currentUserService.UserId;
-                entry.Entity.CreationTime = _dateTime.Now;
+                entry.Entity.CreationTime = _dateTime.UtcNow;
             } 
 
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 entry.Entity.LastModifierUserId = _currentUserService.UserId;
-                entry.Entity.LastModificationTime = _dateTime.Now;
+                entry.Entity.LastModificationTime = _dateTime.UtcNow;
             }
         }
     }

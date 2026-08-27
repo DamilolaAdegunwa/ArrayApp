@@ -22,5 +22,5 @@ public class IdeaOutcome : BaseAuditableEntity, IAggregateRoot
 
     public string? RetrospectiveNotes { get; set; }
     public string? KeyLearnings { get; set; }
-    public DateTime RealizedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset RealizedAt { get; set; } = DateTimeOffset.UtcNow;
 }

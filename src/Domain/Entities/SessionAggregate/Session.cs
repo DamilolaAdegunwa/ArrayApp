@@ -20,9 +20,9 @@ public class Session : BaseAuditableEntity, IAggregateRoot
     public SessionStatus SessionStatus { get; set; } = SessionStatus.Scheduled;
 
     // Scheduled and actual timestamps
-    public DateTime ScheduledStartTime { get; set; } = DateTime.UtcNow;
-    public DateTime? ActualStartTime { get; set; }
-    public DateTime? ActualEndTime { get; set; }
+    public DateTimeOffset ScheduledStartTime { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? ActualStartTime { get; set; }
+    public DateTimeOffset? ActualEndTime { get; set; }
     public TimeSpan Duration { get; set; } = TimeSpan.FromHours(1);
 
     // Meeting link / Virtual room URL
@@ -50,8 +50,8 @@ public class Session : BaseAuditableEntity, IAggregateRoot
     public List<AIAgentInsight> AiInsights { get; set; } = new();
 
     // Legacy fields for backward compatibility
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset ModifiedAt { get; set; } = DateTimeOffset.UtcNow;
     public string Status { get; set; } = "Scheduled";
     public string Type { get; set; } = "Brainstorm";
     public List<ApplicationUser> Participants { get; set; } = new();
@@ -70,7 +70,7 @@ public class SessionParticipant : BaseAuditableEntity, IAggregateRoot
     public bool IsAiAgent { get; set; }
     public string? AiAgentType { get; set; }
 
-    public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset JoinedAt { get; set; } = DateTimeOffset.UtcNow;
 }
 
 public class SessionPoll : BaseAuditableEntity, IAggregateRoot

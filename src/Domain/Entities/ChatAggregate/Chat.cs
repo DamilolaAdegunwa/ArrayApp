@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +14,10 @@ public class Chat : BaseAuditableEntity, IAggregateRoot
     public string Name { get; set; }
 
     // The date and time the chat was created
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The date and time the chat was last modified
-    public DateTime ModifiedAt { get; set; }
+    public DateTimeOffset ModifiedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The users who are members of the chat
     public List<ApplicationUser> Members { get; set; }

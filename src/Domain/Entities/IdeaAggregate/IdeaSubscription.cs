@@ -17,5 +17,5 @@ public class IdeaSubscription : BaseAuditableEntity, IAggregateRoot
     public string? RoleJustification { get; set; }
     public int ContributionsCount { get; set; }
     public bool ReceiveEmailNotifications { get; set; } = true;
-    public DateTime SubscribedAt { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset SubscribedAt { get; set; } = DateTimeOffset.UtcNow;
 }

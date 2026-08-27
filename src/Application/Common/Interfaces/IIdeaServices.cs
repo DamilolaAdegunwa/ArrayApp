@@ -132,7 +132,7 @@ public class RoleActionResultDto
     public string Message { get; set; } = string.Empty;
     public int ReputationPointsAwarded { get; set; }
     public string NewBadgeEarned { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
 }
 
 public class RoleActionHistoryDto
@@ -143,7 +143,7 @@ public class RoleActionHistoryDto
     public ParticipantRole Role { get; set; }
     public string ActionType { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
-    public DateTime ExecutedAt { get; set; }
+    public DateTimeOffset ExecutedAt { get; set; }
 }
 
 // =========================================================================================================

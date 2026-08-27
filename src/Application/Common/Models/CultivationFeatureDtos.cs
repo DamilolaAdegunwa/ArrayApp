@@ -20,7 +20,7 @@ public class KnowledgeGapDto
     public string? AssignedToUserName { get; set; }
     public string? ResolutionDetails { get; set; }
     public string? SupportingEvidenceUrl { get; set; }
-    public DateTime? ResolvedAt { get; set; }
+    public DateTimeOffset? ResolvedAt { get; set; }
 }
 
 public class CreateKnowledgeGapDto
@@ -52,8 +52,8 @@ public class IdeaExperimentDto
     public string? ActualResult { get; set; }
     public string? Learnings { get; set; }
     public ExperimentStatus Status { get; set; }
-    public DateTime? StartedAt { get; set; }
-    public DateTime? CompletedAt { get; set; }
+    public DateTimeOffset? StartedAt { get; set; }
+    public DateTimeOffset? CompletedAt { get; set; }
 }
 
 public class CreateExperimentDto
@@ -86,9 +86,9 @@ public class IdeaSessionDto
     public string SessionTypeName => SessionType.ToString();
     public SessionStatus SessionStatus { get; set; }
     public string SessionStatusName => SessionStatus.ToString();
-    public DateTime ScheduledStartTime { get; set; }
-    public DateTime? ActualStartTime { get; set; }
-    public DateTime? ActualEndTime { get; set; }
+    public DateTimeOffset ScheduledStartTime { get; set; }
+    public DateTimeOffset? ActualStartTime { get; set; }
+    public DateTimeOffset? ActualEndTime { get; set; }
     public TimeSpan Duration { get; set; }
     public string? MeetingUrl { get; set; }
     public string? AgendaNotes { get; set; }
@@ -109,7 +109,7 @@ public class CreateSessionDto
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public SessionType SessionType { get; set; } = SessionType.Brainstorm;
-    public DateTime ScheduledStartTime { get; set; } = DateTime.UtcNow.AddHours(2);
+    public DateTimeOffset ScheduledStartTime { get; set; } = DateTimeOffset.UtcNow.AddHours(2);
     public int DurationMinutes { get; set; } = 60;
     public string? AgendaNotes { get; set; }
     public List<AIAgentType> InviteAiAgents { get; set; } = new();
@@ -126,7 +126,7 @@ public class SessionParticipantDto
     public bool IsHost { get; set; }
     public bool IsAiAgent { get; set; }
     public string? AiAgentType { get; set; }
-    public DateTime JoinedAt { get; set; }
+    public DateTimeOffset JoinedAt { get; set; }
 }
 
 public class JoinSessionDto
@@ -192,8 +192,8 @@ public class IdeaActionDto
     public PriorityLevel Priority { get; set; }
     public ActionItemStatus Status { get; set; }
     public string StatusName => Status.ToString();
-    public DateTime? DueDate { get; set; }
-    public DateTime? CompletedAt { get; set; }
+    public DateTimeOffset? DueDate { get; set; }
+    public DateTimeOffset? CompletedAt { get; set; }
     public string? Dependencies { get; set; }
     public string? ExternalSystem { get; set; }
     public string? ExternalReferenceKey { get; set; }
@@ -210,7 +210,7 @@ public class CreateActionDto
     public string? OwnerUserId { get; set; }
     public string? SupportingTeam { get; set; }
     public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
-    public DateTime? DueDate { get; set; }
+    public DateTimeOffset? DueDate { get; set; }
     public string? Dependencies { get; set; }
     public string? ExternalSystem { get; set; }
 }
@@ -230,7 +230,7 @@ public class IdeaDecisionDto
     public string Rationale { get; set; } = string.Empty;
     public string Context { get; set; } = string.Empty;
     public string? DecidedByUserName { get; set; }
-    public DateTime DecidedAt { get; set; }
+    public DateTimeOffset DecidedAt { get; set; }
     public List<IdeaActionDto> ResultingActions { get; set; } = new();
 }
 
@@ -268,7 +268,7 @@ public class DiscussionMessageDto
     public string? AttachmentUrl { get; set; }
     public string? AttachmentName { get; set; }
     public int VotesCount { get; set; }
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 }
 
 public class SendDiscussionMessageDto
@@ -297,7 +297,7 @@ public class AIAgentInsightDto
     public string FullContent { get; set; } = string.Empty;
     public double ConfidenceScore { get; set; }
     public bool IsPinned { get; set; }
-    public DateTime GeneratedAt { get; set; }
+    public DateTimeOffset GeneratedAt { get; set; }
 }
 
 public class InvokeAIAgentDto
@@ -321,7 +321,7 @@ public class ConnectorConfigDto
     public string? ProjectOrChannelKey { get; set; }
     public bool IsActive { get; set; }
     public bool AutoSyncActions { get; set; }
-    public DateTime? LastSyncTime { get; set; }
+    public DateTimeOffset? LastSyncTime { get; set; }
 }
 
 public class ConfigureConnectorDto
@@ -349,7 +349,7 @@ public class ConnectorSyncLogDto
     public string Payload { get; set; } = string.Empty;
     public bool IsSuccess { get; set; }
     public string? ResponseMessage { get; set; }
-    public DateTime SyncedAt { get; set; }
+    public DateTimeOffset SyncedAt { get; set; }
 }
 #endregion
 
@@ -369,7 +369,7 @@ public class IdeaOutcomeDto
     public double EstimatedRoiPercent { get; set; }
     public string? RetrospectiveNotes { get; set; }
     public string? KeyLearnings { get; set; }
-    public DateTime RealizedAt { get; set; }
+    public DateTimeOffset RealizedAt { get; set; }
 }
 
 public class RecordOutcomeDto
@@ -434,6 +434,6 @@ public class UserBadgeDto
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
-    public DateTime AwardedAt { get; set; }
+    public DateTimeOffset AwardedAt { get; set; }
 }
 #endregion

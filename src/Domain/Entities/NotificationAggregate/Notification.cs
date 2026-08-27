@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +17,7 @@ public class Notification : BaseAuditableEntity, IAggregateRoot
     public string Body { get; set; }
 
     // The date and time the notification was created
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     // The user who the notification is for
     public ApplicationUser Recipient { get; set; }

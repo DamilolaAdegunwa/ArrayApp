@@ -12,7 +12,7 @@ using ArrayApp.Infrastructure.Identity;
 using ArrayApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ArrayApp.Domain.Entities;
 using ArrayApp.Domain.Enums;
@@ -27,26 +27,25 @@ public interface IAccountService
 }
 public class AccountService : IAccountService
 {
-    private readonly Serilog.ILogger log = Log.Logger;
+    private readonly ILogger<AccountService> _logger;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly IHostingEnvironment _hostingEnvironment;
     private readonly IServiceHelper _svcHelper;
-    //private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.Name);
-    public AccountService(
-         //ILogger<AccountService> logger
-         SignInManager<ApplicationUser> signInManager
-         ,UserManager<ApplicationUser> userManager
-         ,RoleManager<ApplicationRole> roleManager
-        , ApplicationDbContext applicationDbContext
-        , IHostingEnvironment hostingEnvironment
-        , IServiceHelper serviceHelper
 
+    public AccountService(
+         ILogger<AccountService> logger,
+         SignInManager<ApplicationUser> signInManager,
+         UserManager<ApplicationUser> userManager,
+         RoleManager<ApplicationRole> roleManager,
+         ApplicationDbContext applicationDbContext,
+         IHostingEnvironment hostingEnvironment,
+         IServiceHelper serviceHelper
         )
     {
-        //log = logger;
+        _logger = logger;
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -123,15 +122,14 @@ public class AccountService : IAccountService
             }
             catch (Exception ex)
             {
-                Log.Error($"{ex.Message} :: {MethodBase.GetCurrentMethod().Name} :: {ex.StackTrace} ");
+                _logger.LogError(ex, "{Message} :: {Method} :: {StackTrace}", ex.Message, MethodBase.GetCurrentMethod()?.Name, ex.StackTrace);
             }
             return true;
         }
         catch (Exception ex)
         {
-            Log.Error($"{ex.Message} :: {MethodBase.GetCurrentMethod().Name} :: {ex.StackTrace} ");
-            //return false;
-            throw ex;
+            _logger.LogError(ex, "{Message} :: {Method} :: {StackTrace}", ex.Message, MethodBase.GetCurrentMethod()?.Name, ex.StackTrace);
+            throw;
         }
     }
 
@@ -203,7 +201,7 @@ public class AccountService : IAccountService
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"{ex.Message} :: {MethodBase.GetCurrentMethod().Name} :: {ex.StackTrace}");
+                    _logger.LogError(ex, "{Message} :: {Method} :: {StackTrace}", ex.Message, MethodBase.GetCurrentMethod()?.Name, ex.StackTrace);
                 }
             }
             else
@@ -214,7 +212,7 @@ public class AccountService : IAccountService
         catch (Exception ex)
         {
             var errMsg = $"an error occured while trying to signup. Please try again!";
-            Log.Error($"{errMsg} :: stack trace - {ex.StackTrace} :: exception message - {ex.Message}", ex);
+            _logger.LogError(ex, "{ErrorMessage} :: stack trace - {StackTrace} :: exception message - {Message}", errMsg, ex.StackTrace, ex.Message);
             throw new Exception(errMsg);
         }
         #endregion
@@ -243,7 +241,7 @@ public class AccountService : IAccountService
         }
         catch (Exception ex)
         {
-            Log.Error($"{ex.Message} :: {MethodBase.GetCurrentMethod().Name} :: {ex.StackTrace} ");
+            _logger.LogError(ex, "{Message} :: {Method} :: {StackTrace}", ex.Message, MethodBase.GetCurrentMethod()?.Name, ex.StackTrace);
             return false;
         }
         return true;
