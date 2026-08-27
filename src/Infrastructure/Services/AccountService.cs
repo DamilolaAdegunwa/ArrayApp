@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -27,7 +27,7 @@ public interface IAccountService
 }
 public class AccountService : IAccountService
 {
-    private readonly ILogger log = Log.Logger;
+    private readonly Serilog.ILogger log = Log.Logger;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;

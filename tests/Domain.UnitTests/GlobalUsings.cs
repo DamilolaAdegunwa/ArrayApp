@@ -1,0 +1,12 @@
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using FluentAssertions;
+global using NUnit.Framework;
+global using ArrayApp.Domain.Common;
+global using ArrayApp.Domain.Entities;
+global using ArrayApp.Domain.Enums;
+global using ArrayApp.Domain.Events;
+global using ArrayApp.Domain.Exceptions;
+global using ArrayApp.Domain.ValueObjects;
