@@ -9,6 +9,7 @@ global using AutoMapper.QueryableExtensions;
 global using FluentValidation;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
 global using ArrayApp.Application.Common.Behaviours;
 global using ArrayApp.Application.Common.Exceptions;
 global using ArrayApp.Application.Common.Interfaces;
