@@ -30,7 +30,7 @@ public class AccountController : BaseController
     private readonly ApplicationDbContext _applicationDbContext;
     private readonly IServiceHelper _serviceHelper;
     private readonly IAccountService _accountService;
-    public readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration;
     public AccountController(
         //ILogger<AccountController> logger
          SignInManager<ApplicationUser> signInManager

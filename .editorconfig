@@ -361,3 +361,27 @@ dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
 
+[*.cs]
+# Disable Naming rule violation: Prefix '_' is not expected
+dotnet_diagnostic.IDE1006.severity = none
+
+# Disable Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# Disable Object initialization can be simplified
+dotnet_diagnostic.IDE0017.severity = none
+dotnet_diagnostic.IDE0037.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0305.severity = none
+
+# Disable Async/await is redundant (CodeRush/Roslynator specific depending on your extension)
+dotnet_diagnostic.CDT1003.severity = none
+
+# Disable Optimize LINQ method call & Remove trailing white-space (Roslynator rules)
+dotnet_diagnostic.RCS1077.severity = none
+dotnet_diagnostic.RCS1037.severity = none
+dotnet_diagnostic.RCS1163.severity = none
+
+dotnet_diagnostic.*.severity = none
+*.*.severity = none
