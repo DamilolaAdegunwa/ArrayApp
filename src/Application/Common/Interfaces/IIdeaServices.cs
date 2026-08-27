@@ -1,3 +1,5 @@
+#pragma warning disable
+#pragma info disable
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -100,3 +102,77 @@ public interface IIdeaProductService
     Task<IdeaGraphDto> GetIdeaGraphAsync(int? focusIdeaId = null, CancellationToken cancellationToken = default);
     Task<InnovationPipelineAnalyticsDto> GetPipelineAnalyticsAsync(CancellationToken cancellationToken = default);
 }
+
+// =========================================================================================================
+// [NEW CORE ARCHITECTURAL ADDITION]: 10-Role Specialized Stakeholder Capacity & Action Dispatcher Service
+// Handles targeted actions (Sponsorships, Gap Resolutions, Academic Evidence, ISO Sign-offs, Resource Leads)
+// =========================================================================================================
+public interface IRoleCapacityService
+{
+    Task<RoleActionResultDto> ExecuteRoleActionAsync(ExecuteRoleActionRequestDto request, string? userId, CancellationToken cancellationToken = default);
+    Task<List<RoleActionHistoryDto>> GetRoleActionHistoryAsync(int ideaId, CancellationToken cancellationToken = default);
+}
+
+public class ExecuteRoleActionRequestDto
+{
+    public int IdeaId { get; set; }
+    public int? SessionId { get; set; }
+    public ParticipantRole Role { get; set; }
+    public string ActionType { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public decimal? PledgedAmount { get; set; }
+    public string? AttachmentUrl { get; set; }
+    public string? ReferenceContact { get; set; }
+    public double? MetricValue { get; set; }
+}
+
+public class RoleActionResultDto
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int ReputationPointsAwarded { get; set; }
+    public string NewBadgeEarned { get; set; } = string.Empty;
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+}
+
+public class RoleActionHistoryDto
+{
+    public int Id { get; set; }
+    public int IdeaId { get; set; }
+    public string ActorName { get; set; } = string.Empty;
+    public ParticipantRole Role { get; set; }
+    public string ActionType { get; set; } = string.Empty;
+    public string Summary { get; set; } = string.Empty;
+    public DateTime ExecutedAt { get; set; }
+}
+
+// =========================================================================================================
+// [NEW CORE ARCHITECTURAL ADDITION]: Multi-Format Workshop & Playbook Engine
+// Manages guided brainstorming methodologies (SCAMPER, Six Thinking Hats, Crazy 8s, Rapid 90-min Hackathon)
+// =========================================================================================================
+public interface ISessionPlaybookService
+{
+    Task<WorkshopPlaybookDto> GetPlaybookTemplateAsync(string formatType, CancellationToken cancellationToken = default);
+    Task<List<WorkshopPlaybookDto>> GetAllPlaybooksAsync(CancellationToken cancellationToken = default);
+}
+
+public class WorkshopPlaybookDto
+{
+    public string FormatId { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public int RecommendedDurationMinutes { get; set; }
+    public List<PlaybookPhaseDto> Phases { get; set; } = new();
+    public List<string> RecommendedRoles { get; set; } = new();
+}
+
+public class PlaybookPhaseDto
+{
+    public int PhaseNumber { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public int DurationMinutes { get; set; }
+    public string Goal { get; set; } = string.Empty;
+    public string FacilitatorInstructions { get; set; } = string.Empty;
+    public List<string> SuggestedPrompts { get; set; } = new();
+}
+

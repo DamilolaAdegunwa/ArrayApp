@@ -155,6 +155,54 @@ public class IdeaSessionHub : Hub
             timestamp = DateTime.UtcNow
         });
     }
+
+    public async Task PublishResearchEvidence(int sessionId, string researcherName, string evidenceTitle, string evidenceUrl, string findingsSummary)
+    {
+        await Clients.Group($"Session-{sessionId}").SendAsync("ResearchEvidencePublished", new
+        {
+            researcherName,
+            evidenceTitle,
+            evidenceUrl,
+            findingsSummary,
+            publishedAt = DateTime.UtcNow
+        });
+    }
+
+    public async Task UpdateCanvasArtifact(int sessionId, string creatorName, string artifactName, string artifactType, string fileUrl)
+    {
+        await Clients.Group($"Session-{sessionId}").SendAsync("CanvasArtifactUpdated", new
+        {
+            creatorName,
+            artifactName,
+            artifactType,
+            fileUrl,
+            updatedAt = DateTime.UtcNow
+        });
+    }
+
+    public async Task LogExperimentMetric(int sessionId, string experimenterName, string metricName, double measuredValue, string unit)
+    {
+        await Clients.Group($"Session-{sessionId}").SendAsync("ExperimentMetricLogged", new
+        {
+            experimenterName,
+            metricName,
+            measuredValue,
+            unit,
+            loggedAt = DateTime.UtcNow
+        });
+    }
+
+    public async Task IntroduceResourceLead(int sessionId, string connectorName, string partnerOrg, string introContact, string valueOpportunity)
+    {
+        await Clients.Group($"Session-{sessionId}").SendAsync("ResourceLeadIntroduced", new
+        {
+            connectorName,
+            partnerOrg,
+            introContact,
+            valueOpportunity,
+            introducedAt = DateTime.UtcNow
+        });
+    }
     #endregion
 
     public async Task BroadcastDecision(int sessionId, IdeaDecisionDto decision)

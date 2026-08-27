@@ -74,6 +74,8 @@ public static class ConfigureServices
         services.AddScoped<IConnectorService, ConnectorService>();
         services.AddScoped<IReputationService, ReputationService>();
         services.AddScoped<IIdeaProductService, IdeaProductService>();
+        services.AddScoped<IRoleCapacityService, RoleCapacityService>();
+        services.AddScoped<ISessionPlaybookService, SessionPlaybookService>();
         services.AddSignalR();
 
         services.AddAuthentication()
