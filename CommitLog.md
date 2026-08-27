@@ -112,6 +112,28 @@ What Would Be Next:
 Epic 6 — Live WebRTC Audio/Video, Diarization & Speech Action Extraction
 Task 6.1 — WebRTC Audio/Video Meeting Mesh, Live Speaker Diarization & Natural Language Speech-to-Action Extraction Engine.
 
+### commit 7:
+-------------
+commit: feat(webrtc): implement WebRTC meeting mesh, live speaker diarization & natural language speech-to-action extraction CQRS pipelines
+
+Milestone: Milestone 2 — Real-Time Spatial Collaboration & Autonomous AI Swarms
+Epic: Epic 6 — Live WebRTC Audio/Video, Diarization & Speech Action Extraction
+Task: Task 6.1 — WebRTC Meeting Mesh, Live Speaker Diarization & Speech-to-Action Extraction
+
+What It Achieved:
+1. Implemented ExtractSpeechActionsCommand and Handler in src/Application/Ideas/Commands/ with natural language heuristic/pattern detection to extract committed tasks and recorded consensus decisions from live meeting transcripts.
+2. Implemented GenerateMeetingRoomTokenQuery in src/Application/Ideas/Queries/ generating WebRTC credentials, room tokens, and STUN/TURN ICE server topology for low-latency audio/video rooms.
+3. Created SpeechActionsExtractedEvent domain event in src/Domain/Events/.
+4. Created LiveMeetingController in both src/ArrayApp.WebAPI/Controllers/ and src/WebUI/Controllers/ exposing GET /api/livemeeting/token/{sessionId} and POST /api/livemeeting/diarization/extract.
+5. Added unit test suite in tests/Application.UnitTests/Ideas/Commands/ExtractSpeechActionsCommandTests.cs (24/24 application unit tests passing, 29/29 total solution unit tests passing, 0 warnings, 0 errors).
+6. Completed all Epics and Deliverables in Milestone 2 (Real-Time Spatial Collaboration & Autonomous AI Swarms).
+
+What Would Be Next:
+Milestone 3 — Execution Mesh, Verifiable Provenance & Innovation Economy
+Epic 7 — Enterprise Integration Mesh & Bi-Directional No-Code Connectors
+Task 7.1 — Enterprise Bi-Directional Connectors: Jira Cloud, GitHub Issues/PRs, Linear, Slack Webhooks & Automated Workstream Synchronization.
+
+
 
 
 
