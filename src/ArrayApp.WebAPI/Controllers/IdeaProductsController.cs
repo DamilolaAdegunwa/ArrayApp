@@ -19,12 +19,18 @@ public class IdeaProductsController : ControllerBase
     private readonly IIdeaProductService _ideaProductService;
     private readonly IApplicationDbContext _context;
     private readonly IReputationService _reputationService;
+    private readonly ISender _mediator;
 
-    public IdeaProductsController(IIdeaProductService ideaProductService, IApplicationDbContext context, IReputationService reputationService)
+    public IdeaProductsController(
+        IIdeaProductService ideaProductService,
+        IApplicationDbContext context,
+        IReputationService reputationService,
+        ISender mediator)
     {
         _ideaProductService = ideaProductService;
         _context = context;
         _reputationService = reputationService;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -63,8 +69,28 @@ public class IdeaProductsController : ControllerBase
     public async Task<ActionResult<IdeaProductDto>> ForkIdea(int id, [FromBody] ForkIdeaDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "user-admin";
-        var forked = await _ideaProductService.ForkIdeaAsync(id, dto, userId);
+        var forked = await _mediator.Send(new ArrayApp.Application.Ideas.Commands.ForkIdeaCommand
+        {
+            IdeaId = id,
+            NewTitle = dto.NewTitle,
+            ForkRationale = dto.ForkRationale,
+            ActorName = userId
+        });
         return CreatedAtAction(nameof(GetIdeaById), new { id = forked.Id }, forked);
+    }
+
+    [HttpPost("merge")]
+    public async Task<ActionResult<IdeaProductDto>> MergeIdeas([FromBody] ArrayApp.Application.Ideas.Commands.MergeIdeasCommand command)
+    {
+        var merged = await _mediator.Send(command);
+        return Ok(merged);
+    }
+
+    [HttpGet("{id}/lineage")]
+    public async Task<ActionResult<ArrayApp.Application.Ideas.Queries.IdeaLineageTreeDto>> GetIdeaLineage(int id)
+    {
+        var lineage = await _mediator.Send(new ArrayApp.Application.Ideas.Queries.GetIdeaLineageTreeQuery(id));
+        return Ok(lineage);
     }
 
     [HttpGet("graph")]

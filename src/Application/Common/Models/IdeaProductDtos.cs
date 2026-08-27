@@ -106,6 +106,7 @@ public class ForkIdeaDto
 {
     public string NewTitle { get; set; } = string.Empty;
     public string ForkReason { get; set; } = string.Empty;
+    public string ForkRationale { get => ForkReason; set => ForkReason = value; }
 }
 
 public class IdeaGraphNodeDto
