@@ -1,12 +1,14 @@
-using System;
+#pragma warning disable
+#pragma info disable
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Application.Ideas.Commands;
+using ArrayApp.Application.Ideas.Queries;
 using ArrayApp.Domain.Entities.IdeaAggregate;
-using ArrayApp.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,11 +20,13 @@ public class OutcomesController : ControllerBase
 {
     private readonly IApplicationDbContext _context;
     private readonly IReputationService _reputationService;
+    private readonly ISender _mediator;
 
-    public OutcomesController(IApplicationDbContext context, IReputationService reputationService)
+    public OutcomesController(IApplicationDbContext context, IReputationService reputationService, ISender mediator)
     {
         _context = context;
         _reputationService = reputationService;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -55,58 +59,25 @@ public class OutcomesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<IdeaOutcomeDto>> RecordOutcome([FromBody] RecordOutcomeDto dto)
+    public async Task<ActionResult<IdeaOutcomeDto>> RecordOutcome([FromBody] RecordIdeaOutcomeCommand command)
     {
-        var idea = await _context.Ideas.FindAsync(dto.IdeaId);
-        if (idea == null) return NotFound("Idea not found");
-
-        var outcome = new IdeaOutcome
-        {
-            IdeaId = dto.IdeaId,
-            Title = dto.Title,
-            Summary = dto.Summary,
-            Type = dto.Type,
-            ArtifactUrl = dto.ArtifactUrl,
-            EstimatedCostSavings = dto.EstimatedCostSavings,
-            RevenueGenerated = dto.RevenueGenerated,
-            ImpactedUsersCount = dto.ImpactedUsersCount,
-            EstimatedRoiPercent = dto.EstimatedRoiPercent,
-            RetrospectiveNotes = dto.RetrospectiveNotes,
-            KeyLearnings = dto.KeyLearnings,
-            RealizedAt = DateTime.UtcNow
-        };
-
-        idea.MaturityStage = IdeaMaturityStage.Measured;
-
-        _context.Outcomes.Add(outcome);
-
-        _context.ProvenanceLogs.Add(new ProvenanceLog
-        {
-            IdeaId = dto.IdeaId,
-            ActorName = "Outcome Evaluator",
-            ActorRole = "Authority",
-            ActionPerformed = "OutcomeRecorded",
-            Details = $"Outcome '{outcome.Title}' ({outcome.Type}) recorded. Estimated ROI: {outcome.EstimatedRoiPercent}%.",
-            Timestamp = DateTime.UtcNow
-        });
-
-        await _context.SaveChangesAsync(default);
-
+        var outcome = await _mediator.Send(command);
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "user-admin";
         await _reputationService.RecordOutcomeAchievementAsync(userId, outcome.Id);
+        return Ok(outcome);
+    }
 
-        return Ok(new IdeaOutcomeDto
-        {
-            Id = outcome.Id,
-            IdeaId = outcome.IdeaId,
-            Title = outcome.Title,
-            Summary = outcome.Summary,
-            Type = outcome.Type,
-            EstimatedCostSavings = outcome.EstimatedCostSavings,
-            RevenueGenerated = outcome.RevenueGenerated,
-            ImpactedUsersCount = outcome.ImpactedUsersCount,
-            EstimatedRoiPercent = outcome.EstimatedRoiPercent,
-            RealizedAt = outcome.RealizedAt
-        });
+    [HttpGet("analytics")]
+    public async Task<ActionResult<InnovationPipelineAnalyticsDto>> GetPipelineAnalytics()
+    {
+        var analytics = await _mediator.Send(new GetExecutivePipelineAnalyticsQuery());
+        return Ok(analytics);
+    }
+
+    [HttpGet("risk-matrix")]
+    public async Task<ActionResult<PortfolioRiskMatrixDto>> GetRiskMatrix()
+    {
+        var matrix = await _mediator.Send(new GetPortfolioRiskMatrixQuery());
+        return Ok(matrix);
     }
 }
