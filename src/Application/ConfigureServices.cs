@@ -1,7 +1,9 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ArrayApp.Application.Common.Behaviours;
 using FluentValidation;
 using MediatR;
+
+using AutoMapper.Internal;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +11,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(cfg => { cfg.Internal().MethodMappingEnabled = false; }, Assembly.GetExecutingAssembly());
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));

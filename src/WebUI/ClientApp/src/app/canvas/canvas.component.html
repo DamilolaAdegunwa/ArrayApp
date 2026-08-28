@@ -1,0 +1,55 @@
+<div class="container-fluid py-4">
+  <!-- Canvas Header -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-4 p-3 bg-white d-flex flex-row justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <span class="badge bg-purple text-white px-2 py-1 mb-1">Epic 5 & 9: Spatial 2D Canvas & Quadratic Economy</span>
+          <h4 class="fw-bold mb-0">Multiplayer Infinite Vector Canvas</h4>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-light px-3 py-2 rounded-3 border">
+            <small class="text-secondary d-block">Voting Credits</small>
+            <span class="fw-bold text-success"><i class="bi bi-coin me-1"></i> {{ userCredits }} pts</span>
+          </div>
+          <button class="btn btn-warning text-dark fw-bold" (click)="addSticky()">
+            <i class="bi bi-sticky-fill me-1"></i> + Add Sticky
+          </button>
+          <button class="btn btn-outline-primary fw-bold" (click)="autoCluster()">
+            <i class="bi bi-diagram-3-fill me-1"></i> Auto-Cluster Canvas
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="statusMessage" class="alert alert-info py-2 px-3 rounded-3 small shadow-sm">
+    <i class="bi bi-info-circle-fill me-1"></i> {{ statusMessage }}
+  </div>
+
+  <!-- Interactive 2D Board Surface -->
+  <div class="canvas-board-viewport rounded-4 shadow-sm p-4 position-relative">
+    <div class="canvas-grid-bg"></div>
+
+    <!-- Render Nodes -->
+    <div *ngFor="let node of nodes" 
+         class="canvas-node-card shadow-sm rounded-3 p-3 position-absolute"
+         [style.left.px]="node.posX"
+         [style.top.px]="node.posY"
+         [style.background-color]="node.colorHex">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="badge bg-dark bg-opacity-10 text-dark small fw-semibold">{{ node.nodeType }}</span>
+        <span class="badge bg-white text-dark shadow-xs"><i class="bi bi-hand-thumbs-up-fill text-warning me-1"></i>{{ node.votesCount }}</span>
+      </div>
+
+      <p class="node-content mb-2 fw-medium text-dark">{{ node.content }}</p>
+
+      <div class="d-flex justify-content-between align-items-center pt-2 border-top border-dark border-opacity-10">
+        <small class="text-dark text-opacity-75"><i class="bi bi-person-fill"></i> {{ node.authorName }}</small>
+        <button class="btn btn-sm btn-dark bg-opacity-75 text-white py-0 px-2" (click)="castQuadraticVote(node)" title="Cast Quadratic Vote (Cost = Votes^2)">
+          +2 Votes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

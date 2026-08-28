@@ -1,0 +1,162 @@
+<div class="container-fluid py-4">
+  <!-- Header & Stage Navigator -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 bg-primary text-white p-4 rounded-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <span class="badge bg-light text-primary px-3 py-1 mb-2 fw-semibold">Epic 1 & 2: Innovation Maturation & Stakeholder Roles</span>
+            <h2 class="fw-bold mb-1">{{ dimensions.title }}</h2>
+            <p class="mb-0 text-white-50">10-Dimensional Idea Product Structuring, Scoring & Role Capacity Hub</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-light text-primary fw-bold px-4" (click)="saveDimensions()" [disabled]="loading">
+              <i class="bi bi-cloud-check-fill me-1"></i> Save Dimensions
+            </button>
+          </div>
+        </div>
+
+        <!-- 10-Stage Progression Bar -->
+        <div class="mt-4 pt-2 border-top border-white-50">
+          <small class="text-white-50 text-uppercase fw-bold letter-spacing-1 d-block mb-2">Maturity Lifecycle Stage</small>
+          <div class="d-flex flex-wrap gap-1">
+            <span *ngFor="let s of stages; let idx = index" 
+                  class="badge px-3 py-2 rounded-pill transition"
+                  [ngClass]="{'bg-warning text-dark fw-bold shadow-sm': s === dimensions.stage, 'bg-white bg-opacity-25 text-white': s !== dimensions.stage}">
+              {{ idx + 1 }}. {{ s }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="saveMessage" class="alert alert-success shadow-sm rounded-3">
+    <i class="bi bi-check-circle-fill me-2"></i> {{ saveMessage }}
+  </div>
+
+  <!-- Main Grid: 10 Dimensions & Scoring -->
+  <div class="row g-4">
+    <!-- Left Column: 10-D Form -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <h4 class="fw-bold text-dark mb-3"><i class="bi bi-bounding-box me-2 text-primary"></i> 10-Dimensional Idea Specification</h4>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">1. Problem Statement</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.problemStatement"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">2. Opportunity & Market Window</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.opportunity"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">3. Core Hypothesis</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.hypothesis"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">4. Target Audience & Beneficiaries</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.targetAudience"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">5. Value Proposition</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.valueProposition"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">6. Technical & Resource Constraints</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.constraints"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">7. Unknowns & Critical Risks</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.unknowns"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">8. Empirical Evidence & Data</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.evidence"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">9. Desired Measurable Outcome</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.desiredOutcome"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-secondary">10. Boundary Scope & Exclusions</label>
+            <textarea class="form-control" rows="2" [(ngModel)]="dimensions.scope"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: ICE/RICE Scoring & 10 Roles -->
+    <div class="col-lg-4">
+      <!-- ICE / RICE Prioritization Engine -->
+      <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-light">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-speedometer2 me-2 text-primary"></i> Composite Prioritization</h5>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-white rounded-3 shadow-xs">
+          <div>
+            <span class="text-secondary small d-block">ICE Score</span>
+            <h3 class="fw-bold text-primary mb-0">{{ iceScore }} / 10</h3>
+          </div>
+          <div class="text-end">
+            <span class="text-secondary small d-block">RICE Score</span>
+            <h3 class="fw-bold text-success mb-0">{{ riceScore | number }}</h3>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between"><small>Impact: {{ impact }}</small></div>
+          <input type="range" class="form-range" min="1" max="10" [(ngModel)]="impact">
+        </div>
+        <div class="mb-2">
+          <div class="d-flex justify-content-between"><small>Confidence: {{ confidence }}</small></div>
+          <input type="range" class="form-range" min="1" max="10" [(ngModel)]="confidence">
+        </div>
+        <div class="mb-2">
+          <div class="d-flex justify-content-between"><small>Ease: {{ ease }}</small></div>
+          <input type="range" class="form-range" min="1" max="10" [(ngModel)]="ease">
+        </div>
+      </div>
+
+      <!-- 10-Role Capacity Action Dispatcher -->
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-people-fill me-2 text-primary"></i> Stakeholder Action Dispatcher</h5>
+        <p class="text-secondary small mb-3">Execute contributions mapped to your capacity role and earn reputation karma.</p>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Select Your Role</label>
+          <select class="form-select" [(ngModel)]="selectedRole">
+            <option value="Student">Student (Ask Question, Learn)</option>
+            <option value="Sponsor">Sponsor (Pledge Funding, Resources)</option>
+            <option value="Professional">Professional (Architectural Sign-off)</option>
+            <option value="Authority">Authority (Regulatory Approval)</option>
+            <option value="Actioner">Actioner (Commit Implementation)</option>
+            <option value="Audience">Audience (End-User Validation)</option>
+            <option value="Researcher">Researcher (Submit Empirical Data)</option>
+            <option value="Creator">Creator (Publish Variant/Prototype)</option>
+            <option value="Experimenter">Experimenter (Design A/B Test)</option>
+            <option value="Connector">Connector (Cross-Link Proposals)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Action Type</label>
+          <input type="text" class="form-control" [(ngModel)]="roleActionType">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Contribution Notes</label>
+          <textarea class="form-control" rows="2" [(ngModel)]="rolePayload"></textarea>
+        </div>
+
+        <button class="btn btn-primary w-100 fw-semibold" (click)="executeRoleAction()">
+          <i class="bi bi-lightning-charge-fill me-1"></i> Dispatch Action & Earn Karma
+        </button>
+
+        <div *ngIf="roleStatusMessage" class="mt-3 p-2 bg-light rounded text-success small">
+          {{ roleStatusMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

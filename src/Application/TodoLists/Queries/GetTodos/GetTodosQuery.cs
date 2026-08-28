@@ -1,4 +1,4 @@
-﻿#pragma warning disable
+#pragma warning disable
 #pragma info disable
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Security;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArrayApp.Application.TodoLists.Queries.GetTodos;
 
-//[Authorize]
+[Authorize]
 public record GetTodosQuery : IRequest<TodosVm>;
 
 public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>

@@ -1,0 +1,91 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <span class="badge bg-danger text-white px-3 py-1 mb-2">Epic 3 & 6: Workshop Playbooks & Speech Diarization</span>
+            <h3 class="fw-bold mb-0">Automated Workshop & Diarization Facilitator</h3>
+          </div>
+          <!-- Timebox Clock -->
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-dark text-white px-4 py-2 rounded-3 text-center">
+              <small class="text-white-50 d-block">Phase Timebox</small>
+              <span class="fs-4 fw-bold text-warning font-monospace">{{ formattedTime }}</span>
+            </div>
+            <button class="btn btn-primary px-3 py-2 fw-semibold" (click)="advancePhase()">
+              Next Phase <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="statusMessage" class="alert alert-primary py-2 rounded-3 shadow-sm">
+    <i class="bi bi-info-circle-fill me-1"></i> {{ statusMessage }}
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Playbook Phases -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4 p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0"><i class="bi bi-collection-play-fill text-danger me-2"></i> {{ selectedTemplate?.playbookName }}</h5>
+          <span class="badge bg-light text-secondary">{{ selectedTemplate?.totalDurationMinutes }} mins</span>
+        </div>
+        <p class="text-secondary small mb-4">{{ selectedTemplate?.description }}</p>
+
+        <!-- Phase List -->
+        <div class="list-group list-group-flush border rounded-3 overflow-hidden">
+          <div *ngFor="let phase of selectedTemplate?.phases; let idx = index"
+               class="list-group-item p-3 d-flex justify-content-between align-items-center"
+               [ngClass]="{'bg-primary text-white': idx === currentPhaseIndex, 'bg-light text-muted': idx < currentPhaseIndex}">
+            <div>
+              <span class="badge me-2" [ngClass]="idx === currentPhaseIndex ? 'bg-light text-primary' : 'bg-secondary'">Step {{ idx + 1 }}</span>
+              <strong [ngClass]="idx === currentPhaseIndex ? 'text-white' : 'text-dark'">{{ phase.phaseName }}</strong>
+            </div>
+            <span class="small" [ngClass]="idx === currentPhaseIndex ? 'text-white-50' : 'text-secondary'">{{ phase.durationMinutes }}m</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Live WebRTC & Speech Action Extractor -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4 p-4 h-100">
+        <h5 class="fw-bold mb-2"><i class="bi bi-mic-fill text-danger me-2"></i> Live Meeting Diarization & Speech Extractor</h5>
+        <p class="text-secondary small mb-3">Ingest real-time speaker audio transcripts; NLP extracts committed tasks and decisions automatically.</p>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Speaker Name</label>
+          <input type="text" class="form-control" [(ngModel)]="speakerName">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Spoken Transcript</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="spokenTranscript"></textarea>
+        </div>
+
+        <button class="btn btn-outline-danger w-100 fw-semibold mb-4" (click)="extractSpeech()">
+          <i class="bi bi-lightning-auto-fill me-1"></i> Run Speech Action Extraction
+        </button>
+
+        <!-- Extracted Items -->
+        <div *ngIf="extractedDecisions.length > 0 || extractedActions.length > 0">
+          <h6 class="fw-bold text-dark mb-2">Real-Time Extracted Outcomes</h6>
+          <div *ngFor="let d of extractedDecisions" class="p-2 mb-2 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-3">
+            <span class="badge bg-success me-1">Decision</span>
+            <strong class="text-dark small">{{ d.summary }}</strong>
+          </div>
+          <div *ngFor="let a of extractedActions" class="p-2 mb-2 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-3">
+            <span class="badge bg-primary me-1">Action Task</span>
+            <strong class="text-dark small">{{ a.title }}</strong>
+            <span class="badge bg-light text-dark ms-2">{{ a.ownerUserId }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

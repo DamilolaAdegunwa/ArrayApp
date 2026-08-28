@@ -1,0 +1,9 @@
+.transition {
+  transition: all 0.2s ease-in-out;
+}
+.shadow-xs {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.letter-spacing-1 {
+  letter-spacing: 0.05em;
+}

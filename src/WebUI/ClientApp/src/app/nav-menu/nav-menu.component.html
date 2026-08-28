@@ -20,22 +20,35 @@
         [ngClass]="{ show: isExpanded }"
       >
         <ul class="navbar-nav flex-grow">
-          <li
-            class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/idea-studio']">
+              <i class="bi bi-lightbulb-fill text-warning me-1"></i> Idea Studio
+            </a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']"
-              >Counter</a
-            >
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/canvas']">
+              <i class="bi bi-palette2 text-primary me-1"></i> 2D Canvas
+            </a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
-              >Fetch data</a
-            >
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/workshop']">
+              <i class="bi bi-clock-history text-danger me-1"></i> Workshop
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/ai-swarm']">
+              <i class="bi bi-robot text-success me-1"></i> AI Swarm
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/executive']">
+              <i class="bi bi-bar-chart-line-fill text-info me-1"></i> Executive ROI
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark fw-semibold" [routerLink]="['/governance']">
+              <i class="bi bi-shield-check text-dark me-1"></i> Governance
+            </a>
           </li>
         </ul>
         <app-login-menu></app-login-menu>

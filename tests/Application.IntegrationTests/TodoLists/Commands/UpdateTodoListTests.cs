@@ -1,4 +1,4 @@
-﻿using ArrayApp.Application.Common.Exceptions;
+using ArrayApp.Application.Common.Exceptions;
 using ArrayApp.Application.TodoLists.Commands.CreateTodoList;
 using ArrayApp.Application.TodoLists.Commands.UpdateTodoList;
 using ArrayApp.Domain.Entities;
@@ -65,7 +65,6 @@ public class UpdateTodoListTests : BaseTestFixture
 
         list.Should().NotBeNull();
         list!.Title.Should().Be(command.Title);
-        list.LastModifierUserId.Should().Be(0);
         list.LastModifierUserId.Should().Be(userId);
         list.LastModificationTime.Should().NotBeNull();
         list.LastModificationTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

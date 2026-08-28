@@ -76,6 +76,10 @@ public class UpdateIdeaDimensionsCommandHandler : IRequestHandler<UpdateIdeaDime
         if (!string.IsNullOrWhiteSpace(request.DesiredOutcome)) filledCount++;
 
         int completenessPercentage = (int)Math.Round((filledCount / 10.0) * 100);
+        if (completenessPercentage >= 70 && idea.MaturityStage < IdeaMaturityStage.Structured)
+        {
+            idea.MaturityStage = IdeaMaturityStage.Structured;
+        }
 
         // 3. Compute Composite Prioritization Formulas
         // ICE = (Impact * Confidence * Ease) / 10

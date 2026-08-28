@@ -1,0 +1,124 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <span class="badge bg-secondary text-white px-3 py-1 mb-2">Epic 7, 8, 11 & 12: Enterprise Governance, DIDs & Connectors</span>
+            <h3 class="fw-bold mb-0">Verifiable Provenance, Zero-Trust & Integration Mesh</h3>
+          </div>
+          <!-- Cryptographic Status Badge -->
+          <div *ngIf="verificationResult" class="d-flex align-items-center gap-2">
+            <span class="badge bg-success py-2 px-3">
+              <i class="bi bi-shield-lock-fill me-1"></i> SHA-256 Hash Chain Verified ({{ verificationResult.totalEntriesVerified }} blocks)
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: W3C DID Credential & Cryptographic Ledger -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-dark mb-0"><i class="bi bi-patch-check-fill text-primary me-2"></i> W3C DID Realization Certificate</h5>
+          <button class="btn btn-primary btn-sm fw-semibold" (click)="generateCertificate()" [disabled]="certLoading">
+            <i class="bi bi-file-earmark-lock-fill me-1"></i> Issue Verifiable Credential
+          </button>
+        </div>
+
+        <div *ngIf="certificate" class="p-3 bg-light border rounded-3 font-monospace small">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="badge bg-dark">{{ certificate.proof.type }}</span>
+            <span class="text-muted">{{ certificate.id }}</span>
+          </div>
+          <p class="mb-1"><strong>Issuer DID:</strong> {{ certificate.issuer }}</p>
+          <p class="mb-1"><strong>Subject:</strong> {{ certificate.credentialSubject.id }}</p>
+          <p class="mb-1"><strong>Verified Cost Savings:</strong> ${{ certificate.credentialSubject.estimatedCostSavings | number }}</p>
+          <p class="mb-1"><strong>Realized ROI:</strong> {{ certificate.credentialSubject.realizedRoiPercent }}%</p>
+          <p class="mb-0 text-break text-muted"><strong>Root Block Hash:</strong> {{ certificate.proof.rootBlockHash }}</p>
+        </div>
+      </div>
+
+      <!-- Zero-Trust ABAC & Blind Review -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-eye-slash-fill text-danger me-2"></i> Zero-Trust ABAC & Blind Review</h5>
+        
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label small fw-semibold">User Department</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="userDepartment">
+          </div>
+          <div class="col-6">
+            <label class="form-label small fw-semibold">Clearance Level</label>
+            <select class="form-select form-select-sm" [(ngModel)]="userClearance">
+              <option value="Internal">Internal</option>
+              <option value="Confidential">Confidential</option>
+              <option value="TopSecret">TopSecret</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-sm btn-outline-secondary" (click)="evaluateAbac()">Evaluate ABAC</button>
+          <button class="btn btn-sm btn-outline-dark" (click)="loadAnonymizedIdea()">Load Anonymized Proposal</button>
+        </div>
+
+        <div *ngIf="abacDecision" class="alert alert-info py-2 small mb-3">
+          {{ abacDecision.reason }}
+        </div>
+
+        <div *ngIf="anonymizedIdea" class="p-3 bg-light rounded-3 mb-3 border">
+          <span class="badge bg-secondary mb-1">{{ anonymizedIdea.pseudonymAuthor }}</span>
+          <h6 class="fw-bold mb-1">{{ anonymizedIdea.title }}</h6>
+          <p class="small text-secondary mb-0">{{ anonymizedIdea.problemStatement }}</p>
+        </div>
+
+        <!-- Blind Review Form -->
+        <div *ngIf="anonymizedIdea">
+          <div class="mb-2">
+            <label class="form-label small fw-semibold">Objective Evaluation Score (1-10)</label>
+            <input type="number" class="form-control form-control-sm" [(ngModel)]="blindScore" min="1" max="10">
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-semibold">Critique & Recommendation</label>
+            <textarea class="form-control form-control-sm" rows="2" [(ngModel)]="blindCritique"></textarea>
+          </div>
+          <button class="btn btn-dark btn-sm w-100 fw-semibold" (click)="submitBlindReview()">
+            Submit Blind Review
+          </button>
+          <div *ngIf="blindStatusMessage" class="mt-2 text-success small">
+            {{ blindStatusMessage }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Enterprise Integration Mesh -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-diagram-2-fill text-primary me-2"></i> Bi-Directional Enterprise Connectors</h5>
+        <p class="text-secondary small mb-3">Automated workstream dispatching to Jira, GitHub, Linear, and Slack.</p>
+
+        <div class="list-group mb-3">
+          <div *ngFor="let conn of connectors" class="list-group-item p-3 d-flex justify-content-between align-items-center">
+            <div>
+              <strong class="d-block">{{ conn.name }}</strong>
+              <small class="text-muted">{{ conn.targetEndpoint }}</small>
+            </div>
+            <button class="btn btn-sm btn-outline-primary" (click)="syncAction(conn.type)">
+              Sync Action <i class="bi bi-arrow-repeat ms-1"></i>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="syncStatusMessage" class="alert alert-success py-2 small shadow-xs">
+          {{ syncStatusMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

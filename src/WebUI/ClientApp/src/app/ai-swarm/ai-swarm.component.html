@@ -1,0 +1,95 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <span class="badge bg-success text-white px-3 py-1 mb-2">Epic 4: Autonomous Multi-Agent AI Swarms</span>
+            <h3 class="fw-bold mb-0">Autonomous AI Co-Pilots & Red Team Swarm</h3>
+          </div>
+          <span class="badge bg-light text-success border border-success p-2 fw-semibold">
+            <i class="bi bi-cpu-fill me-1"></i> 5 Active Intelligence Archetypes
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Agent Dispatcher & Insight Stream -->
+    <div class="col-lg-7">
+      <!-- Invocation Controls -->
+      <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-robot me-2 text-success"></i> Dispatch Autonomous Agent</h5>
+        
+        <div class="row g-2 mb-3">
+          <div class="col-md-5">
+            <select class="form-select" [(ngModel)]="selectedAgent">
+              <option value="Critic">Devil's Advocate (Red Team Stress-Test)</option>
+              <option value="Researcher">Market Scout (Trends & Patents)</option>
+              <option value="Synthesizer">Feasibility Auditor (Tech Stack)</option>
+            </select>
+          </div>
+          <div class="col-md-7">
+            <input type="text" class="form-control" [(ngModel)]="customPrompt">
+          </div>
+        </div>
+
+        <button class="btn btn-success fw-semibold" (click)="invokeAgent()" [disabled]="loading">
+          <i class="bi bi-play-circle-fill me-1"></i> {{ loading ? 'Analyzing...' : 'Execute Swarm Analysis' }}
+        </button>
+      </div>
+
+      <!-- Feed of Insights -->
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <h5 class="fw-bold text-dark mb-3">Generated Swarm Insights</h5>
+        <div *ngFor="let item of insights" class="card mb-3 border rounded-3 p-3 shadow-xs" [ngClass]="{'border-warning border-2 bg-light': item.isPinned}">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <span class="badge bg-secondary me-2">{{ item.agentName }}</span>
+              <strong class="text-dark">{{ item.title }}</strong>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-light text-success border">{{ (item.confidenceScore * 100).toFixed(0) }}% Confidence</span>
+              <button class="btn btn-sm" [ngClass]="item.isPinned ? 'btn-warning' : 'btn-outline-secondary'" (click)="togglePin(item)">
+                <i class="bi" [ngClass]="item.isPinned ? 'bi-pin-fill' : 'bi-pin'"></i>
+              </button>
+            </div>
+          </div>
+          <p class="text-secondary small mb-0">{{ item.summary }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: 24/7 IdeaBot Co-Pilot Chat -->
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0 rounded-4 p-4 h-100 d-flex flex-column">
+        <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+          <div class="bg-success text-white p-2 rounded-circle"><i class="bi bi-chat-dots-fill"></i></div>
+          <div>
+            <h5 class="fw-bold mb-0">IdeaBot 24/7 Co-Pilot</h5>
+            <small class="text-secondary">Continuous Idea Synthesis & PRD Drafts</small>
+          </div>
+        </div>
+
+        <!-- Chat History -->
+        <div class="chat-viewport flex-grow-1 p-3 bg-light rounded-3 mb-3 overflow-auto">
+          <div *ngFor="let msg of chatMessages" class="mb-3" [ngClass]="msg.role === 'User' ? 'text-end' : 'text-start'">
+            <small class="d-block text-muted">{{ msg.role }}</small>
+            <span class="badge py-2 px-3 text-wrap text-start rounded-3" 
+                  [ngClass]="msg.role === 'User' ? 'bg-primary text-white' : 'bg-white text-dark shadow-xs border'">
+              {{ msg.text }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Ask IdeaBot for PRD, SWOT, or risks..." [(ngModel)]="userChatInput" (keyup.enter)="sendChatMessage()">
+          <button class="btn btn-success" (click)="sendChatMessage()"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

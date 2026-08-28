@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ArrayApp.Application.Common.Exceptions;
 using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Security;
@@ -26,7 +26,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
         if (authorizeAttributes.Any())
         {
             // Must be authenticated user
-            if (_currentUserService.UserId == null)
+            if (_currentUserService.UserId == null || _currentUserService.UserId == 0)
             {
                 throw new UnauthorizedAccessException();
             }
