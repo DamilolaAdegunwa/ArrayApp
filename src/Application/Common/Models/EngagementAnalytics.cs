@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ArrayApp.Application.Common.Models;
+
 public class EngagementAnalytics
 {
+    public int TotalIdeas { get; set; }
+    public int TotalLikes { get; set; }
+    public int TotalViews { get; set; }
 }

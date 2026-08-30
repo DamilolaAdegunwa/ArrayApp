@@ -39,12 +39,7 @@ public class AIAgentSwarmIntegrationTests : BaseTestFixture
         insightDto.ConfidenceScore.Should().BeGreaterThan(0.0);
         insightDto.IsPinned.Should().BeFalse();
 
-        // 3. Pin Insight
-        var pinSuccess = await SendAsync(new PinAIAgentInsightCommand
-        {
-            InsightId = insightDto.Id,
-            ActorName = "Lead Systems Architect"
-        });
+        var pinSuccess = await SendAsync(new PinAIAgentInsightCommand(insightDto.Id));
 
         pinSuccess.Should().BeTrue();
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,6 @@ using ArrayApp.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using ArrayApp.Domain.Entities.CategoryAggregate;
 using ArrayApp.Application.Common.Models;
-using System.Data.Entity;
 namespace ArrayApp.Infrastructure.Services;
 public class CategoryService : ICategoryService
 {

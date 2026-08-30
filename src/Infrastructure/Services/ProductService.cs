@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Domain.Entities;
 using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -20,23 +20,48 @@ public class ProductService : IProductService
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
-    public Task<ProductDto> CreateProductAsync(ProductCreateDto productCreateDto)
+
+    public async Task<ProductDto> CreateProductAsync(ProductCreateDto productCreateDto)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Creating product: {Name}", productCreateDto.Name);
+        var product = new Product
+        {
+            Name = productCreateDto.Name,
+            Description = productCreateDto.Description,
+            Price = productCreateDto.Price,
+            CategoryId = productCreateDto.CategoryId,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        var saved = await _unitOfWork.ProductBaseRepository.AddAsync(product);
+        return MapToDto(saved);
     }
 
-    public Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+    public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
     {
-        throw new NotImplementedException();
+        var products = await _unitOfWork.ProductBaseRepository.ListAsync();
+        return products.Select(MapToDto);
     }
 
-    public Task<ProductDto> GetProductByIdAsync(int productId)
+    public async Task<ProductDto> GetProductByIdAsync(int productId)
     {
-        throw new NotImplementedException();
+        var product = await _unitOfWork.ProductBaseRepository.GetByIdAsync(productId);
+        return product != null ? MapToDto(product) : new ProductDto();
     }
 
-    public Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(int categoryId)
+    public async Task<IEnumerable<ProductDto>> GetProductsByCategoryAsync(int categoryId)
     {
-        throw new NotImplementedException();
+        var products = await _unitOfWork.ProductBaseRepository.ListAsync();
+        return products.Where(p => p.CategoryId == categoryId).Select(MapToDto);
     }
+
+    private static ProductDto MapToDto(Product p) => new ProductDto
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Description = p.Description,
+        Price = p.Price,
+        CategoryId = p.CategoryId,
+        CreatedAt = p.CreatedAt
+    };
 }

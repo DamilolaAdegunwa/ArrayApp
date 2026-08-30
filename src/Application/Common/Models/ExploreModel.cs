@@ -1,11 +1,9 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 
 namespace ArrayApp.Application.Common.Models;
+
 public class ExploreModel
 {
-
+    public List<Idea> TrendingIdeas { get; set; } = new();
 }

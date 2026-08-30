@@ -1,10 +1,14 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArrayApp.Application.Common.Models;
+
+public class MessageModel
+{
+    public string Id { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+}
+
 public class MessagesResponse
 {
+    public List<MessageModel> Messages { get; set; } = new();
 }

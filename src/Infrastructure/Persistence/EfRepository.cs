@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ArrayApp.Domain.Common.Interfaces;
 using Ardalis.Specification.EntityFrameworkCore;
 using ArrayApp.Infrastructure.Repositories.Interfaces;
-using System.Data.Entity;
 using ArrayApp.Domain.Entities.CategoryAggregate;
 
 namespace ArrayApp.Infrastructure.Persistence;

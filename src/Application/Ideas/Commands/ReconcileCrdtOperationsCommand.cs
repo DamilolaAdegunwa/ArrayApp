@@ -69,8 +69,16 @@ public class ReconcileCrdtOperationsCommandHandler : IRequestHandler<ReconcileCr
                         idea.ProblemStatement = op.ValueJson.Trim('"');
                         applied++;
                         break;
+                    case "opportunity":
+                        idea.Opportunity = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
                     case "hypothesis":
                         idea.Hypothesis = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    case "targetaudience":
+                        idea.TargetAudience = op.ValueJson.Trim('"');
                         applied++;
                         break;
                     case "valueproposition":
@@ -79,6 +87,25 @@ public class ReconcileCrdtOperationsCommandHandler : IRequestHandler<ReconcileCr
                         break;
                     case "scope":
                         idea.Scope = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    case "constraints":
+                        idea.Constraints = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    case "unknowns":
+                        idea.Unknowns = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    case "evidence":
+                        idea.Evidence = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    case "desiredoutcome":
+                        idea.DesiredOutcome = op.ValueJson.Trim('"');
+                        applied++;
+                        break;
+                    default:
                         applied++;
                         break;
                 }

@@ -1,10 +1,10 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ArrayApp.Domain.Entities.IdeaAggregate;
 
 namespace ArrayApp.Application.Common.Models;
+
 public class UserTimelineModel
 {
+    public string Username { get; set; } = string.Empty;
+    public List<Idea> Ideas { get; set; } = new();
 }

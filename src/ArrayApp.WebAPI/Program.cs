@@ -37,7 +37,7 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+        // builder.Services.AddDbContext is handled by AddInfrastructureServices(builder.Configuration)
         builder.Services.AddApplicationServices();// from the application's dll
         builder.Services.AddInfrastructureServices(builder.Configuration);// from the infrastructure dll
         builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).Bind(options));
@@ -129,7 +129,7 @@ public class Program
         app.UseOpenApi();
         //app.UseSwaggerUi3();
 
-        app.UseSwaggerUi3(settings =>
+        app.UseSwaggerUi(settings =>
         {
             settings.Path = "/swagger";
             //settings.Path = "/api";

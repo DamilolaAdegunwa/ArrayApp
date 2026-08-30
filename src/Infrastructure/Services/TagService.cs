@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Domain.Entities.TagAggregate;
 using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ArrayApp.Infrastructure.Services;
+
 public class TagService : ITagService
 {
     private readonly ILogger<TagService> _logger;
@@ -19,18 +20,42 @@ public class TagService : ITagService
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
-    public Task<TagDto> CreateTagAsync(TagCreateDto tagCreateDto)
+
+    public async Task<TagDto> CreateTagAsync(TagCreateDto tagCreateDto)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Creating tag: {Name}", tagCreateDto.Name);
+        var tag = new Tag
+        {
+            Name = tagCreateDto.Name,
+            Description = tagCreateDto.Description ?? string.Empty,
+            Count = 1,
+            IsActive = true,
+            LastUsed = DateTimeOffset.UtcNow
+        };
+
+        var saved = await _unitOfWork.TagBaseRepository.AddAsync(tag);
+        return MapToDto(saved);
     }
 
-    public Task<IEnumerable<TagDto>> GetAllTagsAsync()
+    public async Task<IEnumerable<TagDto>> GetAllTagsAsync()
     {
-        throw new NotImplementedException();
+        var tags = await _unitOfWork.TagBaseRepository.ListAsync();
+        return tags.Select(MapToDto);
     }
 
-    public Task<IEnumerable<TagDto>> GetTagsByIdeaAsync(int ideaId)
+    public async Task<IEnumerable<TagDto>> GetTagsByIdeaAsync(int ideaId)
     {
-        throw new NotImplementedException();
+        var tags = await _unitOfWork.TagBaseRepository.ListAsync();
+        return tags.Select(MapToDto);
     }
+
+    private static TagDto MapToDto(Tag t) => new TagDto
+    {
+        Id = t.Id,
+        Name = t.Name,
+        Description = t.Description,
+        Count = t.Count,
+        IsActive = t.IsActive,
+        LastUsed = t.LastUsed
+    };
 }

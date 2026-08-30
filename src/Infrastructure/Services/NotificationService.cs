@@ -1,52 +1,110 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArrayApp.Application.Common.Models;
+using ArrayApp.Domain.Entities.NotificationAggregate;
+using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ArrayApp.Infrastructure.Services;
+
 public class NotificationService : INotificationService
 {
-    public Task<NotificationDto> CreateNotificationAsync(NotificationCreateDto notificationCreateDto)
+    private readonly ILogger<NotificationService> _logger;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public NotificationService(ILogger<NotificationService> logger, IUnitOfWork unitOfWork)
     {
-        throw new NotImplementedException();
+        _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
-    public Task DeleteNotificationAsync(int notificationId)
+    public async Task<NotificationDto> CreateNotificationAsync(NotificationCreateDto notificationCreateDto)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Creating notification: {Title}", notificationCreateDto.Title);
+        var notification = new Notification
+        {
+            Title = notificationCreateDto.Title,
+            Body = notificationCreateDto.Body,
+            Type = notificationCreateDto.Type,
+            Importance = notificationCreateDto.Importance,
+            Status = "unread",
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+
+        var saved = await _unitOfWork.NotificationBaseRepository.AddAsync(notification);
+        return MapToDto(saved);
     }
 
-    public Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync()
+    public async Task<NotificationDto> GetNotificationByIdAsync(int notificationId)
     {
-        throw new NotImplementedException();
+        var notification = await _unitOfWork.NotificationBaseRepository.GetByIdAsync(notificationId);
+        return notification != null ? MapToDto(notification) : new NotificationDto();
     }
 
-    public Task<NotificationDto> GetNotificationByIdAsync(int notificationId)
+    public async Task<IEnumerable<NotificationDto>> GetAllNotificationsAsync()
     {
-        throw new NotImplementedException();
+        var notifications = await _unitOfWork.NotificationBaseRepository.ListAsync();
+        return notifications.Select(MapToDto);
     }
 
-    public Task<IEnumerable<NotificationDto>> GetNotificationsByUserAsync(int userId)
+    public async Task UpdateNotificationAsync(int notificationId, NotificationUpdateDto notificationUpdateDto)
     {
-        throw new NotImplementedException();
+        var notification = await _unitOfWork.NotificationBaseRepository.GetByIdAsync(notificationId);
+        if (notification != null)
+        {
+            if (!string.IsNullOrWhiteSpace(notificationUpdateDto.Title))
+                notification.Title = notificationUpdateDto.Title;
+            if (!string.IsNullOrWhiteSpace(notificationUpdateDto.Body))
+                notification.Body = notificationUpdateDto.Body;
+            if (!string.IsNullOrWhiteSpace(notificationUpdateDto.Status))
+                notification.Status = notificationUpdateDto.Status;
+
+            await _unitOfWork.NotificationBaseRepository.UpdateAsync(notification);
+        }
     }
 
-    public Task<int> GetUnreadNotificationCountAsync(int userId)
+    public async Task DeleteNotificationAsync(int notificationId)
     {
-        throw new NotImplementedException();
+        var notification = await _unitOfWork.NotificationBaseRepository.GetByIdAsync(notificationId);
+        if (notification != null)
+        {
+            await _unitOfWork.NotificationBaseRepository.DeleteAsync(notification);
+        }
     }
 
-    public Task MarkNotificationAsReadAsync(int notificationId)
+    public async Task<IEnumerable<NotificationDto>> GetNotificationsByUserAsync(int userId)
     {
-        throw new NotImplementedException();
+        var notifications = await _unitOfWork.NotificationBaseRepository.ListAsync();
+        return notifications.Select(MapToDto);
     }
 
-    public Task UpdateNotificationAsync(int notificationId, NotificationUpdateDto notificationUpdateDto)
+    public async Task<int> GetUnreadNotificationCountAsync(int userId)
     {
-        throw new NotImplementedException();
+        var notifications = await _unitOfWork.NotificationBaseRepository.ListAsync();
+        return notifications.Count(n => n.Status == "unread");
     }
-    //email, sms, calendar, events, meeting, 
+
+    public async Task MarkNotificationAsReadAsync(int notificationId)
+    {
+        var notification = await _unitOfWork.NotificationBaseRepository.GetByIdAsync(notificationId);
+        if (notification != null)
+        {
+            notification.Status = "read";
+            await _unitOfWork.NotificationBaseRepository.UpdateAsync(notification);
+        }
+    }
+
+    private static NotificationDto MapToDto(Notification n) => new NotificationDto
+    {
+        Id = n.Id,
+        Title = n.Title,
+        Body = n.Body,
+        Type = n.Type,
+        Importance = n.Importance,
+        Status = n.Status,
+        CreatedAt = n.CreatedAt
+    };
 }

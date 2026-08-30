@@ -44,14 +44,13 @@ public class EnterpriseConnectorsIntegrationTests : BaseTestFixture
 
         // 3. Create an Action Item on this Idea
         var idea = await FindAsync<Idea>(ideaId);
-        idea.Should().NotBeNull();
-        var actionItem = new ActionItem
+        var actionItem = new IdeaAction
         {
             IdeaId = ideaId,
             Title = "Provision GPS Gateway",
             Description = "Configure cloud ingress for OBD-II vehicle telemetry",
             OwnerUserId = "engineer-1",
-            Priority = ActionItemPriority.High,
+            Priority = PriorityLevel.High,
             Status = ActionItemStatus.Todo
         };
         await AddAsync(actionItem);

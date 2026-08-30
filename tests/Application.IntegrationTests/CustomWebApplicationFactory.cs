@@ -31,22 +31,6 @@ internal class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 .Remove<ICurrentUserService>()
                 .AddTransient(provider => Mock.Of<ICurrentUserService>(s =>
                     s.UserId == GetCurrentUserId()));
-
-            services
-                .Remove<DbContextOptions<ApplicationDbContext>>()
-                .AddDbContext<ApplicationDbContext>((sp, options) =>
-                {
-                    var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
-                    if (isWindows && !builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
-                    {
-                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-                            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
-                    }
-                    else
-                    {
-                        options.UseInMemoryDatabase("ArrayAppIntegrationTestDb");
-                    }
-                });
         });
     }
 }

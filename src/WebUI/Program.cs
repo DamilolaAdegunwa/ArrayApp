@@ -17,8 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");  //Configuration.GetConnectionString("DefaultConnection");
 
-//builder.Services.AddDbContext(connectionString);
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+// builder.Services.AddDbContext is handled by AddInfrastructureServices(builder.Configuration)
 //builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 //.AddEntityFrameworkStores<ApplicationDbContext>()
 //.AddDefaultTokenProviders();
@@ -128,7 +127,7 @@ app.UseStaticFiles();
 app.UseOpenApi();
 //app.UseSwaggerUi3();
 
-app.UseSwaggerUi3(settings =>
+app.UseSwaggerUi(settings =>
 {
     settings.Path = "/api";
     //settings.DocumentPath = "/api/specification.json";

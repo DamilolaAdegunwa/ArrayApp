@@ -65,6 +65,8 @@ public class SyncActionToConnectorCommandHandler : IRequestHandler<SyncActionToC
         await _context.SaveChangesAsync(cancellationToken);
         _logger.LogInformation("Action {ActionId} synced to {ConnectorType} with reference {RefKey}", action.Id, request.ConnectorType, action.ExternalReferenceKey);
 
+        syncLog.ActionItemId = action.Id;
+        syncLog.ExternalTicketId = action.ExternalReferenceKey;
         return syncLog;
     }
 }

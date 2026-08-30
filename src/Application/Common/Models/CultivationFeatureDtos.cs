@@ -345,6 +345,8 @@ public class ConnectorSyncLogDto
 {
     public int Id { get; set; }
     public int ConnectorConfigId { get; set; }
+    public int ActionItemId { get; set; }
+    public string? ExternalTicketId { get; set; }
     public string EventType { get; set; } = string.Empty;
     public string Payload { get; set; } = string.Empty;
     public bool IsSuccess { get; set; }
