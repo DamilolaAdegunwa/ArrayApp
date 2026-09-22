@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "auditReport": "ArrayApp Application Security Assessment",
+  "auditVersion": "1.0.0",
+  "assessmentDate": "2026-09-22",
+  "target": "ArrayApp (.NET 10 WebAPI / EF Core / Identity / Angular)",
+  "overallRiskRating": "LOW (Post-Remediation; previously CRITICAL)",
+  "summary": {
+    "totalFindings": 17,
+    "remediated": 16,
+    "operationalResidual": 1,
+    "severityBreakdown": {
+      "CRITICAL": 3,
+      "HIGH": 5,
+      "MEDIUM": 4,
+      "LOW": 3,
+      "INFORMATIONAL": 2
+    },
+    "remediationBreakdown": {
+      "CRITICAL_RESOLVED": 3,
+      "HIGH_RESOLVED": 5,
+      "MEDIUM_RESOLVED": 4,
+      "LOW_RESOLVED": 3,
+      "INFORMATIONAL_RESOLVED": 1,
+      "INFORMATIONAL_OPERATIONAL": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "SEC-001",
+      "title": "Broken Object Level Authorization (BOLA) Leading to Complete Account Takeover",
+      "severity": "CRITICAL",
+      "cvss": {
+        "version": "3.1",
+        "score": 9.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "cwe": "CWE-639",
+      "cweName": "Authorization Bypass Through User-Controlled Key",
+      "owaspCategory": "API1:2023 - Broken Object Level Authorization",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/AccountController.cs",
+      "affectedEndpoint": "POST /api/Account/ResetPassword",
+      "description": "The ResetPassword endpoint accepted a target user's Email address and a new password with an unauthenticated [AllowAnonymous] policy and without validating a cryptographic password reset token or authenticating caller ownership. Any external adversary could reset any user's password (including Administrator) by supplying their email.",
+      "businessImpact": "Immediate total compromise of application administrator accounts and all tenant accounts, leading to uninhibited data exfiltration, regulatory penalties (GDPR/HIPAA/SOC2), and severe brand damage.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Restructured endpoint to validate caller authentication, verify ownership or identity reset token via ASP.NET Identity UserManager.ResetPasswordAsync, or verify current password via ChangePasswordAsync. Added ResetToken and CurrentPassword to ResetPasswordModel.",
+      "verificationTest": "Security.UnitTests.AccountSecurityUnitTests.ResetPassword_WithoutTokenOrAuth_IsBlocked"
+    },
+    {
+      "id": "SEC-002",
+      "title": "Vertical Privilege Escalation and Missing Functional Authorization on RBAC Endpoints",
+      "severity": "CRITICAL",
+      "cvss": {
+        "version": "3.1",
+        "score": 9.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+      },
+      "cwe": "CWE-285",
+      "cweName": "Improper Authorization",
+      "owaspCategory": "API5:2023 - Broken Function Level Authorization",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/AccountController.cs",
+      "affectedEndpoint": "POST /api/Account/CreateRole, POST /api/Account/AssignRole, POST /api/Account/DeleteRole, POST /api/Account/RemoveUserRole",
+      "description": "Administrative role management endpoints lacked authorization attributes, allowing any anonymous unauthenticated network client to create arbitrary roles and grant themselves or any other user administrative privileges.",
+      "businessImpact": "Any attacker could instantly grant themselves the Administrator role, subverting all role-based security boundaries across the enterprise system.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Enforced strict role-based authorization attributes: [Authorize(Roles = \"Administrator,Admin,admin\")] across all role creation, assignment, deletion, and user query endpoints.",
+      "verificationTest": "Security.UnitTests.ControllerAuthorizationAuditUnitTests.EnsureRoleManagementControllersRequireAdminRole"
+    },
+    {
+      "id": "SEC-003",
+      "title": "Broad Attack Surface from Missing Authentication Across 35 API Controllers",
+      "severity": "CRITICAL",
+      "cvss": {
+        "version": "3.1",
+        "score": 9.1,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N"
+      },
+      "cwe": "CWE-306",
+      "cweName": "Missing Authentication for Critical Function",
+      "owaspCategory": "API2:2023 - Broken Authentication",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/*.cs",
+      "affectedEndpoint": "35 Core Controllers (Campaigns, Products, Innovation, Connectors, AI Agents, ZeroTrust, Compliance, etc.)",
+      "description": "35 out of 38 WebAPI controllers lacked the [Authorize] attribute at the class and action levels. Unauthenticated internet clients had full read, create, update, and delete access to business data, enterprise strategy, chatrooms, and compliance logs.",
+      "businessImpact": "Total disclosure of proprietary business data, campaign strategies, financial metrics, and customer communications; unauthorized manipulation and tampering with corporate assets.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Applied explicit [Authorize] attributes to all 35 controllers and made BaseController abstract. System adheres to secure-by-default zero trust posture.",
+      "verificationTest": "Security.UnitTests.ControllerAuthorizationAuditUnitTests.EnsureAllControllersHaveExplicitAuthorization"
+    },
+    {
+      "id": "SEC-004",
+      "title": "Mass Sensitive Data Exposure via Password Hash and Security Stamp Leaks",
+      "severity": "HIGH",
+      "cvss": {
+        "version": "3.1",
+        "score": 7.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+      },
+      "cwe": "CWE-200",
+      "cweName": "Exposure of Sensitive Information to an Unauthorized Actor",
+      "owaspCategory": "API3:2023 - Broken Object Property Level Authorization",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/AccountController.cs",
+      "affectedEndpoint": "GET /api/Account/GetAllUsers, GET /api/Account/GetUserById, GET /api/Account/GetUserByEmail, GET /api/Account/GetUserByUsername, GET /api/Account/GetUsersInRole",
+      "description": "User queries directly serialized ASP.NET Identity ApplicationUser domain entities into JSON HTTP responses, exposing PasswordHash (PBKDF2/Argon2 hashes), SecurityStamp, ConcurrencyStamp, and internal system flags.",
+      "businessImpact": "Adversaries could scrape password hashes across all accounts for offline dictionary/GPU cracking attacks, and security stamps could be abused to forge or invalidate authentication states.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Introduced UserDto projection model in Application layer that strictly encapsulates safe public profile fields (Id, UserName, Email, PhoneNumber, etc.) and completely omits cryptographic hashes, stamps, and tokens.",
+      "verificationTest": "Security.UnitTests.DataSanitizationUnitTests.EnsureUserDtoNeverExposesSensitiveFields"
+    },
+    {
+      "id": "SEC-005",
+      "title": "Exception Stack Trace and Internal Path Leakage in Error Responses",
+      "severity": "HIGH",
+      "cvss": {
+        "version": "3.1",
+        "score": 5.3,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N"
+      },
+      "cwe": "CWE-209",
+      "cweName": "Generation of Error Message Containing Sensitive Information",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/IdeaController.cs, FileDataController.cs, ApiExceptionFilterAttribute.cs",
+      "affectedEndpoint": "Over 29 API action catch blocks and global error filters",
+      "description": "Catch blocks in IdeaController and FileDataController explicitly formatted and returned `ex.StackTrace` and internal filesystem paths in HTTP 500 error responses.",
+      "businessImpact": "Provides attackers with complete internal architecture maps, exact source code line numbers, server file paths, third-party libraries, and database ORM call sequences.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Removed all 29 instances of ex.StackTrace disclosure. Sanitized ApiExceptionFilterAttribute in both WebAPI and WebUI to produce RFC 7807 compliant ProblemDetails with opaque correlation traceId.",
+      "verificationTest": "Security.UnitTests.ErrorHandlingSecurityUnitTests.UnhandledException_DoesNotLeakStackTraceOrInternalDetails"
+    },
+    {
+      "id": "SEC-006",
+      "title": "Weak Cryptographic Key Length (128-bit) and Inadequate JWT Signature Validation",
+      "severity": "HIGH",
+      "cvss": {
+        "version": "3.1",
+        "score": 7.4,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N"
+      },
+      "cwe": "CWE-326",
+      "cweName": "Inadequate Encryption Strength",
+      "owaspCategory": "API2:2023 - Broken Authentication",
+      "affectedComponent": "src/ArrayApp.WebAPI/Program.cs, appsettings.json, WebUI/appsettings.json",
+      "affectedEndpoint": "JWT Authentication Middleware & /api/Token/GenerateToken",
+      "description": "JWT authentication used a hardcoded 16-character (128-bit) secret key `C421AAEE0D114E9C`, violating NIST SP 800-131A and RFC 7518 HMAC-SHA256 requirements. Token validation also failed to enforce audience validation.",
+      "businessImpact": "Vulnerable to offline brute force and rainbow table recovery. Allows adversaries to forge arbitrary JWT tokens with any identity and roles.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Upgraded JWT validation to mandate a cryptographically secure 256-bit+ key, enforced ValidateIssuer, ValidateAudience, ValidateLifetime, and ClockSkew = Zero. Replaced static 128-bit strings with 256-bit configuration template.",
+      "verificationTest": "Security.UnitTests.JwtSecurityConfigurationUnitTests.JwtKeyUnder256Bits_ThrowsCryptographicException"
+    },
+    {
+      "id": "SEC-007",
+      "title": "Missing Rate Limiting and Brute-Force Lockout on Authentication Endpoints",
+      "severity": "HIGH",
+      "cvss": {
+        "version": "3.1",
+        "score": 7.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+      },
+      "cwe": "CWE-307",
+      "cweName": "Improper Restriction of Excessive Authentication Attempts",
+      "owaspCategory": "API4:2023 - Unrestricted Resource Consumption",
+      "affectedComponent": "src/ArrayApp.WebAPI/Program.cs, TokenController.cs, Infrastructure/ConfigureServices.cs",
+      "affectedEndpoint": "/api/Token/GenerateToken, /api/Account/Login, /api/Account/Register",
+      "description": "Authentication endpoints lacked request throttling, IP rate limiting, and Identity account lockout mechanisms. Attackers could execute credential stuffing and brute-force dictionary attacks unhindered.",
+      "businessImpact": "Account compromise via automated credential spraying, credential stuffing, and denial-of-service against the Identity backend.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Enabled ASP.NET Core RateLimiter middleware with strict fixed-window policy (10 requests/minute on auth endpoints, 100 requests/minute on global API). Configured ASP.NET Identity lockout with MaxFailedAccessAttempts = 5 and DefaultLockoutTimeSpan = 15m. Added AccessFailedAsync tracking in TokenController.",
+      "verificationTest": "Security.UnitTests.AccountSecurityUnitTests.IdentityLockoutPolicy_IsStrictlyConfigured"
+    },
+    {
+      "id": "SEC-008",
+      "title": "Client-Controlled ABAC Attributes and Privilege Escalation in Zero Trust Governance",
+      "severity": "HIGH",
+      "cvss": {
+        "version": "3.1",
+        "score": 8.1,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N"
+      },
+      "cwe": "CWE-639",
+      "cweName": "Authorization Bypass Through User-Controlled Key",
+      "owaspCategory": "API1:2023 - Broken Object Level Authorization",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/ZeroTrustGovernanceController.cs",
+      "affectedEndpoint": "GET /api/ZeroTrustGovernance/evaluate-access",
+      "description": "ZeroTrustGovernanceController allowed callers to pass arbitrary clearance levels, roles, and trust scores as unauthenticated query parameters. The access evaluation engine relied on client-supplied parameters rather than validated server-side claims.",
+      "businessImpact": "Any user could bypass ABAC governance controls and access Top Secret or Compartmentalized enterprise assets simply by appending `userClearance=TopSecret` to the query string.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Added [Authorize] to controller and rebound user clearance, user roles, and device trust evaluation to cryptographically signed claims from the validated ClaimsPrincipal.",
+      "verificationTest": "Security.UnitTests.ControllerAuthorizationAuditUnitTests.ZeroTrustController_EnforcesAuthorization"
+    },
+    {
+      "id": "SEC-009",
+      "title": "Container Security: End-of-Life .NET 7 Base Image, Root Execution, and Missing Health Checks",
+      "severity": "MEDIUM",
+      "cvss": {
+        "version": "3.1",
+        "score": 6.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"
+      },
+      "cwe": "CWE-250",
+      "cweName": "Execution with Unnecessary Privileges",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": "src/ArrayApp.WebAPI/Dockerfile",
+      "affectedEndpoint": "Container Runtime Environment",
+      "description": "Dockerfile used out-of-support .NET 7 base images (`mcr.microsoft.com/dotnet/aspnet:7.0`), executed container processes as root (UID 0), exposed privileged port 80, and lacked container healthcheck directives.",
+      "businessImpact": "Container breakout risks from unpatched OS/runtime CVEs, and potential root host compromise if container isolation is breached.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Upgraded base images to .NET 10 LTS (`mcr.microsoft.com/dotnet/aspnet:10.0`), created and switched to non-root user `appuser:appgroup` (UID 10001), shifted listening port to unprivileged 8080, and configured container HEALTHCHECK.",
+      "verificationTest": "Automated verification in infrastructure-container-audit.md and Dockerfile inspection"
+    },
+    {
+      "id": "SEC-010",
+      "title": "Hardcoded Database Credentials and Deprecated Runners in CI/CD Workflows",
+      "severity": "MEDIUM",
+      "cvss": {
+        "version": "3.1",
+        "score": 6.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N"
+      },
+      "cwe": "CWE-798",
+      "cweName": "Use of Hard-coded Credentials",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": ".github/workflows/dotnet-deploy.yml, dotnet-build.yml, codeql-analysis.yml",
+      "affectedEndpoint": "GitHub Actions Pipelines",
+      "description": "GitHub Actions workflows contained hardcoded SQL Server SA passwords (`Your_password123`), utilized obsolete action versions (`actions/checkout@v2`, `upload-artifact@v2`), and relied on vulnerable deprecated `::set-output` syntax.",
+      "businessImpact": "Credential exposure in workflow logs and build history; susceptibility to workflow injection and supply chain compromise from unmaintained action dependencies.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Extracted SA passwords to GitHub Actions Secrets `${{ secrets.SQL_SA_PASSWORD }}`, upgraded all actions to current major versions (v4/v3), and updated output syntax to `$GITHUB_OUTPUT`.",
+      "verificationTest": "Automated syntax and secrets validation in CI/CD workflows"
+    },
+    {
+      "id": "SEC-011",
+      "title": "Permissive Password Policy Allowing Trivial and Weak Credentials",
+      "severity": "MEDIUM",
+      "cvss": {
+        "version": "3.1",
+        "score": 5.3,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"
+      },
+      "cwe": "CWE-521",
+      "cweName": "Weak Password Requirements",
+      "owaspCategory": "API2:2023 - Broken Authentication",
+      "affectedComponent": "src/Infrastructure/ConfigureServices.cs",
+      "affectedEndpoint": "Identity Password Validator (/api/Account/Register)",
+      "description": "Default Identity setup allowed passwords with length down to 6 characters and lacked requirements for uppercase letters, digits, and special characters, allowing weak passwords vulnerable to rapid guessing.",
+      "businessImpact": "Vulnerability to automated dictionary attacks and offline hash cracking if hashes are ever intercepted.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Configured strict password complexity: RequiredLength = 8, RequireDigit = true, RequireUppercase = true, RequireLowercase = true, RequireNonAlphanumeric = true, RequiredUniqueChars = 4.",
+      "verificationTest": "Security.UnitTests.AccountSecurityUnitTests.PasswordPolicy_RequiresMinimumComplexity"
+    },
+    {
+      "id": "SEC-012",
+      "title": "Missing Security Response Headers (CSP, X-Frame-Options, HSTS, Referrer-Policy)",
+      "severity": "MEDIUM",
+      "cvss": {
+        "version": "3.1",
+        "score": 5.4,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N"
+      },
+      "cwe": "CWE-693",
+      "cweName": "Protection Mechanism Failure",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": "src/ArrayApp.WebAPI/Program.cs",
+      "affectedEndpoint": "All HTTP Endpoints",
+      "description": "WebAPI did not emit modern defensive HTTP headers, leaving clients exposed to clickjacking, MIME sniffing attacks, and cross-site scripting risks.",
+      "businessImpact": "Vulnerability to UI redressing (clickjacking), downgrade attacks, and speculative execution side-channel leaks.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Added custom security headers middleware to Program.cs injecting Content-Security-Policy, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy: strict-origin-when-cross-origin, and Permissions-Policy.",
+      "verificationTest": "Pipeline middleware inspection and unit test validation"
+    },
+    {
+      "id": "SEC-013",
+      "title": "Excessive JWT Token Validity Duration (50 Hours)",
+      "severity": "LOW",
+      "cvss": {
+        "version": "3.1",
+        "score": 3.7,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+      },
+      "cwe": "CWE-613",
+      "cweName": "Insufficient Session Expiration",
+      "owaspCategory": "API2:2023 - Broken Authentication",
+      "affectedComponent": "src/ArrayApp.WebAPI/appsettings.json, WebUI/appsettings.json",
+      "affectedEndpoint": "JWT Token Lifespan",
+      "description": "appsettings configured JWT token expiration to 180,000 seconds (50 hours), keeping compromised tokens valid for over two days with no active revocation mechanism.",
+      "businessImpact": "Prolonged attacker persistence following credential compromise or token theft via XSS/man-in-the-browser.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Reduced JWT token duration to 3,600 seconds (1 hour) in appsettings configuration, minimizing the blast radius and window of vulnerability.",
+      "verificationTest": "Configuration file audit and token lifetime validation"
+    },
+    {
+      "id": "SEC-014",
+      "title": "Sync-Over-Async Thread Pool Starvation Hazard in Account Controller",
+      "severity": "LOW",
+      "cvss": {
+        "version": "3.1",
+        "score": 3.7,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L"
+      },
+      "cwe": "CWE-400",
+      "cweName": "Uncontrolled Resource Consumption",
+      "owaspCategory": "API4:2023 - Unrestricted Resource Consumption",
+      "affectedComponent": "src/ArrayApp.WebAPI/Controllers/AccountController.cs",
+      "affectedEndpoint": "GET /api/Account/GetUsersInRole",
+      "description": "AccountController used `_userManager.GetUsersInRoleAsync(roleName).Result`, blocking asynchronous thread pool threads during synchronous waiting.",
+      "businessImpact": "Thread pool starvation and unresponsiveness (Denial of Service) under moderate concurrent traffic loads.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Refactored GetUsersInRole and related methods to pure async/await patterns using `await _userManager.GetUsersInRoleAsync(roleName)`.",
+      "verificationTest": "Code review and async compilation verification"
+    },
+    {
+      "id": "SEC-015",
+      "title": "Unencrypted Database Connection String Defaults",
+      "severity": "LOW",
+      "cvss": {
+        "version": "3.1",
+        "score": 3.1,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+      },
+      "cwe": "CWE-319",
+      "cweName": "Cleartext Transmission of Sensitive Information",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": "src/ArrayApp.WebAPI/appsettings.json, WebUI/appsettings.json",
+      "affectedEndpoint": "SQL Server Connection Strings",
+      "description": "Connection strings did not enforce TLS transport encryption (`Encrypt=true`), enabling potential eavesdropping on unencrypted internal database network traffic.",
+      "businessImpact": "Interception of plaintext SQL queries, customer PII, and credentials on unsegmented internal networks.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Appended `Encrypt=true;TrustServerCertificate=true;` to all development and default database connection strings.",
+      "verificationTest": "Configuration file review"
+    },
+    {
+      "id": "SEC-016",
+      "title": "Verbosity of Production Logging Defaults to Debug Level",
+      "severity": "INFORMATIONAL",
+      "cvss": {
+        "version": "3.1",
+        "score": 2.0,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N"
+      },
+      "cwe": "CWE-532",
+      "cweName": "Insertion of Sensitive Information into Log File",
+      "owaspCategory": "API9:2023 - Improper Inventory Management",
+      "affectedComponent": "src/WebUI/appsettings.Production.json",
+      "affectedEndpoint": "Logging Configuration",
+      "description": "appsettings.Production.json configured default logging level to `Debug`, increasing log volume, storage costs, and risk of inadvertent PII ingestion.",
+      "businessImpact": "Excessive log storage consumption, performance degradation, and accidental logging of request payloads containing sensitive data.",
+      "remediationStatus": "REMEDIATED",
+      "remediationSummary": "Modified `Default` logging level in appsettings.Production.json to `Warning`, preserving critical alerts while suppressing debug telemetry.",
+      "verificationTest": "Configuration file review"
+    },
+    {
+      "id": "SEC-017",
+      "title": "Secret Sprawl in Source Control History and Local appsettings Files",
+      "severity": "INFORMATIONAL",
+      "cvss": {
+        "version": "3.1",
+        "score": 2.5,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N"
+      },
+      "cwe": "CWE-312",
+      "cweName": "Cleartext Storage of Sensitive Information",
+      "owaspCategory": "API8:2023 - Security Misconfiguration",
+      "affectedComponent": "Git Commit History & Repository Configuration Files",
+      "affectedEndpoint": "Repository Filesystem & Git Log",
+      "description": "Historic commits contain development secrets (128-bit JWT test keys, default SA passwords). While code files have been remediated with strong placeholder keys, Git commit history retains historical artifacts.",
+      "businessImpact": "Any party with clone access to the historical git graph can extract historical test passwords and symmetric keys.",
+      "remediationStatus": "OPERATIONAL_ACTION_REQUIRED",
+      "remediationSummary": "All source files have been scrubbed. Production environments must inject secrets via Azure Key Vault or AWS Secrets Manager. Development teams must rotate any real credentials and consider BFG Repo-Cleaner / git-filter-repo if repo is made public.",
+      "verificationTest": "Git history audit documented in secrets-audit.md"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 ﻿using System.Net;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Services.Interfaces;
@@ -7,6 +8,7 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AdvertController : ControllerBase
 {
     private readonly IAdvertService _advertService;

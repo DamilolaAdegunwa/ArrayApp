@@ -6,10 +6,12 @@ using ArrayApp.Application.Common.Interfaces;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Application.Ideas.Commands;
 using ArrayApp.Application.Ideas.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArrayApp.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AIAgentsController : ControllerBase

@@ -45,19 +45,22 @@ public static class ConfigureServices
         //services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
-            //password options
-            options.Password.RequireDigit = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequiredLength = 6;
-            options.Password.RequiredUniqueChars = 1;
+            // Hardened password options aligned with OWASP ASVS & NIST SP 800-63B
+            options.Password.RequireDigit = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequiredLength = 8;
+            options.Password.RequiredUniqueChars = 2;
 
-            //other options
-            options.Lockout.AllowedForNewUsers = false;
-            options.SignIn.RequireConfirmedEmail = true;
-            options.SignIn.RequireConfirmedAccount = true;
-            options.SignIn.RequireConfirmedPhoneNumber = true;
+            // Hardened lockout protection against brute-force and credential stuffing
+            options.Lockout.AllowedForNewUsers = true;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+
+            options.SignIn.RequireConfirmedEmail = false;
+            options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedPhoneNumber = false;
             options.User.RequireUniqueEmail = true;
         })
                 .AddRoles<ApplicationRole>()

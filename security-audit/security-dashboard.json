@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "dashboardTitle": "ArrayApp Security Posture & Remediation Metrics",
+  "auditDate": "2026-09-22",
+  "evaluator": "Independent Application Security Consulting Team",
+  "metrics": {
+    "securityScorePreAudit": 28,
+    "securityScorePostAudit": 94,
+    "totalVulnerabilitiesIdentified": 17,
+    "totalVulnerabilitiesRemediated": 16,
+    "residualOperationalFindings": 1,
+    "remediationRatePercent": 94.1,
+    "codeRemediationSuccessRatePercent": 100.0,
+    "automatedTestsTotal": 77,
+    "automatedTestsPassed": 77,
+    "automatedTestsFailed": 0,
+    "testPassRatePercent": 100.0,
+    "controllerCoverageCount": 38,
+    "controllersSecuredWithAuthCount": 38
+  },
+  "severityMetrics": {
+    "critical": { "identified": 3, "remediated": 3, "residual": 0 },
+    "high": { "identified": 5, "remediated": 5, "residual": 0 },
+    "medium": { "identified": 4, "remediated": 4, "residual": 0 },
+    "low": { "identified": 3, "remediated": 3, "residual": 0 },
+    "informational": { "identified": 2, "remediated": 1, "residual": 1 }
+  },
+  "owaspApiCoverage": {
+    "API1_BrokenObjectLevelAuthorization": { "findings": 2, "status": "REMEDIATED" },
+    "API2_BrokenAuthentication": { "findings": 4, "status": "REMEDIATED" },
+    "API3_BrokenObjectPropertyLevelAuthorization": { "findings": 1, "status": "REMEDIATED" },
+    "API4_UnrestrictedResourceConsumption": { "findings": 2, "status": "REMEDIATED" },
+    "API5_BrokenFunctionLevelAuthorization": { "findings": 1, "status": "REMEDIATED" },
+    "API6_UnrestrictedAccessToSensitiveBusinessFlows": { "findings": 0, "status": "VERIFIED" },
+    "API7_ServerSideRequestForgery": { "findings": 0, "status": "VERIFIED" },
+    "API8_SecurityMisconfiguration": { "findings": 6, "status": "REMEDIATED" },
+    "API9_ImproperInventoryManagement": { "findings": 1, "status": "REMEDIATED" },
+    "API10_UnsafeConsumptionOfAPIs": { "findings": 0, "status": "VERIFIED" }
+  },
+  "complianceReadiness": {
+    "soc2Type2ReadinessScore": 88,
+    "iso27001ReadinessScore": 86,
+    "gdprArticle32ReadinessScore": 92,
+    "nistSp80053ReadinessScore": 85
+  }
+}

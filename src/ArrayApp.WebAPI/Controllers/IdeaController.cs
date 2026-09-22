@@ -48,7 +48,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -77,7 +77,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -106,7 +106,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -135,7 +135,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -164,7 +164,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -193,7 +193,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -221,7 +221,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -250,7 +250,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -278,7 +278,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -307,7 +307,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -335,7 +335,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -364,7 +364,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -392,7 +392,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -421,7 +421,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -449,7 +449,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -478,7 +478,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -506,7 +506,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -535,7 +535,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -563,7 +563,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -592,7 +592,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -620,7 +620,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -649,7 +649,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -677,7 +677,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -706,7 +706,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -734,7 +734,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -763,7 +763,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -791,7 +791,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -820,7 +820,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -849,7 +849,7 @@ public class IdeaController : ApiControllerBase
             {
                 Code = SystemCodes.Failed,
                 Data = ex.Message,
-                Description = ex.StackTrace,
+                Description = "An unexpected error occurred while processing the request.",
             });
         }
     }
@@ -910,7 +910,7 @@ public class IdeaController : ApiControllerBase
     //        {
     //            Code = SystemCodes.Failed,
     //            Data = ex.Message,
-    //            Description = ex.StackTrace,
+    //            Description = "An unexpected error occurred while processing the request.",
     //        });
     //    }
     //}

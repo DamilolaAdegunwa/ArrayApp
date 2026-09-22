@@ -9,10 +9,10 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BaseController : ApiControllerBase
+public abstract class BaseController : ApiControllerBase
 {
     private ILogger? _logger;
-    protected ILogger Logger => _logger ??= HttpContext?.RequestServices.GetService<ILogger<BaseController>>() ?? new LoggerFactory().CreateLogger<BaseController>();
+    protected ILogger Logger => _logger ??= (HttpContext?.RequestServices != null ? HttpContext.RequestServices.GetService<ILogger<BaseController>>() : null) ?? new LoggerFactory().CreateLogger<BaseController>();
 
     public BaseController(ILogger? logger = null)
     {

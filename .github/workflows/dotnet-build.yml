@@ -5,22 +5,23 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     services:
       sql:
-        image: mcr.microsoft.com/mssql/server
+        image: mcr.microsoft.com/mssql/server:2022-latest
         ports:
           - 1433:1433
         env:
-          SA_PASSWORD: Your_password123
+          SA_PASSWORD: ${{ secrets.SQL_SA_PASSWORD || 'SecuredMssqlPassword2026!' }}
           ACCEPT_EULA: Y
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
     - name: Restore
       run: dotnet restore
     - name: Build
@@ -28,4 +29,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
       env:
-        ConnectionStrings__DefaultConnection: Server=.;Database=CleanArchitectureDb-Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
+        ConnectionStrings__DefaultConnection: Server=127.0.0.1;Database=CleanArchitectureDb-Test;User=sa;Password=${{ secrets.SQL_SA_PASSWORD || 'SecuredMssqlPassword2026!' }};MultipleActiveResultSets=true;Encrypt=true;TrustServerCertificate=true;

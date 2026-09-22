@@ -1,20 +1,26 @@
-﻿using ArrayApp.Application.Common.Models;
+using ArrayApp.Application.Common.Models;
 using ArrayApp.Domain.Entities.FileAggregate;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ArrayApp.Infrastructure.Services.Interfaces;
 
 namespace ArrayApp.WebAPI.Controllers;
+
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class FileDataController : ControllerBase
 {
     private readonly IFileDataService _fileService;
+    private readonly ILogger<FileDataController> _logger;
 
-    public FileDataController(IFileDataService fileService)
+    public FileDataController(IFileDataService fileService, ILogger<FileDataController> logger)
     {
         _fileService = fileService;
+        _logger = logger;
     }
 
     [HttpPost("upload")]
@@ -34,11 +40,12 @@ public class FileDataController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error while uploading file");
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
-                Data = ex.Message,
-                Description = ex.StackTrace,
+                Data = "An error occurred while uploading the file.",
+                Description = "File upload processing failed. Please check file properties and try again.",
             });
         }
     }
@@ -60,11 +67,12 @@ public class FileDataController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error while retrieving file {FileId}", fileId);
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
-                Data = ex.Message,
-                Description = ex.StackTrace,
+                Data = "An error occurred while retrieving the file.",
+                Description = "File retrieval failed.",
             });
         }
     }
@@ -86,13 +94,13 @@ public class FileDataController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error while deleting file {FileId}", fileId);
             return BadRequest(new ApiResponse<string>
             {
                 Code = SystemCodes.Failed,
-                Data = ex.Message,
-                Description = ex.StackTrace,
+                Data = "An error occurred while deleting the file.",
+                Description = "File deletion failed.",
             });
         }
     }
-
 }

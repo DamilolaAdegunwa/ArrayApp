@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 ﻿using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Services.Interfaces;
 using System.Net;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArrayApp.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UserGroupController : ControllerBase
 {
     private readonly IUserGroupService _userGroupService;

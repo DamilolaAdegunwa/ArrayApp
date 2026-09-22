@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 #pragma warning disable
 #pragma info disable
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class EdgeSyncController : ControllerBase
 {
     private readonly ISender _mediator;

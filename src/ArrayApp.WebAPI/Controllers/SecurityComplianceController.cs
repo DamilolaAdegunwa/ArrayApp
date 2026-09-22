@@ -7,8 +7,11 @@ using ArrayApp.Domain.Entities.IdeaAggregate;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace ArrayApp.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SecurityComplianceController : ControllerBase
@@ -40,6 +43,7 @@ public class SecurityComplianceController : ControllerBase
     }
 
     [HttpGet("audit-log")]
+    [Authorize(Roles = "Administrator,Admin,admin,SecurityOfficer,Audit")]
     public async Task<ActionResult<List<SecurityAuditLogEntryDto>>> GetAuditLogs([FromQuery] int? ideaId)
     {
         var logs = await _context.ProvenanceLogs

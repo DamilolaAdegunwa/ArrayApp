@@ -1,5 +1,5 @@
-﻿using ArrayApp.Application.Common.Exceptions;
-
+using ArrayApp.Application.Common.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -13,12 +13,12 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         // Register known exception types and handlers.
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
-            {
-                { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
-                { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
-            };
+        {
+            { typeof(ValidationException), HandleValidationException },
+            { typeof(NotFoundException), HandleNotFoundException },
+            { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
+            { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+        };
     }
 
     public override void OnException(ExceptionContext context)
@@ -42,6 +42,8 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             HandleInvalidModelStateException(context);
             return;
         }
+
+        HandleUnknownException(context);
     }
 
     private void HandleValidationException(ExceptionContext context)
@@ -115,6 +117,28 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new ObjectResult(details)
         {
             StatusCode = StatusCodes.Status403Forbidden
+        };
+
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleUnknownException(ExceptionContext context)
+    {
+        var details = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "An unexpected error occurred while processing your request.",
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+            Detail = "A server error occurred. Please reference the trace identifier when contacting support.",
+            Extensions =
+            {
+                ["traceId"] = context.HttpContext.TraceIdentifier
+            }
+        };
+
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
         };
 
         context.ExceptionHandled = true;

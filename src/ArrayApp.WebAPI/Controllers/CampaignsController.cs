@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 #pragma warning disable
 #pragma info disable
 using System;
@@ -16,6 +17,7 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CampaignsController : ControllerBase
 {
     private readonly IApplicationDbContext _context;

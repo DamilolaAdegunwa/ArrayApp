@@ -9,11 +9,13 @@ using ArrayApp.Application.Common.Models;
 using ArrayApp.Application.Ideas.Commands;
 using ArrayApp.Domain.Entities.IdeaAggregate;
 using ArrayApp.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArrayApp.WebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ConnectorsController : ControllerBase

@@ -1,51 +1,55 @@
 using System;
 using System.Text;
+using System.Threading.RateLimiting;
+using ArrayApp.Application.Common.Interfaces;
+using ArrayApp.Application.Common.Mappings;
 using ArrayApp.Application.Common.Models;
 using ArrayApp.Infrastructure.Persistence;
 using ArrayApp.Infrastructure.Repositories;
 using ArrayApp.Infrastructure.Repositories.Interfaces;
 using ArrayApp.Infrastructure.Services;
+using ArrayApp.Infrastructure.Services.Interfaces;
+using ArrayApp.WebAPI.Filters;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AutoMapper;
-using ArrayApp.Application.Common.Mappings;
-using Microsoft.AspNetCore.Hosting;
-using MABSwagger = Microsoft.AspNetCore.Builder.SwaggerBuilderExtensions;
-using System.Reflection.Metadata;
-using ArrayApp.Application.Common.Interfaces;
-using ArrayApp.Infrastructure.Services.Interfaces;
 using Steeltoe.Extensions.Configuration.ConfigServer;
+
 namespace ArrayApp.WebAPI;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args)
-            .AddConfigServer()
-            ;
+        var builder = WebApplication.CreateBuilder(args);
 
-        string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        string name = builder.Configuration["name"];
-        string age = builder.Configuration["age"];
-        string country = builder.Configuration["country"];
-        // Add services to the container.
+        string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Add services to the container
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<ApiExceptionFilterAttribute>();
+        });
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        // builder.Services.AddDbContext is handled by AddInfrastructureServices(builder.Configuration)
-        builder.Services.AddApplicationServices();// from the application's dll
-        builder.Services.AddInfrastructureServices(builder.Configuration);// from the infrastructure dll
-        builder.Services.Configure<JwtConfig>(options => builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).Bind(options));
+
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureServices(builder.Configuration);
+
+        builder.Services.Configure<JwtConfig>(options => 
+            builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).Bind(options));
+
         builder.Services.AddScoped<IAccountService, AccountService>();
         builder.Services.AddScoped<IServiceHelper, ServiceHelper>();
         builder.Services.AddScoped<ITokenSvc, TokenService>();
         builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-        builder.Services.AddWebAPIServices();// web api services
+        builder.Services.AddWebAPIServices();
+
         builder.Services.AddScoped<IAdvertService, AdvertService>();
         builder.Services.AddScoped<IAppService, AppService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -61,8 +65,55 @@ public class Program
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
-        #region jwt
-        var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey");
+        // Restrictive CORS Policy
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("ArrayAppCorsPolicy", policy =>
+            {
+                policy.WithOrigins(
+                    "https://localhost:44447", 
+                    "https://localhost:5001", 
+                    "https://localhost:7089", 
+                    "http://localhost:4200")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
+        // Rate Limiting Protection (Anti-Brute Force / Anti-DoS)
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.User.Identity?.Name 
+                                  ?? httpContext.Connection.RemoteIpAddress?.ToString() 
+                                  ?? "anonymous",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 120,
+                        QueueLimit = 15,
+                        Window = TimeSpan.FromMinutes(1)
+                    }));
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+        });
+
+        #region Hardened JWT Bearer Authentication
+        var jwtKey = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("SecurityKey")
+                     ?? "ArrayAppEnterpriseSecretKeyWith256BitsMinimumLength2026!";
+        var jwtIssuer = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("Issuer")
+                        ?? "ArrayApp.WebUI.Issuer";
+        var jwtAudience = builder.Configuration.GetSection(Constants.Sections.AuthJwtBearer).GetValue<string>("Audience")
+                          ?? "ArrayApp.WebUI.Audience";
+
+        var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
+        if (keyBytes.Length < 32)
+        {
+            var padded = new byte[32];
+            Array.Copy(keyBytes, padded, keyBytes.Length);
+            keyBytes = padded;
+        }
 
         builder.Services.AddAuthentication(x =>
         {
@@ -70,39 +121,25 @@ public class Program
             x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(x =>
         {
-            x.Authority = "https://YOUR_AUTH0_DOMAIN";
-            x.Audience = "YOUR_AUDIENCE";
-            //----
-            x.RequireHttpsMetadata = false;
+            x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
             x.SaveToken = true;
-            x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            x.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey)),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                //---
-                ValidAudiences = new string[] { "YOUR_AUDIENCE" },
-                ValidIssuer = "YOUR_AUTH0_DOMAIN"
+                IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+                ValidateIssuer = true,
+                ValidIssuer = jwtIssuer,
+                ValidateAudience = true,
+                ValidAudience = jwtAudience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(5)
             };
         });
-        //simplified version
-        //builder.Services.AddAuthentication().AddJwtBearer(); //?? new feature
         #endregion
 
         var app = builder.Build();
 
-        #region old impl of swagger
-        //// Configure the HTTP request pipeline.
-        //if (app.Environment.IsDevelopment())
-        //{
-        //    //app.UseSwagger();
-        //    app.UseSwaggerUI();
-        //}
-        #endregion
-
-        #region newer
-        // Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -118,31 +155,37 @@ public class Program
         }
         else
         {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        // Security Response Headers Middleware
+        app.Use(async (context, next) =>
+        {
+            context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+            context.Response.Headers["X-Frame-Options"] = "DENY";
+            context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+            context.Response.Headers["Content-Security-Policy"] = 
+                "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' wss: https:;";
+            context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
+            await next();
+        });
 
         app.UseHealthChecks("/health");
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseOpenApi();
-        //app.UseSwaggerUi3();
+        app.UseCors("ArrayAppCorsPolicy");
+        app.UseRateLimiter();
 
+        app.UseOpenApi();
         app.UseSwaggerUi(settings =>
         {
             settings.Path = "/swagger";
-            //settings.Path = "/api";
-            //settings.DocumentPath = "/api/specification.json";
         });
 
         app.UseRouting();
 
         app.UseAuthentication();
-        #endregion
-
-        app.UseHttpsRedirection();
-
         app.UseAuthorization();
 
         app.MapControllers();
@@ -152,35 +195,3 @@ public class Program
         app.Run();
     }
 }
-/*
- -- Insert roles into AspNetRoles table
-INSERT INTO AspNetRoles (Name)
-VALUES
-    ('admin'),
-    ('manager'),
-    ('finance'),
-    ('accountant'),
-    ('business'),
-    ('marketing'),
-    ('hr'),
-    ('security'),
-    ('operations'),
-    ('support'),
-    ('customercare'),
-    ('ceo'),
-    ('audit');
-
--- Insert permissions into Permissions table
-INSERT INTO Permissions (Name)
-VALUES
-    ('dashboard_edit_and_view'),
-    ('dashboard_view'),
-    ('payment_edit_and_view'),
-    ('payment_view'),
-    ('subscription_edit_and_view'),
-    ('subscription_view'),
-    ('campaign_edit_and_view'),
-    ('campaign_view'),
-    ('moderator_edit_and_view'),
-    ('moderator_view');
- */

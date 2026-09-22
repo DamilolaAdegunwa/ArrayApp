@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 #pragma warning disable
 #pragma info disable
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class SessionPlaybookController : ControllerBase
 {
     private readonly ISender _mediator;

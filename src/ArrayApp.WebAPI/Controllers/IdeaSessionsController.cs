@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 #pragma warning disable
 #pragma info disable
 using System;
@@ -17,6 +18,7 @@ namespace ArrayApp.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class IdeaSessionsController : ControllerBase
 {
     private readonly IApplicationDbContext _context;

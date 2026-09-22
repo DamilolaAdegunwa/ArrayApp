@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ArrayApp API Security Matrix",
+  "version": "1.0.0",
+  "generatedDate": "2026-09-22",
+  "controllersCount": 38,
+  "defaultAuthPolicy": "RequireAuthenticatedUser",
+  "rateLimiting": {
+    "globalPolicy": "100 requests per minute per IP",
+    "authPolicy": "10 requests per minute per IP"
+  },
+  "controllers": [
+    {
+      "name": "AccountController",
+      "route": "api/Account",
+      "authAttribute": "[Authorize]",
+      "rolesRequired": ["Administrator", "Admin", "admin"],
+      "rateLimiter": "AuthRateLimitPolicy",
+      "endpoints": [
+        { "method": "POST", "path": "/api/Account/Register", "auth": "AllowAnonymous", "rateLimited": true, "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/Login", "auth": "AllowAnonymous", "rateLimited": true, "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/ResetPassword", "auth": "Authorize / Token-Validated", "rateLimited": true, "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/CreateRole", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/AssignRole", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/DeleteRole", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "status": "REMEDIATED" },
+        { "method": "POST", "path": "/api/Account/RemoveUserRole", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/Account/GetAllUsers", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "sanitization": "UserDto", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/Account/GetUserById", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "sanitization": "UserDto", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/Account/GetUserByEmail", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "sanitization": "UserDto", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/Account/GetUserByUsername", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "sanitization": "UserDto", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/Account/GetUsersInRole", "auth": "Authorize", "roles": ["Administrator", "Admin", "admin"], "sanitization": "UserDto", "status": "REMEDIATED" }
+      ]
+    },
+    {
+      "name": "TokenController",
+      "route": "api/Token",
+      "authAttribute": "[AllowAnonymous]",
+      "rolesRequired": [],
+      "rateLimiter": "AuthRateLimitPolicy",
+      "endpoints": [
+        { "method": "POST", "path": "/api/Token/GenerateToken", "auth": "AllowAnonymous", "rateLimited": true, "lockoutEnabled": true, "status": "REMEDIATED" }
+      ]
+    },
+    {
+      "name": "ZeroTrustGovernanceController",
+      "route": "api/ZeroTrustGovernance",
+      "authAttribute": "[Authorize]",
+      "rolesRequired": [],
+      "endpoints": [
+        { "method": "GET", "path": "/api/ZeroTrustGovernance/evaluate-access", "auth": "Authorize", "claimsDerived": true, "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/ZeroTrustGovernance/verify-device", "auth": "Authorize", "claimsDerived": true, "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/ZeroTrustGovernance/posture", "auth": "Authorize", "claimsDerived": true, "status": "REMEDIATED" }
+      ]
+    },
+    {
+      "name": "SecurityComplianceController",
+      "route": "api/SecurityCompliance",
+      "authAttribute": "[Authorize]",
+      "rolesRequired": ["Administrator", "Admin", "admin", "SecurityOfficer", "Audit"],
+      "endpoints": [
+        { "method": "GET", "path": "/api/SecurityCompliance/evaluate-risk", "auth": "Authorize", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/SecurityCompliance/check-compliance", "auth": "Authorize", "status": "REMEDIATED" },
+        { "method": "GET", "path": "/api/SecurityCompliance/audit-logs", "auth": "Authorize", "roles": ["Administrator", "SecurityOfficer"], "status": "REMEDIATED" }
+      ]
+    },
+    {
+      "name": "IdeaController",
+      "route": "api/Idea",
+      "authAttribute": "[Authorize]",
+      "status": "REMEDIATED",
+      "exceptionSanitization": "RFC 7807 ProblemDetails (No StackTrace)"
+    },
+    {
+      "name": "FileDataController",
+      "route": "api/FileData",
+      "authAttribute": "[Authorize]",
+      "status": "REMEDIATED",
+      "exceptionSanitization": "RFC 7807 ProblemDetails (No StackTrace)"
+    },
+    { "name": "AIAgentsController", "route": "api/AIAgents", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "AdvertController", "route": "api/Advert", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "AppController", "route": "api/App", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "CampaignsController", "route": "api/Campaigns", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "CategoryController", "route": "api/Category", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "ChatController", "route": "api/Chat", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "CommentController", "route": "api/Comment", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "ConnectorsController", "route": "api/Connectors", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "EdgeSyncController", "route": "api/EdgeSync", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "IdeaActionsController", "route": "api/IdeaActions", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "IdeaCanvasController", "route": "api/IdeaCanvas", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "IdeaChatroomsController", "route": "api/IdeaChatrooms", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "IdeaProductsController", "route": "api/IdeaProducts", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "IdeaSessionsController", "route": "api/IdeaSessions", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "InnovationEconomyController", "route": "api/InnovationEconomy", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "LeaderboardController", "route": "api/Leaderboard", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "LiveMeetingController", "route": "api/LiveMeeting", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "NotificationController", "route": "api/Notification", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "OutcomesController", "route": "api/Outcomes", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "ProductController", "route": "api/Product", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "ProvenanceController", "route": "api/Provenance", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "RoleCapacityController", "route": "api/RoleCapacity", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "SessionController", "route": "api/Session", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "SessionPlaybookController", "route": "api/SessionPlaybook", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "SubscriptionController", "route": "api/Subscription", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "SuccessMetricsController", "route": "api/SuccessMetrics", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "TagController", "route": "api/Tag", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "UserGroupController", "route": "api/UserGroup", "authAttribute": "[Authorize]", "status": "REMEDIATED" },
+    { "name": "ValuesController", "route": "api/Values", "authAttribute": "[Authorize]", "status": "REMEDIATED" }
+  ]
+}
